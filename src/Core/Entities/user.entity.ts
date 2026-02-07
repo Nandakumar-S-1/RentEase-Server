@@ -2,7 +2,9 @@ import { UserTypeData } from "Core/Types/user.types";
 import { UserRole } from "Shared/Enums/user.role.type";
 
 export class UserEntity {
-  private constructor(
+  private constructor( //private constructor prevents direct instantiation from outside the class
+    //this is called factory method pattern
+    // forces to use the static create method to create a new user
     private readonly _id: string,
     private _email: string,
     private _fullName: string,
@@ -12,9 +14,10 @@ export class UserEntity {
     private _isActive: boolean = true,
     private _isSuspended: boolean = false,
     private _isEmailVerified: boolean = false,
-    private _createdAt: Date ,
-  ) {}
+    private _createdAt: Date,
+  ) { }
 
+  //this is the factory method that creates a new user 
   static create(data: UserTypeData): UserEntity {
     return new UserEntity(
       data.id,
@@ -31,7 +34,7 @@ export class UserEntity {
   }
 
   //We expose identity via a getter to preserve encapsulation while keeping it immutable
-  get id() {
+  get id() { //these are private fields , so get is used to expose it
     return this._id;
   }
   get email() {

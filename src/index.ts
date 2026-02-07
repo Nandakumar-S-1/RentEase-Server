@@ -1,7 +1,7 @@
-import "reflect-metadata";
+import "reflect-metadata"; //enable decorator metadata
 import "dotenv/config"
 
-import "@presentation/Dependency-Injection/Container"
+import "@presentation/Dependency-Injection/Container" //execute the DI container setup
 import express from "express";
 import userRoutes from 'Presentation/Routes/user.routes'
 import cors from 'cors'

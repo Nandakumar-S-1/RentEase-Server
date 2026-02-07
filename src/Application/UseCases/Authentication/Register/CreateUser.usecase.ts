@@ -4,22 +4,26 @@ import { IUserRepository } from '@core/Interfaces/IUserRepository';
 import { inject, injectable } from "tsyringe"
 
 //this is where everything gets connected
+//@injectable() tells tsyringe "this class can be created by the container
 @injectable()
 export class Create_User_Usecase {
     //this class represents the a specific single operation.which is creating new user
     // Single Responsibility Principle
 
     constructor(
-        @inject('UserRepository')
+        // "When creating this class, look up 'UserRepository' token 
+        // and inject whatever class is registered for that token"
+        @inject('IUserRepository')
+        private readonly userRepository: IUserRepository,
         //this decorator will tell the tsyringe to inject the user repository 
         //Dependency Inversion Principle in action here because the type is an Interface insted of the class UserRepo
 
         //nothing but this usecase doesnt know itis using mongo,or postg or any otherdb .
         //it only know to call findby email in IUserRepository and create in Ibaserepo methods
 
-        private readonly userRepository: IUserRepository,
         //insted of the usecase to create its own repo, it will receive the repo as parameter
     ) { }
+    //
     async execute(dto: ICreateUserDTO) {
         //this is the logic to execute the usecase
         //this has no connection to express or rest or anything like that
@@ -28,7 +32,7 @@ export class Create_User_Usecase {
         if (isUserExist) {
             throw new Error('User alredy exists')
         }
-        const user = UserMapper.toEntity(dto)
+        const user = UserMapper.toEntity(dto) //Convert DTO to Entity using mapper, This adds UUID, prepares data for storage
         return await this.userRepository.create(user)
     }
 

@@ -1,0 +1,44 @@
+1️⃣ Frontend sends POST /api/users/register
+    { email: "test@test.com", password: "123", fullname: "Test", phone: "123", role: "TENANT" }
+    
+2️⃣ Express receives request → routes to user.routes.ts
+    
+3️⃣ user.routes.ts calls: userRegisterController.register(req, res)
+
+4️⃣ Register_user.controller.ts
+    - Extracts req.body
+    - Calls: this.createUser.execute(req.body)
+
+5️⃣ CreateUser.usecase.ts
+    - Receives DTO (the req.body)
+    - Calls: this.userRepository.findByEmail(dto.email)
+
+6️⃣ UserRepository.ts (via DI, injected as IUserRepository)
+    - Queries PostgreSQL: SELECT * FROM users WHERE email = ?
+    - Returns null (user doesn't exist)
+
+7️⃣ Back in CreateUser.usecase.ts
+    - User doesn't exist, so continue
+    - Calls: UserMapper.toEntity(dto)
+
+8️⃣ User.mapper.ts
+    - Creates UserEntity with new UUID
+    - Returns UserEntity instance
+
+9️⃣ Back in CreateUser.usecase.ts
+    - Calls: this.userRepository.create(user)
+
+🔟 UserRepository.ts
+    - Inserts into PostgreSQL via Prisma
+    - Calls: UserPersistenceMapper.toEntity(result)
+    - Returns the created UserEntity
+
+1️⃣1️⃣ Back in CreateUser.usecase.ts
+    - Returns the UserEntity to controller
+
+1️⃣2️⃣ Back in Register_user.controller.ts
+    - Wraps in { success: true, data: user }
+    - Returns: res.status(201).json(...)
+
+1️⃣3️⃣ Frontend receives:
+    { success: true, data: { id: "...", email: "test@test.com", ... } }

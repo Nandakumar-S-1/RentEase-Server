@@ -11,7 +11,7 @@ import { UserRole } from "Shared/Enums/user.role.type"
 
 //seperation of concern is like changing internal data structre without affecting or breaking api or backwards.
 
-export interface ICreateUserDTO {
+export interface ICreateUserDTO { //// Defines what the FRONTEND sends to create a user
     email: string
     fullname: string,
     password: string,
