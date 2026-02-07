@@ -1,0 +1,106 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+
+//----------Database structure is in this file--------
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  ADMIN
+  OWNER
+  TENANT
+}
+
+model User {
+  //(id:- column name, String:- stored as text/uuid @id :- primary key, default:- autogenerate uuid)
+
+  id           String @id @default(uuid())
+  email        String @unique
+  passwordHash String
+  fullName     String
+  phone        String @unique
+
+  role      UserRole
+  avatarUrl String?
+
+  isEmailVerified Boolean @default(false)
+  isActive        Boolean @default(true)
+  isSuspended     Boolean @default(false)
+
+  suspensionReason String?
+  suspendedAt      DateTime?
+  suspendedBy      String?
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  lastActive  DateTime?
+  lastLoginAt DateTime?
+
+  owner_profile  OwnerProfile?
+  tenant_profile TenantProfile?
+  admin_profile  AdminProfile?
+
+  tokens VerificationToken[]
+
+  @@index([email])
+  @@index([phone])
+  @@index([role])
+}
+
+model OwnerProfile {
+  id         String   @id @default(uuid())
+  user_id    String   @unique
+  user       User     @relation(fields: [user_id], references: [id])
+  bio        String?
+  occupation String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model TenantProfile {
+  id         String   @id @default(uuid())
+  userId     String   @unique
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bio        String?
+  occupation String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model AdminProfile {
+  id               String   @id @default(uuid())
+  userId           String   @unique
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  adminRole        String
+  twoFactorEnabled Boolean  @default(true)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model VerificationToken {
+  id String @id @default(uuid())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  tokenType  String // 'email_verify | 'password_reset'
+  tokenValue String
+  isUsed     Boolean @default(false)
+
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId, tokenType])
+  @@index([tokenValue])
+}
