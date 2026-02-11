@@ -7,7 +7,7 @@ import { Pool } from 'pg';
 
 // Create a PostgreSQL connection pool
 const pool = new Pool({
-    connectionString: process.env.DATABASE_URL
+  connectionString: process.env.DATABASE_URL,
 });
 
 // Create the Prisma adapter
@@ -15,5 +15,5 @@ const adapter = new PrismaPg(pool);
 
 // Export Prisma client with the adapter
 export const prisma = new PrismaClient({
-    adapter
+  adapter,
 });

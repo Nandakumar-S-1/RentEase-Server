@@ -1,10 +1,12 @@
-import { Create_User_Usecase } from "@application/UseCases/Authentication/Register/CreateUser.usecase";
-import { container } from "tsyringe";
+import { Create_User_Usecase } from '@application/UseCases/Authentication/Register/CreateUser.usecase';
+import { ICreateUserUseCase } from '@application/Interfaces/User-Interfaces/ICreateUserUseCase';
+import { container } from 'tsyringe';
 
-export class UseCaseModule{
-    static registerModules():void{
-        container.register<Create_User_Usecase>('Create_User_Usecase',{
-            useClass:Create_User_Usecase
-        })
-    }
+export class UseCaseModule {
+  static registerModules(): void {
+    //registering interface token to the concrete class
+    container.register<ICreateUserUseCase>('ICreateUserUseCase', {
+      useClass: Create_User_Usecase,
+    });
+  }
 }
