@@ -1,5 +1,5 @@
-import { UserEntity } from "Core/Entities/user.entity";
-import { IBaseRepository } from 'Core/Interfaces/Base/IBaseRepository'
+import { UserEntity } from 'Core/Entities/user.entity';
+import { IBaseRepository } from 'Core/Interfaces/Base/IBaseRepository';
 
 //reuse common repository operations while still extending user-specific queries,
 
@@ -8,9 +8,5 @@ import { IBaseRepository } from 'Core/Interfaces/Base/IBaseRepository'
 //this is inheritence, where base repo is being extended to user repo
 export interface IUserRepository extends IBaseRepository<UserEntity> {
   // User-specific method not in base repository
-  findByEmail(email: string): Promise<UserEntity | null>
+  findByEmail(email: string): Promise<UserEntity | null>;
 }
-
-
-
-

@@ -10,56 +10,55 @@ src/
 
 │
 
-├── Core/                # Enterprise business rules (Domain)
+├── Core/ # Enterprise business rules (Domain)
 
-│       |── Entities
+│ |── Entities
 
-│       ├── Interfaces
+│ ├── Interfaces
 
-│       ├── Types
+│ ├── Types
 
-│       └── Enums
-
-│
-
-├── Application/         # Application business rules
-
-│   ├── UseCases
-
-│   ├── DTOs
-
-│   └── Mappers
+│ └── Enums
 
 │
 
-├── Infrastructure/      # External services & frameworks
+├── Application/ # Application business rules
 
-│   ├── Database
+│ ├── UseCases
 
-│   │   └── prisma
+│ ├── DTOs
 
-│   ├── Repositories
-
-│   └── Mappers
+│ └── Mappers
 
 │
 
-├── Presentation/        # HTTP layer
+├── Infrastructure/ # External services & frameworks
 
-│   ├── Controllers
+│ ├── Database
 
-│   ├── Routes
+│ │ └── prisma
 
-│   └── Dependency-Injection
+│ ├── Repositories
 
-│
-
-├── Shared/              # Shared enums & utilities
+│ └── Mappers
 
 │
 
-└── index.ts             # Application entry point
+├── Presentation/ # HTTP layer
 
+│ ├── Controllers
+
+│ ├── Routes
+
+│ └── Dependency-Injection
+
+│
+
+├── Shared/ # Shared enums & utilities
+
+│
+
+└── index.ts # Application entry point
 
 ⚙️ Tech Stack
 

@@ -1,35 +1,43 @@
-import "reflect-metadata"; //enable decorator metadata
-import "dotenv/config"
+import 'reflect-metadata'; //enable decorator metadata
+import 'dotenv/config';
 
-import "@presentation/Dependency-Injection/Container" //execute the DI container setup
-import express from "express";
-import userRoutes from 'Presentation/Routes/user.routes'
-import cors from 'cors'
-import { connectToPostgressDB } from "@infrastructure/Database/postgress";
+import '@presentation/Dependency-Injection/Container'; //execute the DI container setup
+import express from 'express';
+import userRoutes from 'Presentation/Routes/user.routes';
+import cors from 'cors';
+import { connectToPostgressDB } from '@infrastructure/Database/postgress';
 
-const app = express()
+const app = express();
+
+// app.use(
+//   cors({
+//     origin: process.env.CLIENT_SIDE_URL || "http://localhost:5173",
+//   })
+// )
+
 app.use(
   cors({
-    origin: process.env.CLIENT_SIDE_URL || "http://localhost:5173"
-  })
-)
-app.use(express.json())
+    origin: [
+      process.env.CLIENT_SIDE_URL || 'http://localhost:5173',
+      `https://wnfgzsjc-5173.inc1.devtunnels.ms`,
+    ],
+  }),
+);
 
-app.use('/api/users', userRoutes)
+app.use(express.json());
+
+app.use('/api/users', userRoutes);
 
 app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
+  res.send('Hello World!');
+});
 
-
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT || 3000;
 async function serverStart() {
-  await connectToPostgressDB()
+  await connectToPostgressDB();
   app.listen(PORT, () => {
     console.log(`🚀 Server running on port http://localhost:${PORT}`);
   });
 }
 
-
-serverStart()
-
+serverStart();
