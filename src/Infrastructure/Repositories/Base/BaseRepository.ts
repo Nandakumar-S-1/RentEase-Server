@@ -1,5 +1,5 @@
 import { IBaseRepository } from '@core/Interfaces/Base/IBaseRepository';
-import { prisma } from '@infrastructure/Database/prisma/prisma.client';
+// import { prisma } from '@infrastructure/Database/prisma/prisma.client';
 
 export abstract class BaseRepository<
   TE,

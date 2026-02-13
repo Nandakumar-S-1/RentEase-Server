@@ -1,7 +1,7 @@
 //Dependency Injection is a design pattern where a class receives
 //its dependencies from outside rather than creating them itself.
 
-import { container } from 'tsyringe';
+// import { container } from 'tsyringe';
 import { RepositoryModule } from './RepositoryModule';
 import { UseCaseModule } from './UseCaseModule';
 
