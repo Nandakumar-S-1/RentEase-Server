@@ -1,4 +1,3 @@
-import { Create_User_Usecase } from '@application/UseCases/Authentication/Register/CreateUser.usecase';
 import { Request, Response } from 'express';
 import { Http_StatusCodes } from 'Shared/Enums/Http_StatusCodes';
 import { inject, injectable } from 'tsyringe';
@@ -13,7 +12,7 @@ export class UserRegisterController {
 
   async register(req: Request, res: Response): Promise<Response> {
     try {
-      console.log('registed data from frontend', req.body);
+      // console.log('registed data from frontend', req.body);
 
       const user = await this.createUser.execute(req.body);
       return res.status(Http_StatusCodes.CREATED).json({
@@ -27,4 +26,7 @@ export class UserRegisterController {
       });
     }
   }
+
+
+
 }

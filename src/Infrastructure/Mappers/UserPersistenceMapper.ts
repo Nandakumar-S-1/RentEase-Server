@@ -1,5 +1,4 @@
 import { UserEntity } from 'Core/Entities/user.entity';
-import { UserTypeData } from 'Core/Types/user.types';
 
 //Database=> Domain(it actually convert database records into domain entities) // the database might have different names compared to domain.
 //so we use this mapper to convert database records back to domain entities. database to entity used because db not equalto domains shape
