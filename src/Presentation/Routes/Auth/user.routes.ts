@@ -1,19 +1,19 @@
-import { container, injectable } from 'tsyringe';
+import { injectable } from 'tsyringe';
 import { UserRegisterController } from '@presentation/Controllers/Authentication/Register_user.controller';
 import { BaseRoute } from '../Base/base.route';
 
 @injectable()
-export class AuthRoutes extends BaseRoute{
-    private _userRegisterController:UserRegisterController;
+export class UserRoutes extends BaseRoute {
 
-    constructor(){
+    constructor(
+        private readonly userRegisterController: UserRegisterController
+    ) {
         super()
-        this._userRegisterController=container.resolve(UserRegisterController);
+        this.initializeRoutes()
     }
-    protected initializeRoutes():void{
-        this.router.post(
-            '/register',
-            this._userRegisterController.register.bind(this._userRegisterController)
+    protected initializeRoutes(): void {
+        this.router.post('/register', (req, res) =>
+            this.userRegisterController.register(req, res)
         )
     }
 }

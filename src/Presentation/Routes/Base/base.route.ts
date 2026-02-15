@@ -5,7 +5,7 @@ export abstract class BaseRoute{
 
     constructor(){
         this.router=Router()
-        this.initializeRoutes()
+        
     }
     protected abstract initializeRoutes():void
 }

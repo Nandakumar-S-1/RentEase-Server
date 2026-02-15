@@ -3,12 +3,14 @@
 
 // import { container } from 'tsyringe';
 import { RepositoryModule } from './RepositoryModule';
+import { ServiceModule } from './ServiceModule';
 import { UseCaseModule } from './UseCaseModule';
 
 export class Container_Setup {
   static registerAll(): void {
     RepositoryModule.registerModules();
     UseCaseModule.registerModules();
+    ServiceModule.registerModues()
   }
 }
 Container_Setup.registerAll();
