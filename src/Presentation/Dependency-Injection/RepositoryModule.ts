@@ -1,7 +1,6 @@
 // All database-related classes are registered here. if you switch the db's,  only change THIS file:
 
 import { container } from 'tsyringe';
-
 import { IUserRepository } from '@core/Interfaces/IUserRepository';
 import { UserRepository } from '@infrastructure/Repositories/UserRepository';
 

@@ -10,7 +10,7 @@ export class UserRegisterController {
 
   constructor(@inject('ICreateUserUseCase') private readonly createUser: ICreateUserUseCase) {} // inject using the token  defined in UseCaseModule     //the controllers is only need to do receve http request, extract data from the req body, // pass it to the corresponding use case and format respone to json .
 
-  async register(req: Request, res: Response): Promise<Response> {
+   register= async(req: Request, res: Response): Promise<Response>=> {
     try {
       // console.log('registed data from frontend', req.body);
 
@@ -26,7 +26,5 @@ export class UserRegisterController {
       });
     }
   }
-
-
 
 }
