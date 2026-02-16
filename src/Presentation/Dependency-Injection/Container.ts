@@ -10,7 +10,7 @@ export class Container_Setup {
   static registerAll(): void {
     RepositoryModule.registerModules();
     UseCaseModule.registerModules();
-    ServiceModule.registerModues()
+    ServiceModule.registerModues();
   }
 }
 Container_Setup.registerAll();

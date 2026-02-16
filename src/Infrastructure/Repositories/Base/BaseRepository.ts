@@ -2,20 +2,22 @@ import { IBaseRepository } from '@core/Interfaces/Base/IBaseRepository';
 // import { prisma } from '@infrastructure/Database/prisma/prisma.client';
 
 export abstract class BaseRepository<
-  TE,
-  TM extends {
-    create: (param: any) => Promise<any>;
+  TEntity,
+  TPersisted,
+  TCreateInput,
+  TModel extends {
+    create: (param: { data: TCreateInput }) => Promise<TPersisted>;
   },
-> implements IBaseRepository<TE> {
+> implements IBaseRepository<TEntity> {
   constructor(
-    protected readonly model: TM,
+    protected readonly model: TModel,
     protected readonly mapper: {
-      toEntity: (raw: any) => TE;
-      toPrismaCreate: (entity: TE) => any;
+      toEntity: (raw: TPersisted) => TEntity;
+      toPrismaCreate: (entity: TEntity) => TCreateInput;
     },
   ) {}
 
-  async create(entity: TE): Promise<TE> {
+  async create(entity: TEntity): Promise<TEntity> {
     const data = this.mapper.toPrismaCreate(entity);
     const res = await this.model.create({ data });
     return this.mapper.toEntity(res);
