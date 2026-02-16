@@ -1,11 +1,10 @@
-import { Router } from "express";
+import { Router } from 'express';
 
-export abstract class BaseRoute{
-    public router:Router
+export abstract class BaseRoute {
+  public router: Router;
 
-    constructor(){
-        this.router=Router()
-        
-    }
-    protected abstract initializeRoutes():void
+  constructor() {
+    this.router = Router();
+  }
+  protected abstract initializeRoutes(): void;
 }
