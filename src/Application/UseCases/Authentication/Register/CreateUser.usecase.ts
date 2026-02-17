@@ -39,24 +39,30 @@ export class Create_User_Usecase implements ICreateUserUseCase {
     if (isUserExist) {
       throw new Error('User alredy exists');
     }
+    const isPhoneExist = await this.userRepository.findByPhone(dto.phone)
+
+    if(isPhoneExist){
+      throw new Error('phone number already exist')
+    }
+
     const hashedPasswordIS = await this.hashService.hash(dto.password);
     const user = UserMapper.toEntity({
       ...dto,
       password: hashedPasswordIS,
     }); //Convert DTO to Entity using mapper, This adds UUID, prepares data for storage
    
-    const newUser = this.userRepository.create(user);
+    const newUser = await this.userRepository.create(user);
     const otp=this.otpService.generateOTP()
 
     logger.info(`'''''''''''''''''''''''''''''''${otp}`)
 
     await this.redisCache.set(
-      `otp:${(await newUser).email}`,
+      `otp:${newUser.email}`,
       otp,
       300
     )
     await this.mailService.sendMail(
-      (await newUser).email,
+      newUser.email,
       'verify your Email by typing the otp',
       `your OTP code is ${otp}`
     )
@@ -64,3 +70,4 @@ export class Create_User_Usecase implements ICreateUserUseCase {
     return newUser
   }
 }
+

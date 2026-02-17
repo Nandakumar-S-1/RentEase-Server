@@ -29,4 +29,10 @@ export class UserRepository implements IUserRepository {
     // iff found, map to entity; if not, return null
     return user ? UserPersistenceMapper.toEntity(user) : null;
   }
+  async findByPhone(phone: string): Promise<UserEntity | null> {
+    const user = await prisma.user.findUnique({
+      where:{phone},
+    })
+    return user ? UserPersistenceMapper.toEntity(user) : null
+  }
 }

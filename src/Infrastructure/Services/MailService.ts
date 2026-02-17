@@ -19,12 +19,12 @@ export class MailService implements IMailService {
     await this.transporter.verify();
   }
 
-  async sendMail(to: string, otp: string) {
+  async sendMail(to: string, subject: string, html:string):Promise<void> {
     await this.transporter.sendMail({
-      from: `RentEas  ${emailConfig.user}`,
+      from: `RentEase  ${emailConfig.user}`,
       to,
-      subject: 'Your OTP',
-      html: `<h2>${otp}</h2>`,
+      subject,
+      html,
     });
   }
 }

@@ -1,39 +1,53 @@
 import { logger } from '@shared/Log/logger';
 import { createClient } from 'redis';
 
+// export const redisClient = createClient({
+//   username: process.env.REDIS_USERNAME,
+//   password: process.env.REDIS_PASSWORD,
+//   socket: {
+//     host: process.env.REDIS_HOST,
+//     port: Number(process.env.REDIS_PORT),
+//     tls: true,
+//   },
+//     tls:{
+//      rejectUnauthorized:false //Without this, Redis Cloud often silently fails SSL handshake.
+//   }
+// });
+
+// redisClient.on('connect',()=>{
+//   logger.info('redis connecting')
+// })
+
+// redisClient.on('ready', () => {
+//   logger.info('Redis ready');
+// })
+
+// redisClient.on('error', (err) => {
+//   logger.error({err},'FULL REDIS ERROR:');
+// });
+
+
 export const redisClient = createClient({
-  username: process.env.REDIS_USERNAME,
-  password: process.env.REDIS_PASSWORD,
-  socket: {
-    host: process.env.REDIS_HOST,
-    port: Number(process.env.REDIS_PORT),
-    // tls: true,
-  },
+  url: `redis://${process.env.REDIS_USERNAME}:${process.env.REDIS_PASSWORD}@${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`,
+});
+
+redisClient.on('connect', () => {
+  console.log('Redis connecting...');
+});
+
+redisClient.on('ready', () => {
+  console.log('Redis ready');
 });
 
 redisClient.on('error', (err) => {
-  logger.error('FULL REDIS ERROR:', err);
+  console.error('FULL REDIS ERROR:', err);
 });
 
 export async function connectToRedis() {
   await redisClient.connect();
-  logger.error('Redis connected successfully');
+  logger.info('Redis connected successfully');
+
+  await redisClient.set('test-key', 'hello', { EX: 60 });
+  const value = await redisClient.get('test-key');
+  console.log("Redis Test Value:", value);
 }
-
-// import { logger } from "@shared/Enums/Log/logger";
-// import { createClient } from "redis";
-
-// export const redisClient = createClient({
-//     url:process.env.REDIS_URL,
-// })
-
-// redisClient.on('error',(err)=>{
-//     console.log('redis error',err)
-//     // logger.info('redis error',err)
-// })
-
-// export async function connectToRedis() {
-//     await redisClient.connect()
-//     console.log('redis connected succesfuly')
-//     // logger.info('redis connected succesfuly')
-// }
