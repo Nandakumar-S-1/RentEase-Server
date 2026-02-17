@@ -1,3 +1,3 @@
 export interface IMailService {
-  sendMail(to: string, subject: string, text: string): Promise<void>;
+  sendMail(to: string, subject: string, html: string): Promise<void>;
 }
