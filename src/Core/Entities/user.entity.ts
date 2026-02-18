@@ -55,9 +55,21 @@ export class UserEntity {
     return this._role;
   }
 
+  get isEmailVerified():boolean{
+    return this._isEmailVerified
+  }
+
+  get isActive():boolean{
+    return this._isActive
+  }
+
+  get isSuspended():boolean{
+    return this._isSuspended
+  }
+
   setEmailVerified():void{
     if(this._isEmailVerified){
-      throw new Error('Email is already Verified')
+      throw new Error('Email already Verified')
     }
     this._isEmailVerified=true
   }

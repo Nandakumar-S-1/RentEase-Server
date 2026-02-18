@@ -1,5 +1,5 @@
-import { IVerifyOtpDTO } from "@application/Data-Transfer-Object/Authentication/IVerifyOtpDTO ";
-import { IVerifyOtpUseCase } from "@application/Interfaces/IVerifyOtpUseCase ";
+import { IVerifyOtpRequestDTO } from "@application/Data-Transfer-Object/Authentication/Request/VerifyOtpRequestDTO ";
+import { IVerifyOtpUseCase } from "@application/Interfaces/User-Interfaces/IVerifyOtpUseCase ";
 import { IRedisCache } from "@application/Interfaces/User-Interfaces/IRedisCacheService";
 import { UserEntity } from "@core/Entities/user.entity";
 import { IUserRepository } from "@core/Interfaces/IUserRepository";
@@ -22,7 +22,7 @@ export class VerifyOtpUseCasee implements IVerifyOtpUseCase{
 
 
     ){}
-    async execute(dto: IVerifyOtpDTO): Promise<{ user: UserEntity; refreshToken: string; accessToken: string; }> {
+    async execute(dto: IVerifyOtpRequestDTO): Promise<{ user: UserEntity; refreshToken: string; accessToken: string; }> {
         
     }
 }
