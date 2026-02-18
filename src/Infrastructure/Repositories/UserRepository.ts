@@ -35,4 +35,23 @@ export class UserRepository implements IUserRepository {
     })
     return user ? UserPersistenceMapper.toEntity(user) : null
   }
+  update(id: string, user: UserEntity): Promise<UserEntity> {
+    try {
+      const res = await prisma.user.update({
+        where:{id},
+        data:{
+          email:user.email,
+          phone:user.phone,
+          fullName:user.fullname,
+          isEmailVerified:user.isEmailVerified,
+          isActive:user.isActive,
+          isSuspended:user.isSuspended
+        }
+      })
+
+      return UserPersistenceMapper.toEntity(res)
+    } catch (error) {
+      
+    }
+  }
 }
