@@ -1,15 +1,7 @@
 import { Http_StatusCodes } from "@shared/Enums/Http_StatusCodes"
+import { ProjectErrors } from "./Base/BaseError"
 
-export class ProjectErrors extends Error{
-    constructor(
-        public statusCode:number,
-        public message:string,
-        public code:string
-    ) {
-        super(message)
-        this.name=this.constructor.name
-    }
-}
+
 
 export class InvalidOtpError extends ProjectErrors{
     constructor(message = 'Invalid OTP'){
@@ -25,6 +17,7 @@ export class OtpExpiredError extends ProjectErrors{
 
 export class MaxOtpAttemptError extends ProjectErrors{
     constructor(message:'Maximum OTP verification Attempts reached'){
-        super(Http_StatusCodes.NOT_FOUND,'NOT_FOUND',message)
+        super(Http_StatusCodes.BAD_REQUEST,'MAX_OTP_ATTEMPTS',message)
     }
 }
+

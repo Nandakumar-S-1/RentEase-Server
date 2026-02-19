@@ -32,15 +32,15 @@ export const redisClient = createClient({
 });
 
 redisClient.on('connect', () => {
-  console.log('Redis connecting...');
+  logger.info('Redis connecting...');
 });
 
 redisClient.on('ready', () => {
-  console.log('Redis ready');
+  logger.info('Redis ready');
 });
 
 redisClient.on('error', (err) => {
-  console.error('FULL REDIS ERROR:', err);
+  logger.error({err},'-------------FULL REDIS ERROR:');
 });
 
 export async function connectToRedis() {
@@ -49,5 +49,5 @@ export async function connectToRedis() {
 
   await redisClient.set('test-key', 'hello', { EX: 60 });
   const value = await redisClient.get('test-key');
-  console.log("Redis Test Value:", value);
+  logger.info({value},"Redis Test Value");
 }

@@ -1,6 +1,7 @@
 import { prisma } from '@infrastructure/Database/prisma/prisma.client';
 //mapper to convert DB records ot Domain entities
 import { UserPersistenceMapper } from '@infrastructure/Mappers/UserPersistenceMapper';
+import { logger } from '@shared/Log/logger';
 import { UserEntity } from 'Core/Entities/user.entity';
 import { IUserRepository } from 'Core/Interfaces/IUserRepository';
 
@@ -35,7 +36,7 @@ export class UserRepository implements IUserRepository {
     })
     return user ? UserPersistenceMapper.toEntity(user) : null
   }
-  update(id: string, user: UserEntity): Promise<UserEntity> {
+  async update(id: string, user: UserEntity): Promise<UserEntity> {
     try {
       const res = await prisma.user.update({
         where:{id},
@@ -51,7 +52,8 @@ export class UserRepository implements IUserRepository {
 
       return UserPersistenceMapper.toEntity(res)
     } catch (error) {
-      
+      logger.error({error},`error updating user`)
+      throw new Error('Failed to update user')
     }
   }
 }

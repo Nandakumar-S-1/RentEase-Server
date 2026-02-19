@@ -54,7 +54,7 @@ export class Create_User_Usecase implements ICreateUserUseCase {
     const newUser = await this.userRepository.create(user);
     const otp=this.otpService.generateOTP()
 
-    logger.info(`'''''''''''''''''''''''''''''''${otp}`)
+    logger.info(`''''''''''''otp is'''''''''''''''''''${otp}`)
 
     await this.redisCache.set(
       `otp:${newUser.email}`,
