@@ -6,5 +6,6 @@ export const TokenTypes = {
     IOtpService:"IOtpService",
     IMailService:"IMailService",
     IRedisCache:"IRedisCache",
-    IJwtService:"IJwtService"
+    IJwtService:"IJwtService",
+    IResendOtpUseCase:"IResendOtpUseCase"
 }
