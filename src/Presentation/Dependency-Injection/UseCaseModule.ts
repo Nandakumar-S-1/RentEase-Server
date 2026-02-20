@@ -1,8 +1,8 @@
-import { Create_User_Usecase } from '@application/UseCases/Authentication/Register/CreateUser.usecase';
+import { Create_User_Usecase } from '@application/UseCases/Authentication/CreateUser.usecase';
 import { ICreateUserUseCase } from '@application/Interfaces/Auth/ICreateUserUseCase';
 import { container } from 'tsyringe';
 import { IVerifyOtpUseCase } from '@application/Interfaces/Auth/IVerifyOtpUseCase ';
-import { VerifyOtpUseCase } from '@application/UseCases/Authentication/Register/VerifyOtp.usecase';
+import { VerifyOtpUseCase } from '@application/UseCases/Authentication/VerifyOtp.usecase';
 
 export class UseCaseModule {
   static registerModules(): void {
