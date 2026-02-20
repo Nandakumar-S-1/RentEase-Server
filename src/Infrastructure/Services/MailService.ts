@@ -1,4 +1,4 @@
-import { IMailService } from '@application/Interfaces/User-Interfaces/IMailService ';
+import { IMailService } from '@application/Interfaces/Services/IMailService ';
 import { injectable } from 'tsyringe';
 import nodemailer from 'nodemailer';
 import { emailConfig } from '@infrastructure/Config/email.config';
@@ -19,7 +19,7 @@ export class MailService implements IMailService {
     await this.transporter.verify();
   }
 
-  async sendMail(to: string, subject: string, html:string):Promise<void> {
+  async sendMail(to: string, subject: string, html: string): Promise<void> {
     await this.transporter.sendMail({
       from: `RentEase  ${emailConfig.user}`,
       to,

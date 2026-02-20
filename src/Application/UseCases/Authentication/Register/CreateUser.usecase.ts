@@ -1,13 +1,14 @@
 import { ICreateUserDTO } from '@application/Data-Transfer-Object/Authentication/ICreateUserDTO';
-import { ICreateUserUseCase } from '@application/Interfaces/User-Interfaces/ICreateUserUseCase';
-import { IMailService } from '@application/Interfaces/User-Interfaces/IMailService ';
-import { IOtpService } from '@application/Interfaces/User-Interfaces/IOtpService';
-import { IRedisCache } from '@application/Interfaces/User-Interfaces/IRedisCacheService';
+import { ICreateUserUseCase } from '@application/Interfaces/Auth/ICreateUserUseCase';
+import { IMailService } from '@application/Interfaces/Services/IMailService ';
+import { IOtpService } from '@application/Interfaces/Services/IOtpService';
+import { IRedisCache } from '@application/Interfaces/Services/IRedisCacheService';
 import { UserMapper } from '@application/Mappers/Authentication/User.mapper';
 import { UserEntity } from '@core/Entities/user.entity';
 import { IUserRepository } from '@core/Interfaces/IUserRepository';
-import { IHashService } from '@infrastructure/Interfaces/IHashService';
+import { IHashService } from '@application/Interfaces/Services/IHashService';
 import { logger } from '@shared/Log/logger';
+import { TokenTypes } from '@shared/Types/tokens';
 import { inject, injectable } from 'tsyringe';
 
 //this is where everything gets connected //@injectable() tells tsyringe "this class can be created by the main container
@@ -16,33 +17,34 @@ import { inject, injectable } from 'tsyringe';
 @injectable()
 export class Create_User_Usecase implements ICreateUserUseCase {
   constructor(
-    @inject('IUserRepository') // "When creating this class, look up 'UserRepository' token  // and inject whatever class is registered for that token"
+    @inject(TokenTypes.IUserRepository) // "When creating this class, look up 'UserRepository' token  // and inject whatever class is registered for that token"
     private readonly userRepository: IUserRepository, //this decorator will tell the tsyringe to inject the user repository  //Dependency Inversion Principle in action here because the type is an Interface insted of the class UserRepo //nothing but this usecase doesnt know itis using mongo,or postg or any otherdb . //it only know to call findby email in IUserRepository and create in Ibaserepo methods //insted of the usecase to create its own repo, it will receive the repo as parameter
 
-    @inject('IHashService')
+    @inject(TokenTypes.IHashService)
     private readonly hashService: IHashService,
 
-    @inject('IOtpService')
-    private readonly otpService:IOtpService,
+    @inject(TokenTypes.IOtpService)
+    private readonly otpService: IOtpService,
 
-    @inject("IMailService")
-    private readonly mailService:IMailService,
+    @inject(TokenTypes.IMailService)
+    private readonly mailService: IMailService,
 
-    @inject('IRedisCache')
-    private readonly redisCache:IRedisCache
+    @inject(TokenTypes.IRedisCache)
+    private readonly redisCache: IRedisCache,
   ) {}
 
-  async execute(dto: ICreateUserDTO): Promise<UserEntity> { //this is the logic to execute the usecase //this has no connection to express or rest or anything like that
+  async execute(dto: ICreateUserDTO): Promise<UserEntity> {
+    //this is the logic to execute the usecase //this has no connection to express or rest or anything like that
 
     const isUserExist = await this.userRepository.findByEmail(dto.email);
 
     if (isUserExist) {
       throw new Error('User alredy exists');
     }
-    const isPhoneExist = await this.userRepository.findByPhone(dto.phone)
+    const isPhoneExist = await this.userRepository.findByPhone(dto.phone);
 
-    if(isPhoneExist){
-      throw new Error('phone number already exist')
+    if (isPhoneExist) {
+      throw new Error('phone number already exist');
     }
 
     const hashedPasswordIS = await this.hashService.hash(dto.password);
@@ -50,24 +52,19 @@ export class Create_User_Usecase implements ICreateUserUseCase {
       ...dto,
       password: hashedPasswordIS,
     }); //Convert DTO to Entity using mapper, This adds UUID, prepares data for storage
-   
+
     const newUser = await this.userRepository.create(user);
-    const otp=this.otpService.generateOTP()
+    const otp = this.otpService.generateOTP();
 
-    logger.info(`''''''''''''otp is'''''''''''''''''''${otp}`)
+    logger.info(`''''''''''''otp is'''''''''''''''''''${otp}`);
 
-    await this.redisCache.set(
-      `otp:${newUser.email}`,
-      otp,
-      300
-    )
+    await this.redisCache.set(`otp:${newUser.email}`, otp, 300);
     await this.mailService.sendMail(
       newUser.email,
       'verify your Email by typing the otp',
-      `your OTP code is ${otp}`
-    )
+      `your OTP code is ${otp}`,
+    );
 
-    return newUser
+    return newUser;
   }
 }
-

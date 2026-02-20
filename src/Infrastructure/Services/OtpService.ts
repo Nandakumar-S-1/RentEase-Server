@@ -1,4 +1,4 @@
-import { IOtpService } from '@application/Interfaces/User-Interfaces/IOtpService';
+import { IOtpService } from '@application/Interfaces/Services/IOtpService';
 import { injectable } from 'tsyringe';
 
 @injectable()

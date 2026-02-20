@@ -55,34 +55,34 @@ export class UserEntity {
     return this._role;
   }
 
-  get isEmailVerified():boolean{
-    return this._isEmailVerified
+  get isEmailVerified(): boolean {
+    return this._isEmailVerified;
   }
 
-  get isActive():boolean{
-    return this._isActive
+  get isActive(): boolean {
+    return this._isActive;
   }
 
-  get isSuspended():boolean{
-    return this._isSuspended
+  get isSuspended(): boolean {
+    return this._isSuspended;
   }
 
-  setEmailVerified():void{
-    if(this._isEmailVerified){
-      throw new Error('Email already Verified')
+  setEmailVerified(): void {
+    if (this._isEmailVerified) {
+      throw new Error('Email already Verified');
     }
-    this._isEmailVerified=true
+    this._isEmailVerified = true;
   }
-  deactivateUser():void{
-    this._isActive=false
+  deactivateUser(): void {
+    this._isActive = false;
   }
-  activateUser():void{
-    this._isActive=true
+  activateUser(): void {
+    this._isActive = true;
   }
-  suspendUser():void{
-    this._isSuspended=true
+  suspendUser(): void {
+    this._isSuspended = true;
   }
-  unSuspendUser():void{
-    this._isSuspended=false
+  unSuspendUser(): void {
+    this._isSuspended = false;
   }
 }

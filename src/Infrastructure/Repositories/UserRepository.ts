@@ -32,28 +32,28 @@ export class UserRepository implements IUserRepository {
   }
   async findByPhone(phone: string): Promise<UserEntity | null> {
     const user = await prisma.user.findUnique({
-      where:{phone},
-    })
-    return user ? UserPersistenceMapper.toEntity(user) : null
+      where: { phone },
+    });
+    return user ? UserPersistenceMapper.toEntity(user) : null;
   }
   async update(id: string, user: UserEntity): Promise<UserEntity> {
     try {
       const res = await prisma.user.update({
-        where:{id},
-        data:{
-          email:user.email,
-          phone:user.phone,
-          fullName:user.fullname,
-          isEmailVerified:user.isEmailVerified,
-          isActive:user.isActive,
-          isSuspended:user.isSuspended
-        }
-      })
+        where: { id },
+        data: {
+          email: user.email,
+          phone: user.phone,
+          fullName: user.fullname,
+          isEmailVerified: user.isEmailVerified,
+          isActive: user.isActive,
+          isSuspended: user.isSuspended,
+        },
+      });
 
-      return UserPersistenceMapper.toEntity(res)
+      return UserPersistenceMapper.toEntity(res);
     } catch (error) {
-      logger.error({error},`error updating user`)
-      throw new Error('Failed to update user')
+      logger.error({ error }, `error updating user`);
+      throw new Error('Failed to update user');
     }
   }
 }
