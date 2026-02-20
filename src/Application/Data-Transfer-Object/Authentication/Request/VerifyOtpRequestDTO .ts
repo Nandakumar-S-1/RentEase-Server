@@ -2,6 +2,6 @@
 //this is what client sends
 
 export interface IVerifyOtpRequestDTO {
-    email:string,
-    otp:string
+  email: string;
+  otp: string;
 }

@@ -9,6 +9,6 @@ import { IBaseRepository } from 'Core/Interfaces/Base/IBaseRepository';
 export interface IUserRepository extends IBaseRepository<UserEntity> {
   // User-specific method not in base repository
   findByEmail(email: string): Promise<UserEntity | null>;
-  findByPhone(phone:string):Promise<UserEntity |null>
-  update(id:string,user:UserEntity):Promise<UserEntity>
+  findByPhone(phone: string): Promise<UserEntity | null>;
+  update(id: string, user: UserEntity): Promise<UserEntity>;
 }
