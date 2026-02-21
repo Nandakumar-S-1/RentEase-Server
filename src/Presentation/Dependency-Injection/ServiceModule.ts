@@ -10,23 +10,24 @@ import { MailService } from '@infrastructure/Services/MailService';
 import { OtpService } from '@infrastructure/Services/OtpService';
 
 import { container } from 'tsyringe';
+import { TokenTypes } from '@shared/Types/tokens';
 
 export class ServiceModule {
   static registerModues(): void {
-    container.register<IHashService>('IHashService', {
+    container.register<IHashService>(TokenTypes.IHashService, {
       useClass: BcryptHashService,
     });
-    container.register<IOtpService>('IOtpService', {
+    container.register<IOtpService>(TokenTypes.IOtpService, {
       useClass: OtpService,
     });
-    container.register<IMailService>('IMailService', {
+    container.register<IMailService>(TokenTypes.IMailService, {
       //When someone asks for IMailService, create a new instance of MailService.
       useClass: MailService,
     });
-    container.register<IRedisCache>('IRedisCache', {
+    container.register<IRedisCache>(TokenTypes.IRedisCache, {
       useClass: RedisCacheService,
     });
-    container.register<IJwtService>('IJwtService',{
+    container.register<IJwtService>(TokenTypes.IJwtService,{
       useClass:JwtService,
     })
   }

@@ -3,8 +3,8 @@ import { inject, injectable } from 'tsyringe';
 import { Request, Response } from 'express';
 import { logger } from '@shared/Log/logger';
 import { Http_StatusCodes } from '@shared/Enums/Http_StatusCodes';
-import { ProjectErrors } from '@shared/Errors/Base/BaseError';
 import { TokenTypes } from '@shared/Types/tokens';
+import { ApiResponse } from '@application/Data-Transfer-Object/ApiResponseDTO';
 
 @injectable()
 export class VerifyOtpController {
@@ -12,11 +12,10 @@ export class VerifyOtpController {
     @inject(TokenTypes.IVerifyOtpUseCase)
     private readonly verifyOtpUseCase: IVerifyOtpUseCase,
 
-    
-  ) {}
+
+  ) { }
 
   async verify(req: Request, res: Response): Promise<Response> {
-    try {
       const { email, otp } = req.body;
       logger.info(`otp verification req on ${email}`);
 
@@ -24,34 +23,31 @@ export class VerifyOtpController {
         email,
         otp,
       });
-      return res.status(Http_StatusCodes.OK).json({
+      const response: ApiResponse<{
+        user: {
+          id: string,
+          email: string,
+          fullname: string,
+          phone: string,
+          role: string
+        }
+        accessToken: string,
+        refreshToken: string
+      }> = {
         success: true,
         message: 'Email verified Successfully',
         data: {
-          id: result.user.id,
-          email: result.user.email,
-          fullname: result.user.fullname,
-          phone: result.user.phone,
-          role: result.user.role,
-        },
-        accessToken: result.accessToken,
-        refreshToken: result.refreshToken,
-      });
-    } catch (error) {
-      logger.error({ error }, 'otp verification failed');
-
-      if (error instanceof ProjectErrors) {
-        return res.status(error.statusCode).json({
-          success: false,
-          message: error.message,
-          code: error.code,
-        });
-      }
-
-      return res.status(Http_StatusCodes.INTERNAL_SERVER_ERROR).json({
-        success: false,
-        message: 'something went wrong',
-      });
-    }
+          user: {
+            id: result.user.id,
+            email: result.user.email,
+            fullname: result.user.fullname,
+            phone: result.user.phone,
+            role: result.user.role,
+          },
+          accessToken: result.accessToken,
+          refreshToken: result.refreshToken,
+        }
+      };
+      return res.status(Http_StatusCodes.OK).json(response)
   }
 }
