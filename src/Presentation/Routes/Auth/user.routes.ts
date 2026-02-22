@@ -4,13 +4,15 @@ import { VerifyOtpController } from '@presentation/Controllers/Authentication/Ve
 import { BaseRoute } from '../Base/base.route';
 import { asyncHandlerFunction } from '@presentation/Utils/asyncHandler';
 import { ResendOtpController } from '@presentation/Controllers/Authentication/ResendOtp.controller';
+import { LoginController } from '@presentation/Controllers/Authentication/Login.controller';
 
 @injectable()
 export class UserRoutes extends BaseRoute {
   constructor(
     private readonly userRegisterController: UserRegisterController,
     private readonly verifyOtpController: VerifyOtpController,
-    private readonly resendOtpControler:ResendOtpController
+    private readonly resendOtpControler:ResendOtpController,
+    private readonly loginController:LoginController
   ) {
     super();
     this.initializeRoutes();
@@ -19,5 +21,6 @@ export class UserRoutes extends BaseRoute {
     this.router.post('/register', asyncHandlerFunction(this.userRegisterController.register.bind(this.userRegisterController)))
     this.router.post('/verify-otp',asyncHandlerFunction(this.verifyOtpController.verify.bind(this.verifyOtpController)))
     this.router.post('/resend-otp',asyncHandlerFunction(this.resendOtpControler.resend.bind(this.resendOtpControler)))
+    this.router.post('/login',asyncHandlerFunction(this.loginController.login.bind(this.loginController)))
   }
 }
