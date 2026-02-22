@@ -1,6 +1,7 @@
 import { prisma } from '@infrastructure/Database/prisma/prisma.client';
 //mapper to convert DB records ot Domain entities
 import { UserPersistenceMapper } from '@infrastructure/Mappers/UserPersistenceMapper';
+import { logger } from '@shared/Log/logger';
 import { UserEntity } from 'Core/Entities/user.entity';
 import { IUserRepository } from 'Core/Interfaces/IUserRepository';
 
@@ -31,8 +32,28 @@ export class UserRepository implements IUserRepository {
   }
   async findByPhone(phone: string): Promise<UserEntity | null> {
     const user = await prisma.user.findUnique({
-      where:{phone},
-    })
-    return user ? UserPersistenceMapper.toEntity(user) : null
+      where: { phone },
+    });
+    return user ? UserPersistenceMapper.toEntity(user) : null;
+  }
+  async update(id: string, user: UserEntity): Promise<UserEntity> {
+    try {
+      const res = await prisma.user.update({
+        where: { id },
+        data: {
+          email: user.email,
+          phone: user.phone,
+          fullName: user.fullname,
+          isEmailVerified: user.isEmailVerified,
+          isActive: user.isActive,
+          isSuspended: user.isSuspended,
+        },
+      });
+
+      return UserPersistenceMapper.toEntity(res);
+    } catch (error) {
+      logger.error({ error }, `error updating user`);
+      throw new Error('Failed to update user');
+    }
   }
 }

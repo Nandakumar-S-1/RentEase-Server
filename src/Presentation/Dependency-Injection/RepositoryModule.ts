@@ -3,11 +3,12 @@
 import { container } from 'tsyringe';
 import { IUserRepository } from '@core/Interfaces/IUserRepository';
 import { UserRepository } from '@infrastructure/Repositories/UserRepository';
+import { TokenTypes } from '@shared/Types/tokens';
 
 export class RepositoryModule {
   //this is like when a call for Iuserrepo token ,it will give an instance of UserRepository class
   static registerModules(): void {
-    container.register<IUserRepository>('IUserRepository', {
+    container.register<IUserRepository>(TokenTypes.IUserRepository, {
       useClass: UserRepository,
     });
   }
