@@ -11,9 +11,11 @@ import { OtpService } from '@infrastructure/Services/OtpService';
 
 import { container } from 'tsyringe';
 import { TokenTypes } from '@shared/Types/tokens';
+import { IFirebaseService } from '@application/Interfaces/Services/IFirebaseService';
+import { FirebaseService } from '@infrastructure/Services/FirebaseService';
 
 export class ServiceModule {
-  static registerModues(): void {
+  static registerModules(): void {
     container.register<IHashService>(TokenTypes.IHashService, {
       useClass: BcryptHashService,
     });
@@ -27,8 +29,11 @@ export class ServiceModule {
     container.register<IRedisCache>(TokenTypes.IRedisCache, {
       useClass: RedisCacheService,
     });
-    container.register<IJwtService>(TokenTypes.IJwtService,{
-      useClass:JwtService,
+    container.register<IJwtService>(TokenTypes.IJwtService, {
+      useClass: JwtService,
+    })
+    container.register<IFirebaseService>(TokenTypes.IFirebaseService, {
+      useClass: FirebaseService
     })
   }
 }

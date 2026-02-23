@@ -4,6 +4,7 @@ import { inject, injectable } from 'tsyringe';
 import { ICreateUserUseCase } from '@application/Interfaces/Auth/ICreateUserUseCase';
 import { TokenTypes } from '@shared/Types/tokens';
 import { ApiResponse } from '@application/Data-Transfer-Object/ApiResponseDTO';
+import { logger } from '@shared/Log/logger';
 
 @injectable()
 export class UserRegisterController {
@@ -13,8 +14,7 @@ export class UserRegisterController {
   constructor(@inject(TokenTypes.ICreateUserUseCase) private readonly createUser: ICreateUserUseCase) {} // inject using the token  defined in UseCaseModule     //the controllers is only need to do receve http request, extract data from the req body, // pass it to the corresponding use case and format respone to json .
 
   register = async (req: Request, res: Response): Promise<Response> => {
-
-      // console.log('registed data from frontend', req.body);
+      logger.info('registed data from frontend', req.body);
       const user = await this.createUser.execute(req.body);
 
       const respone : ApiResponse<unknown>={

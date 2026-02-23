@@ -1,4 +1,4 @@
-import { IVerifyOtpRequestDTO } from '@application/Data-Transfer-Object/Authentication/Request/VerifyOtpRequestDTO ';
+import { IVerifyOtpRequestDTO } from '@application/Data-Transfer-Object/Authentication/Request/VerifyOtpRequestDTO';
 // import { UserEntity } from "@core/Entities/user.entity";
 import { UserRole } from '@shared/Enums/user.role.type';
 
