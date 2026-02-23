@@ -16,7 +16,7 @@ export class UserEntity {
     private _isSuspended: boolean = false,
     private _isEmailVerified: boolean = false,
     private _createdAt: Date,
-  ) {}
+  ) { }
 
   //this is the factory method that creates a new user
   static create(data: UserTypeData): UserEntity {
@@ -67,6 +67,10 @@ export class UserEntity {
     return this._isSuspended;
   }
 
+  get createdAt(): Date {
+    return this._createdAt;
+  }
+
   setEmailVerified(): void {
     if (this._isEmailVerified) {
       throw new Error('Email already Verified');
@@ -84,5 +88,8 @@ export class UserEntity {
   }
   unSuspendUser(): void {
     this._isSuspended = false;
+  }
+  setPassword(hash: string): void {
+    this._password = hash;
   }
 }

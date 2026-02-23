@@ -19,23 +19,41 @@ export class UserRepository implements IUserRepository {
         role: user.role,
         passwordHash: user.password,
         fullName: user.fullname,
+        isEmailVerified: user.isEmailVerified,
+        isActive: user.isActive,
+        isSuspended: user.isSuspended,
       },
     });
     return UserPersistenceMapper.toEntity(result);
   }
+
   async findByEmail(email: string): Promise<UserEntity | null> {
     const user = await prisma.user.findUnique({
       where: { email },
     });
-    // iff found, map to entity; if not, return null
+    // iff found, map to entity, if not- return null
     return user ? UserPersistenceMapper.toEntity(user) : null;
   }
+
   async findByPhone(phone: string): Promise<UserEntity | null> {
     const user = await prisma.user.findUnique({
       where: { phone },
     });
     return user ? UserPersistenceMapper.toEntity(user) : null;
   }
+
+  async findById(id: string): Promise<UserEntity | null> {
+    const user = await prisma.user.findUnique({
+      where: { id },
+    });
+    return user ? UserPersistenceMapper.toEntity(user) : null;
+  }
+
+  async findAll(): Promise<UserEntity[]> {
+    const users = await prisma.user.findMany();
+    return users.map((user) => UserPersistenceMapper.toEntity(user));
+  }
+
   async update(id: string, user: UserEntity): Promise<UserEntity> {
     try {
       const res = await prisma.user.update({
@@ -47,12 +65,13 @@ export class UserRepository implements IUserRepository {
           isEmailVerified: user.isEmailVerified,
           isActive: user.isActive,
           isSuspended: user.isSuspended,
+          passwordHash: user.password
         },
       });
 
       return UserPersistenceMapper.toEntity(res);
     } catch (error) {
-      logger.error({ error }, `error updating user`);
+      logger.error({ error }, `Error updating user with ID: ${id}`);
       throw new Error('Failed to update user');
     }
   }

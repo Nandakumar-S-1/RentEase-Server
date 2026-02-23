@@ -1,4 +1,4 @@
-import { IVerifyOtpRequestDTO } from '@application/Data-Transfer-Object/Authentication/Request/VerifyOtpRequestDTO ';
+import { IVerifyOtpRequestDTO } from '@application/Data-Transfer-Object/Authentication/Request/VerifyOtpRequestDTO';
 import { IVerifyOtpUseCase } from '@application/Interfaces/Auth/IVerifyOtpUseCase ';
 import { IRedisCache } from '@application/Interfaces/Services/IRedisCacheService';
 import { UserEntity } from '@core/Entities/user.entity';
@@ -25,7 +25,7 @@ export class VerifyOtpUseCase implements IVerifyOtpUseCase {
 
     @inject('IJwtService')
     private readonly jwtService: IJwtService,
-  ) {}
+  ) { }
 
   private validateInputOfOTP(dto: IVerifyOtpRequestDTO): void {
     if (!dto.email || !dto.otp) {
@@ -90,12 +90,16 @@ export class VerifyOtpUseCase implements IVerifyOtpUseCase {
   private async clearRedisData(email: string): Promise<void> {
     const otpKey = `otp:${email}`;
     const attemptKey = `otp:attempts:${email}`;
+    const pendingUserKey = `pending_user:${email}`;
     try {
       await this.redisCache.delete(otpKey);
       logger.info('otp deleted from redis');
 
       await this.redisCache.delete(attemptKey);
       logger.info(`the counter to attempt deleted from redisdb`);
+
+      await this.redisCache.delete(pendingUserKey);
+      logger.info('pending user deleted from redis');
     } catch (error) {
       logger.error({ error }, `error clearing redis data`);
     }
@@ -107,11 +111,17 @@ export class VerifyOtpUseCase implements IVerifyOtpUseCase {
     logger.info(`otp verification with the main ${dto.email}`);
     this.validateInputOfOTP(dto);
 
-    const user = await this.userRepository.findByEmail(dto.email);
-    if (!user) {
-      logger.warn(`user not found on the email ${dto.email}`);
-      throw new Error('Email was verified already');
+    // Instead of findByEmail in DB, we check Redis for pending registration
+    const pendingUserJson = await this.redisCache.get(`pending_user:${dto.email}`);
+    if (!pendingUserJson) {
+      // Check if user already exists in DB (maybe already verified)
+      const existingUser = await this.userRepository.findByEmail(dto.email);
+      if (existingUser) {
+        throw new Error('Email was verified already');
+      }
+      throw new Error('Verification session expired or not found');
     }
+
     await this.checkAttemptsCount(dto.email);
 
     const storedOtpIs = await this.retreveOtpFromRedis(dto.email);
@@ -121,21 +131,29 @@ export class VerifyOtpUseCase implements IVerifyOtpUseCase {
     }
 
     logger.info('otp verified succesfully');
-    user.setEmailVerified();
 
-    const updatedUser = await this.userRepository.update(user.id, user);
-    logger.info(`users email has been verified and updated`);
+    // Parse the pending user data
+    const userData = JSON.parse(pendingUserJson);
+    const user = UserEntity.create({
+      ...userData,
+      createdAt: new Date(userData.createdAt),
+      isEmailVerified: true // Mark as verified before saving
+    });
+
+    // Save to DB for the first time
+    const newUser = await this.userRepository.create(user);
+    logger.info(`users email has been verified and saved to database`);
 
     await this.clearRedisData(dto.email);
 
     const tokens = this.jwtService.createPairofJwtTokens({
-      userId: updatedUser.id,
-      email: updatedUser.email,
-      role: updatedUser.role,
+      userId: newUser.id,
+      email: newUser.email,
+      role: newUser.role,
     });
-    logger.info(`tokens for ${updatedUser} created`);
+    logger.info(`tokens for ${newUser.email} created`);
     return {
-      user: updatedUser,
+      user: newUser,
       accessToken: tokens.accessToken,
       refreshToken: tokens.refreshToken,
     };

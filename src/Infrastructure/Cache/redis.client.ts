@@ -17,14 +17,39 @@ redisClient.on('error', (err) => {
   logger.error({ err }, '-------------FULL REDIS ERROR:');
 });
 
-export async function connectToRedis() {
-  await redisClient.connect();
-  logger.info('Redis connected successfully');
 
-  await redisClient.set('test-key', 'hello', { EX: 60 });
-  const value = await redisClient.get('test-key');
-  logger.info({ value }, 'Redis Test Value');
+export async function connectToRedis() {
+  try {
+    await redisClient.connect();
+    logger.info('Redis connected successfully');
+
+    await redisClient.set('test-key', 'hello', { EX: 60 });
+    const value = await redisClient.get('test-key');
+    logger.info({ value }, 'Redis Test Value');
+  } catch (err) {
+    logger.error({ err }, 'Redis connection failed');
+  }
 }
+
+// export async function connectToRedis() {
+//   await redisClient.connect();
+//   logger.info('Redis connected successfully');
+
+//   await redisClient.set('test-key', 'hello', { EX: 60 });
+//   const value = await redisClient.get('test-key');
+//   logger.info({ value }, 'Redis Test Value');
+// }
+
+
+
+
+
+
+
+
+
+
+
 
 // export const redisClient = createClient({
 //   username: process.env.REDIS_USERNAME,

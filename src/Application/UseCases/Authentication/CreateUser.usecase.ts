@@ -53,18 +53,34 @@ export class Create_User_Usecase implements ICreateUserUseCase {
       password: hashedPasswordIS,
     }); //Convert DTO to Entity using mapper, This adds UUID, prepares data for storage
 
-    const newUser = await this.userRepository.create(user);
+    // Instead of saving to DB, we store the entity data in Redis until verification
     const otp = this.otpService.generateOTP();
 
     logger.info(`''''''''''''otp is'''''''''''''''''''${otp}`);
 
-    await this.redisCache.set(`otp:${newUser.email}`, otp, 300);
+    // Store the raw user data in Redis for verification later
+    const pendingUserData = {
+      id: user.id,
+      email: user.email,
+      fullname: user.fullname,
+      passwordHash: user.password,
+      phone: user.phone,
+      role: user.role,
+      isEmailVerified: false,
+      isActive: true,
+      isSuspended: false,
+      createdAt: new Date().toISOString(),
+    };
+
+    await this.redisCache.set(`pending_user:${user.email}`, JSON.stringify(pendingUserData), 300);
+    await this.redisCache.set(`otp:${user.email}`, otp, 300);
+
     await this.mailService.sendMail(
-      newUser.email,
+      user.email,
       'verify your Email by typing the otp',
       `your OTP code is ${otp}`,
     );
 
-    return newUser;
+    return user;
   }
 }
