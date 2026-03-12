@@ -15,12 +15,12 @@ export class App {
   }
 
   private middlewareConfigs() {
-    // this._app.use(
-    //   cors({
-    //     origin: [process.env.CLIENT_SIDE_URL || `http://localhost:5173`],
-    //     credentials: true,
-    //   }),
-    // );
+  //   this._app.use(
+  //     cors({
+  //       origin: [process.env.CLIENT_SIDE_URL || `http://localhost:5173`],
+  //       credentials: true,
+  //     }),
+  //   );
 
     const allowedOrigins = ['http://localhost:5173', 'http://localhost:5174'];
 

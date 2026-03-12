@@ -10,6 +10,7 @@ import { IHashService } from '@application/Interfaces/Services/IHashService';
 import { logger } from '@shared/Log/logger';
 import { TokenTypes } from '@shared/Types/tokens';
 import { inject, injectable } from 'tsyringe';
+import { PhoneAlreadyExistError, UserAlreadyExistError } from '@shared/Errors/User_Errors';
 
 //this is where everything gets connected //@injectable() tells tsyringe "this class can be created by the main container
 //this class represents a specific single operation.which is creating new user // Single Responsibility Principle
@@ -39,12 +40,12 @@ export class Create_User_Usecase implements ICreateUserUseCase {
     const isUserExist = await this.userRepository.findByEmail(dto.email);
 
     if (isUserExist) {
-      throw new Error('User alredy exists');
+      throw new UserAlreadyExistError()
     }
     const isPhoneExist = await this.userRepository.findByPhone(dto.phone);
 
     if (isPhoneExist) {
-      throw new Error('phone number already exist');
+      throw new PhoneAlreadyExistError()
     }
 
     const hashedPasswordIS = await this.hashService.hash(dto.password);
@@ -66,7 +67,7 @@ export class Create_User_Usecase implements ICreateUserUseCase {
       passwordHash: user.password,
       phone: user.phone,
       role: user.role,
-      isEmailVerified: false,
+      isEmailVerified: true,
       isActive: true,
       isSuspended: false,
       createdAt: new Date().toISOString(),

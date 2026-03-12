@@ -19,6 +19,7 @@ export class UserManagementController {
 
         const result = await this.useCase.getUsers(page, limit, role);
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const response: ApiResponse<any> = {
             success: true,
             message: 'Fetched users',
