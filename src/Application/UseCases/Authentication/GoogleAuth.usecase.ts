@@ -1,50 +1,95 @@
-import { IFirebaseService } from "@application/Interfaces/Services/IFirebaseService";
-import { IJwtService } from "@application/Interfaces/Services/IJwtService";
-import { UserEntity } from "@core/Entities/user.entity";
-import { IUserRepository } from "@core/Interfaces/IUserRepository";
-import { UserRole } from "@shared/Enums/user.role.type";
-import { TokenTypes } from "@shared/Types/tokens";
-import { inject, injectable } from "tsyringe";
+import { IFirebaseService } from '@application/Interfaces/Services/IFirebaseService';
+import { IJwtService } from '@application/Interfaces/Services/IJwtService';
+import { UserEntity } from '@core/Entities/user.entity';
+import { IUserRepository } from '@core/Interfaces/IUserRepository';
+import { UserRole } from '@shared/Enums/user.role.type';
+import { logger } from '@shared/Log/logger';
+import { TokenTypes } from '@shared/Types/tokens';
+import { inject, injectable } from 'tsyringe';
 
 @injectable()
 export class GoogleAuthUseCase {
-    constructor(
-        @inject(TokenTypes.IUserRepository)
-        private readonly userRepository: IUserRepository,
-        @inject(TokenTypes.IFirebaseService)
-        private readonly firebaseService: IFirebaseService,
-        @inject(TokenTypes.IJwtService)
-        private readonly jwtService: IJwtService
-    ) { }
+  constructor(
+    @inject(TokenTypes.IUserRepository)
+    private readonly userRepository: IUserRepository,
+    @inject(TokenTypes.IFirebaseService)
+    private readonly firebaseService: IFirebaseService,
+    @inject(TokenTypes.IJwtService)
+    private readonly jwtService: IJwtService,
+  ) {}
 
-    async execute(idToken: string, selectedRole: UserRole) {
-        const { email, fullname } = await this.firebaseService.verifyIdToken(idToken);
 
-        let user = await this.userRepository.findByEmail(email);
+  async execute(idToken: string, selectedRole: UserRole) {
+  const { email, fullname } =
+    await this.firebaseService.verifyIdToken(idToken);
 
-        if (!user) {
-            user = UserEntity.create({
-                id: crypto.randomUUID(),
-                email,
-                fullname,
-                passwordHash: 'GOOGLE_AUTH_RANDOM_PASSWORD_FOR_HASH',
-                phone: 'N/A',
-                role: selectedRole,
-                isEmailVerified: true
-            });
-            await this.userRepository.create(user);
-        }
+  let user = await this.userRepository.findByEmail(email);
 
-        const tokens = this.jwtService.createPairofJwtTokens({
-            userId: user.id,
-            email: user.email,
-            role: user.role
-        });
+  if (!user) {
+    const emailPrefix = email.split('@')[0];
+    const randomSuffix = Math.random().toString(36).substring(2, 8);
+    const uniquePhone = `${emailPrefix}_${randomSuffix}`;
 
-        return {
-            user,
-            accessToken: tokens.accessToken,
-            refreshToken: tokens.refreshToken
-        };
-    }
+    logger.info(`Creating new google user: ${email}`);
+
+    const newUser = UserEntity.create({
+      id: crypto.randomUUID(),
+      email,
+      fullname,
+      passwordHash: 'GOOGLE_AUTH_RANDOM_PASSWORD_FOR_HASH',
+      phone: uniquePhone,
+      role: selectedRole,
+      isEmailVerified: true,
+    });
+
+    user = await this.userRepository.create(newUser);
+  }
+
+  const tokens = this.jwtService.createPairofJwtTokens({
+    userId: user.id,
+    email: user.email,
+    role: user.role,
+  });
+
+  return {
+    user,
+    accessToken: tokens.accessToken,
+    refreshToken: tokens.refreshToken,
+  };
+}
+
+//   async execute(idToken: string, selectedRole: UserRole) {
+//     const { email, fullname } = await this.firebaseService.verifyIdToken(idToken);
+
+//     let user = await this.userRepository.findByEmail(email);
+//     if (!user) {
+//       const emailPrefix = email.split('@')[0];
+//       const randomSuffix = Math.random().toString(36).substring(2, 8);
+//       const uniquePhone = `${emailPrefix}_${randomSuffix}`;
+
+//       logger.info(`Creating new ggoogle user: ${email}`);
+
+//       user = UserEntity.create({
+//         id: crypto.randomUUID(),
+//         email,
+//         fullname,
+//         passwordHash: 'GOOGLE_AUTH_RANDOM_PASSWORD_FOR_HASH',
+//         phone: uniquePhone,
+//         role: selectedRole,
+//         isEmailVerified: true,
+//       });
+
+//       const tokens = this.jwtService.createPairofJwtTokens({
+//         userId: user.id,
+//         email: user.email,
+//         role: user.role,
+//       });
+
+//       return {
+//         user,
+//         accessToken: tokens.accessToken,
+//         refreshToken: tokens.refreshToken,
+//       };
+//     }
+//   }
 }

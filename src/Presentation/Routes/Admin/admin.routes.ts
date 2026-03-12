@@ -13,7 +13,6 @@ export class AdminRoutes extends BaseRoute {
         super();
         this.initializeRoutes();
     }
-
     protected initializeRoutes(): void {
         this.router.post('/login', asyncHandlerFunction(this.adminLoginController.login.bind(this.adminLoginController)));
 

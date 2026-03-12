@@ -1,7 +1,11 @@
-import { UserEntity } from "@core/Entities/user.entity";
-
-export interface LoginResponseDTO{
-    user:UserEntity,
-    accessToken:string,
-    refreshToken:string
+export interface LoginResponseDTO {
+    user: {
+        id: string;
+        email: string;
+        fullname: string;
+        phone: string;
+        role: string;
+    },
+    accessToken: string,
+    refreshToken: string
 }

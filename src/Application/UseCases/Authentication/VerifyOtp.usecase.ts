@@ -111,7 +111,7 @@ export class VerifyOtpUseCase implements IVerifyOtpUseCase {
     logger.info(`otp verification with the main ${dto.email}`);
     this.validateInputOfOTP(dto);
 
-    // Instead of findByEmail in DB, we check Redis for pending registration
+    // Instead of findByEmail in DB, check Redis for pending registration
     const pendingUserJson = await this.redisCache.get(`pending_user:${dto.email}`);
     if (!pendingUserJson) {
       // Check if user already exists in DB (maybe already verified)
@@ -132,15 +132,15 @@ export class VerifyOtpUseCase implements IVerifyOtpUseCase {
 
     logger.info('otp verified succesfully');
 
-    // Parse the pending user data
+    // parse the pending user data
     const userData = JSON.parse(pendingUserJson);
     const user = UserEntity.create({
       ...userData,
       createdAt: new Date(userData.createdAt),
-      isEmailVerified: true // Mark as verified before saving
+      isEmailVerified: true // ot willbe markd as verified before saving
     });
 
-    // Save to DB for the first time
+    // Save to ddb for the first time
     const newUser = await this.userRepository.create(user);
     logger.info(`users email has been verified and saved to database`);
 
