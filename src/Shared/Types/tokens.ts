@@ -13,5 +13,6 @@ export const TokenTypes = {
     IFirebaseService: 'IFirebaseService',
     IGoogleAuthUseCase: 'IGoogleAuthUseCase',
     UserManagementUseCase: 'UserManagementUseCase',
-    AdminUserManagementUseCase: "AdminUserManagementUseCase"
+    AdminUserManagementUseCase: "AdminUserManagementUseCase",
+    IRefreshTokenUseCase: 'IRefreshTokenUseCase'
 }

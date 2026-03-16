@@ -13,6 +13,8 @@ import { ForgotPasswordUseCase } from '@application/UseCases/Authentication/Forg
 import { UserManagementUseCase } from '@application/UseCases/Admin/UserManagement.usecase';
 import { IUserManagement } from '@application/Interfaces/Admin/IUserManagement';
 import { GoogleAuthUseCase } from '@application/UseCases/Authentication/GoogleAuth.usecase';
+import { IRefreshTokenUseCase } from '@application/Interfaces/Auth/IRefreshTokenUseCase';
+import { RefreshTokenUseCase } from '@application/UseCases/Authentication/RefreshToken.usecase';
 
 export class UseCaseModule {
   static registerModules(): void {
@@ -37,6 +39,10 @@ export class UseCaseModule {
     })
     container.register<GoogleAuthUseCase>(TokenTypes.IGoogleAuthUseCase, {
       useClass: GoogleAuthUseCase
+    })
+
+    container.register<IRefreshTokenUseCase>(TokenTypes.IRefreshTokenUseCase,{
+      useClass:RefreshTokenUseCase
     })
   }
 }

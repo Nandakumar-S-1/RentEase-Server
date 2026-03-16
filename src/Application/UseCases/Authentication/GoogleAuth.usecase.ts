@@ -1,14 +1,16 @@
+import { GoogleAuthRequestDTO } from '@application/Data-Transfer-Object/Authentication/Request/GoogleAuthRequestDTO';
+import { LoginResponseDTO } from '@application/Data-Transfer-Object/Authentication/Response/LoginResponseDTO';
+import { IGoogleAuthUseCase } from '@application/Interfaces/Auth/IGoogleAuthUseCase';
 import { IFirebaseService } from '@application/Interfaces/Services/IFirebaseService';
 import { IJwtService } from '@application/Interfaces/Services/IJwtService';
 import { UserEntity } from '@core/Entities/user.entity';
 import { IUserRepository } from '@core/Interfaces/IUserRepository';
-import { UserRole } from '@shared/Enums/user.role.type';
 import { logger } from '@shared/Log/logger';
 import { TokenTypes } from '@shared/Types/tokens';
 import { inject, injectable } from 'tsyringe';
 
 @injectable()
-export class GoogleAuthUseCase {
+export class GoogleAuthUseCase implements IGoogleAuthUseCase {
   constructor(
     @inject(TokenTypes.IUserRepository)
     private readonly userRepository: IUserRepository,
@@ -19,8 +21,9 @@ export class GoogleAuthUseCase {
   ) {}
 
 
-  async execute(idToken: string, selectedRole: UserRole) {
-  const { email, fullname } =
+  async execute(dto:GoogleAuthRequestDTO):Promise<LoginResponseDTO> {
+    const {idToken,role}=dto
+    const { email, fullname } =
     await this.firebaseService.verifyIdToken(idToken);
 
   let user = await this.userRepository.findByEmail(email);
@@ -38,7 +41,7 @@ export class GoogleAuthUseCase {
       fullname,
       passwordHash: 'GOOGLE_AUTH_RANDOM_PASSWORD_FOR_HASH',
       phone: uniquePhone,
-      role: selectedRole,
+      role: role,
       isEmailVerified: true,
     });
 
@@ -52,7 +55,13 @@ export class GoogleAuthUseCase {
   });
 
   return {
-    user,
+    user:{
+      id:user.id,
+      email:user.email,
+      fullname:user.fullname,
+      phone:user.fullname,
+      role:user.role
+    },
     accessToken: tokens.accessToken,
     refreshToken: tokens.refreshToken,
   };

@@ -13,6 +13,7 @@ export class Container_Setup {
     ServiceModule.registerModules();
   }
 }
+//App starts
 Container_Setup.registerAll();
 
 //here is where the DI happens .
