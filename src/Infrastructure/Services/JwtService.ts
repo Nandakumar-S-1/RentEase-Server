@@ -15,10 +15,10 @@ import { IJwtService } from '@application/Interfaces/Services/IJwtService';
 
 @injectable()
 export class JwtService implements IJwtService {
-  private readonly accessTokenSecret: string;
-  private readonly refreshTokenSecret: string;
-  private readonly accessTokenExpiry;
-  private readonly refreshTokenExpiry;
+  private readonly _accessTokenSecret: string;
+  private readonly _refreshTokenSecret: string;
+  private readonly _accessTokenExpiry;
+  private readonly _refreshTokenExpiry;
 
   constructor() {
     if (!process.env.JWT_ACCESS_TOKEN_SECRET) {
@@ -34,19 +34,19 @@ export class JwtService implements IJwtService {
       throw new Error('JWT_REFRESH_TOKEN_EXPIRY is missing');
     }
 
-    this.accessTokenSecret = process.env.JWT_ACCESS_TOKEN_SECRET;
-    this.refreshTokenSecret = process.env.JWT_REFRESH_TOKEN_SECRET;
-    this.accessTokenExpiry = process.env.JWT_ACCESS_TOKEN_EXPIRY as SignOptions['expiresIn'];
-    this.refreshTokenExpiry = process.env.JWT_REFRESH_TOKEN_EXPIRY as SignOptions['expiresIn'];
+    this._accessTokenSecret = process.env.JWT_ACCESS_TOKEN_SECRET;
+    this._refreshTokenSecret = process.env.JWT_REFRESH_TOKEN_SECRET;
+    this._accessTokenExpiry = process.env.JWT_ACCESS_TOKEN_EXPIRY as SignOptions['expiresIn'];
+    this._refreshTokenExpiry = process.env.JWT_REFRESH_TOKEN_EXPIRY as SignOptions['expiresIn'];
   }
 
   private createAccessToken(payload: ITokenPayloadContent): string {
     try {
       const signOptions: SignOptions = {
-        expiresIn: this.accessTokenExpiry,
+        expiresIn: this._accessTokenExpiry,
         algorithm: 'HS256',
       };
-      const token = jwt.sign(payload, this.accessTokenSecret, signOptions);
+      const token = jwt.sign(payload, this._accessTokenSecret, signOptions);
 
       logger.info(`access token for user id:${payload.userId}`);
       return token;
@@ -59,11 +59,11 @@ export class JwtService implements IJwtService {
   private createRefreshToken(payload: ITokenPayloadContent): string {
     try {
       const signOptions: SignOptions = {
-        expiresIn: this.refreshTokenExpiry,
+        expiresIn: this._refreshTokenExpiry,
         algorithm: 'HS256',
       };
 
-      const token = jwt.sign(payload, this.refreshTokenSecret, signOptions);
+      const token = jwt.sign(payload, this._refreshTokenSecret, signOptions);
 
       logger.info(`refreshtoken for ${payload.userId} created`);
       return token;
@@ -91,7 +91,7 @@ export class JwtService implements IJwtService {
 
   verifyTheAccessToken(token: string): ITokenPayloadContent {
     try {
-      const decoded = jwt.verify(token, this.accessTokenSecret) as ITokenPayloadContent;
+      const decoded = jwt.verify(token, this._accessTokenSecret) as ITokenPayloadContent;
       logger.info(`${decoded.userId}'s access token verified`);
       return decoded;
     } catch (error) {
@@ -102,7 +102,7 @@ export class JwtService implements IJwtService {
 
   verifyTheRefreshToken(token: string): ITokenPayloadContent {
     try {
-      const decoded = jwt.verify(token, this.refreshTokenSecret) as ITokenPayloadContent;
+      const decoded = jwt.verify(token, this._refreshTokenSecret) as ITokenPayloadContent;
       logger.info(`${decoded.userId}' s refresh token has verified`);
 
       return decoded;

@@ -15,6 +15,10 @@ import { ResendOtpResponseDTO } from '@application/Data-Transfer-Object/Authenti
 import { IForgotPasswordUseCase } from '@application/Interfaces/Auth/IForgotPasswordUseCase';
 import { IHashService } from '@application/Interfaces/Services/IHashService';
 import { IUserRepository } from '@core/Interfaces/IUserRepository';
+import { GoogleAuthUseCase } from '@application/UseCases/Authentication/GoogleAuth.usecase';
+import { InvalidOtpError } from '@shared/Errors/OTP_Errors';
+import { IRefreshTokenUseCase } from '@application/Interfaces/Auth/IRefreshTokenUseCase';
+import { RefreshTokenResponseDTO } from '@application/Data-Transfer-Object/Authentication/Response/IRefreshTokenResponseDTO';
 
 @injectable()
 export class AuthController {
@@ -31,8 +35,14 @@ export class AuthController {
         @inject(TokenTypes.IResendOtpUseCase)
         private readonly _resendOtpUseCase: IResendOtpUseCase,
 
+        @inject(TokenTypes.ILoginUseCase)
+        private readonly _loginUseCase: ILoginUserUseCase,
+
         @inject(TokenTypes.IForgotPasswordUseCase)
         private readonly _forgotPasswordUsecase: IForgotPasswordUseCase,
+
+        @inject(TokenTypes.IGoogleAuthUseCase)
+        private readonly _googleAuthUseCase:GoogleAuthUseCase,
 
         @inject(TokenTypes.IHashService)
         private readonly _hashService:IHashService,
@@ -40,8 +50,8 @@ export class AuthController {
         @inject(TokenTypes.IRedisCache)
         private readonly _redisService: IRedisCache,
 
-        @inject(TokenTypes.ILoginUseCase)
-        private readonly _loginUseCase: ILoginUserUseCase
+        @inject(TokenTypes.IRefreshTokenUseCase)
+        private readonly _refreshTokenUseCase:IRefreshTokenUseCase,
     ) { }
 
     register = async (req: Request, res: Response): Promise<Response> => {
@@ -63,6 +73,57 @@ export class AuthController {
         };
         return res.status(Http_StatusCodes.CREATED).json(response)
     };
+
+    login = async (req: Request, res: Response): Promise<Response> => {
+        logger.info('login request')
+        const { email, password } = req.body
+
+        const result = await this._loginUseCase.execute({
+            email, password
+        })
+        const response: ApiResponse<LoginResponseDTO> = {
+            success: true,
+            message: Auth_Response_Messages.LOGIN_SUCCESS,
+            data: {
+                user: {
+                    id: result.user.id,
+                    email: result.user.email,
+                    fullname: result.user.fullname,
+                    phone: result.user.phone,
+                    role: result.user.role
+                },
+                accessToken: result.accessToken,
+                refreshToken: result.refreshToken
+            }
+        }
+        return res.status(Http_StatusCodes.OK).json(response)
+    }
+
+    googleAuth = async(req:Request,res:Response):Promise<Response>=>{
+        logger.info('Auth request for google auth')
+        const {idToken,role}=req.body
+        
+        const result =  await this._googleAuthUseCase.execute(
+            {idToken,role}
+        )
+
+        const response :ApiResponse<LoginResponseDTO>={
+            success:true,
+            message:Auth_Response_Messages.GOOGLE_LOGIN_SUCCESS,
+            data:{
+                user: {
+                    id: result.user.id,
+                    email: result.user.email,
+                    fullname: result.user.fullname,
+                    phone: result.user.phone,
+                    role: result.user.role
+                },
+                accessToken: result.accessToken,
+                refreshToken: result.refreshToken
+            }
+        }
+        return res.send(Http_StatusCodes.OK).json(response)
+    }
 
     verifyOtp = async (req: Request, res: Response): Promise<Response> => {
         const { email, otp } = req.body
@@ -116,6 +177,29 @@ export class AuthController {
         return res.status(Http_StatusCodes.OK).json(response)
     }
 
+    verifyResetOtp = async(req:Request,res:Response):Promise<Response>=>{
+        const {email,otp}=req.body
+        logger.info('Verify reset otp')
+
+        const redisKey=`resetPassword_otp:${email}`
+        const storedOtp = await this._redisService.get(redisKey)
+
+        if(!storedOtp){
+            throw new InvalidOtpError('Otp Might be expired or not found')
+        }
+        if(storedOtp!==otp){
+            throw new InvalidOtpError('Invalid Otp, Try again')
+        }
+        await this._redisService.set(`resetPassword_otp:${email}`,'true',300)
+        await this._redisService.delete(redisKey)
+
+        const response:ApiResponse<null>={
+            success:true,
+            message:Auth_Response_Messages.OTP_VERIFIED
+        }
+        return res.status(Http_StatusCodes.OK).json(response)
+    }
+
     resetPassword = async(req:Request,res:Response):Promise<Response>=>{
         const {email,newPassword}=req.body
         logger.info(`Password reset requested for: ${email}`)
@@ -146,30 +230,24 @@ export class AuthController {
         return res.send(Http_StatusCodes.OK).json(response)
     }
 
-    login = async (req: Request, res: Response): Promise<Response> => {
-        logger.info('login request')
-        const { email, password } = req.body
+    refreshToken = async(req:Request,res:Response):Promise<Response>=>{
+        const {refreshToken}=req.body
 
-        const result = await this._loginUseCase.execute({
-            email, password
-        })
-        const response: ApiResponse<LoginResponseDTO> = {
-            success: true,
-            message: Auth_Response_Messages.LOGIN_SUCCESS,
-            data: {
-                user: {
-                    id: result.user.id,
-                    email: result.user.email,
-                    fullname: result.user.fullname,
-                    phone: result.user.phone,
-                    role: result.user.role
-                },
-                accessToken: result.accessToken,
-                refreshToken: result.refreshToken
-            }
+        logger.info('Refresh Token request')
+        if(!refreshToken){
+            return res.status(Http_StatusCodes.BAD_REQUEST).json({
+                success:false,
+                message:Auth_Response_Messages.MISSING_REFRESH_TOKEN
+            })
         }
-        return res.status(Http_StatusCodes.OK).json(response)
-    }
+        const tokens = await this._refreshTokenUseCase.execute(refreshToken)
 
+        const response:ApiResponse<RefreshTokenResponseDTO>={
+            success:true,
+            message:Auth_Response_Messages.TOKEN_REFRESHED,
+            data:tokens
+        }
+        return res.send(Http_StatusCodes.OK).json(response)
+    }
 
 }

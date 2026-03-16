@@ -5,7 +5,7 @@ import { emailConfig } from '@infrastructure/Config/email.config';
 
 @injectable()
 export class MailService implements IMailService {
-  private transporter = nodemailer.createTransport({
+  private _transporter = nodemailer.createTransport({
     host: emailConfig.host,
     port: emailConfig.port,
     auth: {
@@ -16,11 +16,11 @@ export class MailService implements IMailService {
   });
 
   async verifyConnection() {
-    await this.transporter.verify();
+    await this._transporter.verify();
   }
 
   async sendMail(to: string, subject: string, html: string): Promise<void> {
-    await this.transporter.sendMail({
+    await this._transporter.sendMail({
       from: `RentEase  ${emailConfig.user}`,
       to,
       subject,

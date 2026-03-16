@@ -13,21 +13,21 @@ import { IJwtService } from '@application/Interfaces/Services/IJwtService';
 
 @injectable()
 export class VerifyOtpUseCase implements IVerifyOtpUseCase {
-  private readonly MAX_OTP_WRITE_ATTEMPTS = 5;
-  private readonly OTP_ATTEMPT_TTL = 900;
+  private readonly _MAX_OTP_WRITE_ATTEMPTS = 5;
+  private readonly _OTP_ATTEMPT_TTL = 900;
 
   constructor(
     @inject(TokenTypes.IUserRepository)
-    private readonly userRepository: IUserRepository,
+    private readonly _userRepository: IUserRepository,
 
-    @inject('IRedisCache')
-    private readonly redisCache: IRedisCache,
+    @inject(TokenTypes.IRedisCache)
+    private readonly _redisCache: IRedisCache,
 
-    @inject('IJwtService')
-    private readonly jwtService: IJwtService,
+    @inject(TokenTypes.IJwtService)
+    private readonly _jwtService: IJwtService,
   ) { }
 
-  private validateInputOfOTP(dto: IVerifyOtpRequestDTO): void {
+  private _validateInputOfOTP(dto: IVerifyOtpRequestDTO): void {
     if (!dto.email || !dto.otp) {
       throw new Error('Email and OTP required');
     }
@@ -45,21 +45,21 @@ export class VerifyOtpUseCase implements IVerifyOtpUseCase {
   private async checkAttemptsCount(email: string): Promise<void> {
     const attemptKey = `otp:attempts:${email}`;
     try {
-      const currentAttemptsString = await this.redisCache.get(attemptKey);
+      const currentAttemptsString = await this._redisCache.get(attemptKey);
       if (currentAttemptsString === null) {
-        await this.redisCache.set(attemptKey, '1', this.OTP_ATTEMPT_TTL);
+        await this._redisCache.set(attemptKey, '1', this._OTP_ATTEMPT_TTL);
         return;
       }
 
       const currentAttempts = parseInt(currentAttemptsString, 10);
 
-      if (currentAttempts >= this.MAX_OTP_WRITE_ATTEMPTS) {
+      if (currentAttempts >= this._MAX_OTP_WRITE_ATTEMPTS) {
         logger.warn(`alredy exceeded maximum OTP attempts for the email ${email}`);
         throw new MaxOtpAttemptError(`Maximum OTP verification Attempts reached`);
       }
 
       const newAttempt = currentAttempts + 1;
-      await this.redisCache.set(attemptKey, newAttempt.toString(), this.OTP_ATTEMPT_TTL);
+      await this._redisCache.set(attemptKey, newAttempt.toString(), this._OTP_ATTEMPT_TTL);
 
       logger.info(`otp attempt ${newAttempt} for email ${email}`);
     } catch (error) {
@@ -70,10 +70,10 @@ export class VerifyOtpUseCase implements IVerifyOtpUseCase {
     }
   }
 
-  private async retreveOtpFromRedis(email: string): Promise<string> {
+  private async _retreveOtpFromRedis(email: string): Promise<string> {
     const otpKey = `otp:${email}`;
     try {
-      const otp = await this.redisCache.get(otpKey);
+      const otp = await this._redisCache.get(otpKey);
       if (otp === null) {
         logger.warn('Otp isnt there in redis for this email---------');
         throw new OtpExpiredError('OTP has expired or does not exist. Please request a new one');
@@ -87,18 +87,18 @@ export class VerifyOtpUseCase implements IVerifyOtpUseCase {
     }
   }
 
-  private async clearRedisData(email: string): Promise<void> {
+  private async _clearRedisData(email: string): Promise<void> {
     const otpKey = `otp:${email}`;
     const attemptKey = `otp:attempts:${email}`;
     const pendingUserKey = `pending_user:${email}`;
     try {
-      await this.redisCache.delete(otpKey);
+      await this._redisCache.delete(otpKey);
       logger.info('otp deleted from redis');
 
-      await this.redisCache.delete(attemptKey);
+      await this._redisCache.delete(attemptKey);
       logger.info(`the counter to attempt deleted from redisdb`);
 
-      await this.redisCache.delete(pendingUserKey);
+      await this._redisCache.delete(pendingUserKey);
       logger.info('pending user deleted from redis');
     } catch (error) {
       logger.error({ error }, `error clearing redis data`);
@@ -109,13 +109,13 @@ export class VerifyOtpUseCase implements IVerifyOtpUseCase {
     dto: IVerifyOtpRequestDTO,
   ): Promise<{ user: UserEntity; refreshToken: string; accessToken: string }> {
     logger.info(`otp verification with the main ${dto.email}`);
-    this.validateInputOfOTP(dto);
+    this._validateInputOfOTP(dto);
 
     // Instead of findByEmail in DB, check Redis for pending registration
-    const pendingUserJson = await this.redisCache.get(`pending_user:${dto.email}`);
+    const pendingUserJson = await this._redisCache.get(`pending_user:${dto.email}`);
     if (!pendingUserJson) {
       // Check if user already exists in DB (maybe already verified)
-      const existingUser = await this.userRepository.findByEmail(dto.email);
+      const existingUser = await this._userRepository.findByEmail(dto.email);
       if (existingUser) {
         throw new Error('Email was verified already');
       }
@@ -124,7 +124,7 @@ export class VerifyOtpUseCase implements IVerifyOtpUseCase {
 
     await this.checkAttemptsCount(dto.email);
 
-    const storedOtpIs = await this.retreveOtpFromRedis(dto.email);
+    const storedOtpIs = await this._retreveOtpFromRedis(dto.email);
     if (storedOtpIs !== dto.otp) {
       logger.warn('Invalid otp attempt');
       throw new InvalidOtpError('Invalid Otp,please try again carefulluy');
@@ -141,12 +141,12 @@ export class VerifyOtpUseCase implements IVerifyOtpUseCase {
     });
 
     // Save to ddb for the first time
-    const newUser = await this.userRepository.create(user);
+    const newUser = await this._userRepository.create(user);
     logger.info(`users email has been verified and saved to database`);
 
-    await this.clearRedisData(dto.email);
+    await this._clearRedisData(dto.email);
 
-    const tokens = this.jwtService.createPairofJwtTokens({
+    const tokens = this._jwtService.createPairofJwtTokens({
       userId: newUser.id,
       email: newUser.email,
       role: newUser.role,

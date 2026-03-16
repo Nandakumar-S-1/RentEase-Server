@@ -1,3 +1,26 @@
+minimal explanation
+
+1. App starts → Container_Setup.registerAll()
+2. tsyringe stores: { "IUserRepository" → UserRepository class }
+3. Request hits route → route needs AuthController
+4. tsyringe sees AuthController needs ILoginUserUseCase
+5. tsyringe sees LoginUseCase needs IUserRepository, IHashService, IJwtService  
+6. tsyringe creates UserRepository, BcryptHashService, JwtService
+7. tsyringe injects them into LoginUseCase
+8. tsyringe injects LoginUseCase into AuthController
+9. Controller.login() runs with all dependencies ready
+
+
+
+
+
+
+
+
+detailed explanation
+
+
+
 1️⃣ Frontend sends POST /api/users/register
     { email: "test@test.com", password: "123", fullname: "Test", phone: "123", role: "TENANT" }
     
@@ -42,3 +65,13 @@
 
 1️⃣3️⃣ Frontend receives:
     { success: true, data: { id: "...", email: "test@test.com", ... } }
+
+
+
+
+
+
+
+
+
+
