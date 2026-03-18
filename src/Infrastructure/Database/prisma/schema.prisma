@@ -63,8 +63,22 @@ model OwnerProfile {
   user       User     @relation(fields: [user_id], references: [id])
   bio        String?
   occupation String?
+
+  documentType  String?
+  documentUrl   String?
+  verificationStatus  verificationStatus @default(PENDING)
+  rejectionReason String?
+  verifiedAt  DateTime @updatedAt
+
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+}
+
+enum verificationStatus{
+  PENDING
+  SUBMITTED
+  VERIFIED
+  REJECTED
 }
 
 model TenantProfile {
