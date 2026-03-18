@@ -14,5 +14,6 @@ export const TokenTypes = {
     IGoogleAuthUseCase: 'IGoogleAuthUseCase',
     UserManagementUseCase: 'UserManagementUseCase',
     AdminUserManagementUseCase: "AdminUserManagementUseCase",
-    IRefreshTokenUseCase: 'IRefreshTokenUseCase'
+    IRefreshTokenUseCase: 'IRefreshTokenUseCase',
+    IOwnerProfileRepository:"IOwnerProfileRepository"
 }
