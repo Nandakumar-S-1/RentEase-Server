@@ -66,15 +66,15 @@ model OwnerProfile {
 
   documentType  String?
   documentUrl   String?
-  verificationStatus  verificationStatus @default(PENDING)
+  verificationStatus  VerificationStatus @default(PENDING)
   rejectionReason String?
-  verifiedAt  DateTime @updatedAt
+  verifiedAt  DateTime @default(now())
 
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 }
 
-enum verificationStatus{
+enum VerificationStatus{
   PENDING
   SUBMITTED
   VERIFIED
