@@ -15,5 +15,7 @@ export const TokenTypes = {
     UserManagementUseCase: 'UserManagementUseCase',
     AdminUserManagementUseCase: "AdminUserManagementUseCase",
     IRefreshTokenUseCase: 'IRefreshTokenUseCase',
-    IOwnerProfileRepository:"IOwnerProfileRepository"
+    IOwnerProfileRepository:"IOwnerProfileRepository",
+    SubmitVerificationUseCase: 'SubmitVerificationUseCase',
+    VerifyOwnerUseCase: 'VerifyOwnerUseCase',
 }

@@ -1,7 +1,10 @@
-import { OwnerProfile } from "@prisma/client";
+import { IBaseRepository } from "./Base/IBaseRepository";
+import { OwnerProfileEntity } from "@core/Entities/OwnerProfileEntity.entity";
+import { Owner_Verification_Staus } from "@shared/Enums/owner.verification.status";
 
-export interface IOwnerProfileRepository {
-    findByUserId(userId:string):Promise<OwnerProfile | null>
-    updateVerificatioinStatus(userId:string,status:string,reason?:string):Promise<void>
-    // updateDocumentURL(userId:string,documentType:string,documentUrl:string):Promise<void>;
+export interface IOwnerProfileRepository extends IBaseRepository<OwnerProfileEntity> {
+    findByUserId(userId:string):Promise<OwnerProfileEntity | null>
+    submitDocument(userId:string,docType:string,docUrl:string):Promise<OwnerProfileEntity>
+    updateVerificatioinStatus(userId:string,status:Owner_Verification_Staus.VERIFIED|Owner_Verification_Staus.REJECTED,rejectionReason?:string):Promise<OwnerProfileEntity>
+    findAllPending():Promise<OwnerProfileEntity[]>
 }
