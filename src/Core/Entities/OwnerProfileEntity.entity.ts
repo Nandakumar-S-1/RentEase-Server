@@ -1,5 +1,5 @@
 import { OwnerProfileTypeData } from '@core/Types/ownerProfile.types';
-import { Owner_Verification_Staus } from '@shared/Enums/owner.verification.status';
+import { Owner_Verification_Status  } from '@shared/Enums/owner.verification.status';
 import {OwnerVerifiedError,InvalidVerificationError,RejectionReasonError} from '../../Shared/Errors/Owner_Errors'
 export class OwnerProfileEntity {
   private constructor(
@@ -9,9 +9,9 @@ export class OwnerProfileEntity {
     private _bio: string | null,
     private _occupation: string | null,
     //verification fields
-    private _documentUrl: string,
-    private _documentType: string,
-    private _verificationStatus: Owner_Verification_Staus,
+    private _documentUrl: string |null,
+    private _documentType: string|null,
+    private _verificationStatus: Owner_Verification_Status ,
     private _rejectionReason: string | null,
     private _verifiedAt: Date | null,
     private readonly _createdAt: Date,
@@ -21,11 +21,11 @@ export class OwnerProfileEntity {
     return new OwnerProfileEntity(
       props.id,
       props.userId,
-      props.occupation ?? null,
       props.bio ?? null,
-      props.documentType ?? null,
-      props.documentUrl ?? null,
-      props.verificationStatus ?? Owner_Verification_Staus.PENDING,
+      props.occupation ?? null,
+      props.documentUrl ?? '',
+      props.documentType ?? '',
+      props.verificationStatus ?? Owner_Verification_Status .PENDING,
       props.rejectionReason ?? null,
       props.verifiedAt ?? null,
       props.createdAt ?? new Date(),
@@ -66,29 +66,29 @@ export class OwnerProfileEntity {
     return this._updatedAt;
   }
   documentSubmit(docType:string,docUrl:string):void{
-    if(this.verificationStatus===Owner_Verification_Staus.VERIFIED){
+    if(this.verificationStatus===Owner_Verification_Status .VERIFIED){
         throw new  OwnerVerifiedError()
     }
     this._documentType=docType
     this._documentUrl=docUrl
-    this._verificationStatus=Owner_Verification_Staus.SUBMITTED
+    this._verificationStatus=Owner_Verification_Status .SUBMITTED
   }
   approve():void{
-    if(this._verificationStatus!==Owner_Verification_Staus.SUBMITTED){
+    if(this._verificationStatus!==Owner_Verification_Status .SUBMITTED){
         throw new InvalidVerificationError(this._verificationStatus,'reject')
     }
-    this._verificationStatus=Owner_Verification_Staus.VERIFIED
+    this._verificationStatus=Owner_Verification_Status .VERIFIED
     this._verifiedAt=new Date()
     this._rejectionReason=null
   }
   reject(reason:string):void{
-    if(this.verificationStatus!==Owner_Verification_Staus.SUBMITTED){
+    if(this.verificationStatus!==Owner_Verification_Status .SUBMITTED){
         throw new InvalidVerificationError(this._verificationStatus,'approve')
     }
     if(!reason){
         throw new RejectionReasonError()
     }
-    this._verificationStatus=Owner_Verification_Staus.REJECTED
+    this._verificationStatus=Owner_Verification_Status .REJECTED
     this._rejectionReason=reason
   }
 }

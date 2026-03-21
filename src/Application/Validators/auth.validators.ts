@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import { UserRole } from '@shared/Enums/user.role.type';
 
 const fullname = z.string()
     .trim()
@@ -30,7 +29,7 @@ const otp = z.string()
     .regex(/^\d{6}$/, "OTP must be exactly 6 digits");
 
 
-// dto validation schemas -------------------------------------------- //
+// dto validation schemas -------------------------------------------- 
 
 export const registerSchema = z.object({
     email,

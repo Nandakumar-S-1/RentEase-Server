@@ -12,8 +12,22 @@ export const AUTH_ROUTES = {
 
 export const ADMIN_ROUTES = {
     LOGIN: '/login',
-    USERS: '/users',
-    VERIFY_OWNER: '/verify-owner',
+    USERS: {
+        BASE: '/users',
+        SUSPEND:'/users/suspend/:id',
+        ACTIVATE: '/users/activate/:id',
+        DEACTIVATE: '/users/deactivate/:id',
+    },
+    OWNER_VERIFICATION:{
+        PENDING:'/owners/pending',
+        VERIFY: '/owners/:id/verify',
+        REJECT: '/owners/:id/reject'
+    }
+} as const;
+
+export const OWNER_ROUTES = {
+  SUBMIT: '/submit-verification',
+  STATUS: '/verification-status',
 } as const;
 
 export const API_PREFIXES = {

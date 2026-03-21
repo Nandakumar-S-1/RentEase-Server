@@ -1,69 +1,92 @@
-import { OwnerProfileEntity } from "@core/Entities/OwnerProfileEntity.entity";
-import { IOwnerProfileRepository } from "@core/Interfaces/IOwnerRepository";
-import { prisma } from "@infrastructure/Database/prisma/prisma.client";
-import { OwnerProfilePersistenceMapper } from "@infrastructure/Mappers/OwnerProfilePersistence.mapper";
-import { Owner_Verification_Staus } from "@shared/Enums/owner.verification.status";
-import { logger } from "@shared/Log/logger";
-import { injectable } from "tsyringe";
+import { OwnerProfileEntity } from '@core/Entities/OwnerProfileEntity.entity';
+import { IOwnerProfileRepository } from '@core/Interfaces/IOwnerRepository';
+import { prisma } from '@infrastructure/Database/prisma/prisma.client';
+import { OwnerProfilePersistenceMapper } from '@infrastructure/Mappers/OwnerProfilePersistence.mapper';
+import { Owner_Verification_Status  } from '@shared/Enums/owner.verification.status';
+import { logger } from '@shared/Log/logger';
+import { injectable } from 'tsyringe';
 
 @injectable()
-export class OwnerProfileRepository implements IOwnerProfileRepository{
-    async create(entity: OwnerProfileEntity): Promise<OwnerProfileEntity> {
-        const result = await prisma.ownerProfile.create({
-            data:{
-                user_id:entity.userId,
-                bio:entity.bio,
-                occupation:entity.occupation
-            }
-        })
-        return OwnerProfilePersistenceMapper.toEntity(result)
+export class OwnerProfileRepository implements IOwnerProfileRepository {
+  async create(entity: OwnerProfileEntity): Promise<OwnerProfileEntity> {
+    const result = await prisma.ownerProfile.create({
+      data: {
+        userId: entity.userId,
+        bio: entity.bio,
+        occupation: entity.occupation,
+      },
+    });
+    return OwnerProfilePersistenceMapper.toEntity(result);
+  }
+  async findByUserId(userId: string): Promise<OwnerProfileEntity | null> {
+    const result = await prisma.ownerProfile.findUnique({
+      where: {
+        userId: userId,
+      },
+    });
+    if (!result) {
+      return null;
     }
-    async findByUserId(userId: string): Promise<OwnerProfileEntity | null> {
-        const result = await prisma.ownerProfile.findUnique({
-            where:{
-                user_id:userId
-            }
-        })
-        if(!result){
-            return null
-        }
-        return OwnerProfilePersistenceMapper.toEntity(result)
-    }
-    async submitDocument(userId: string, docType: string, docUrl: string): Promise<OwnerProfileEntity> {
-        const result =  await prisma.ownerProfile.update({
-            where:{
-                user_id:userId
-            },
-            data:{
-                documentType:docType,
-                documentUrl:docUrl,
-                verificationStatus:Owner_Verification_Staus.SUBMITTED
-            }
-        })
-        return OwnerProfilePersistenceMapper.toEntity(result)
-    }
+    return OwnerProfilePersistenceMapper.toEntity(result);
+  }
+  async submitDocument(
+    userId: string,
+    docType: string,
+    docUrl: string,
+  ): Promise<OwnerProfileEntity> {
+    const result = await prisma.ownerProfile.update({
+      where: {
+        userId: userId,
+      },
+      data: {
+        documentType: docType,
+        documentUrl: docUrl,
+        verificationStatus: Owner_Verification_Status .SUBMITTED,
+      },
+    });
+    return OwnerProfilePersistenceMapper.toEntity(result);
+  }
 
-    async updateVerificatioinStatus(userId: string, status: Owner_Verification_Staus.VERIFIED | Owner_Verification_Staus.REJECTED , rejectionReason?:string): Promise<OwnerProfileEntity> {
-        const result = await prisma.ownerProfile.update({
-            where:{
-                user_id:userId
-            },data:{
-                verificationStatus:status,
-                rejectionReason:rejectionReason??null,
-                verifiedAt: status== Owner_Verification_Staus.VERIFIED ? new Date() :null
-            }
-        })
-        logger.info(`Owner ${userId} verification status updated to ${status}`);
-        return OwnerProfilePersistenceMapper.toEntity(result)
-    }
+  async updateVerificationStatus(
+    userId: string,
+    status: Owner_Verification_Status .VERIFIED | Owner_Verification_Status .REJECTED,
+    rejectionReason?: string,
+  ): Promise<OwnerProfileEntity> {
+    const result = await prisma.ownerProfile.update({
+      where: {
+        userId: userId,
+      },
+      data: {
+        verificationStatus: status,
+        rejectionReason: rejectionReason ?? null,
+        verifiedAt: status == Owner_Verification_Status .VERIFIED ? new Date() : null,
+      },
+    });
+    logger.info(`Owner ${userId} verification status updated to ${status}`);
+    return OwnerProfilePersistenceMapper.toEntity(result);
+  }
 
-   async findAllPending(): Promise<OwnerProfileEntity[]> {
+  async save(entity: OwnerProfileEntity): Promise<OwnerProfileEntity> {
+    const result = await prisma.ownerProfile.update({
+      where: { userId: entity.userId },
+      data: {
+        documentType: entity.documentType,
+        documentUrl: entity.documentUrl,
+        verificationStatus: entity.verificationStatus,
+        rejectionReason: entity.rejectionReason,
+        verifiedAt: entity.verifiedAt,
+      },
+    });
+
+    return OwnerProfilePersistenceMapper.toEntity(result);
+  }
+
+  async findAllPending(): Promise<OwnerProfileEntity[]> {
     const result = await prisma.ownerProfile.findMany({
-        where:{
-            verificationStatus:Owner_Verification_Staus.SUBMITTED
-        }
-    })   
-    return result.map(OwnerProfilePersistenceMapper.toEntity) 
-   }
+      where: {
+        verificationStatus: Owner_Verification_Status .SUBMITTED,
+      },
+    });
+    return result.map(OwnerProfilePersistenceMapper.toEntity);
+  }
 }
-

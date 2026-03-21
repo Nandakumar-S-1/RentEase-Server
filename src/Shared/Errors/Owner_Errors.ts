@@ -1,6 +1,6 @@
 import { Http_StatusCodes } from '@shared/Enums/Http_StatusCodes';
 import { ProjectErrors } from './Base/BaseError';
-import { Owner_Verification_Staus } from '@shared/Enums/owner.verification.status';
+import { Owner_Verification_Status  } from '@shared/Enums/owner.verification.status';
 
 export class OwnerVerifiedError extends ProjectErrors {
   constructor() {
@@ -9,7 +9,7 @@ export class OwnerVerifiedError extends ProjectErrors {
 }
 
 export class InvalidVerificationError extends ProjectErrors {
-  constructor(currentState: Owner_Verification_Staus, action: string) {
+  constructor(currentState: Owner_Verification_Status , action: string) {
     super(
       Http_StatusCodes.BAD_REQUEST,
       'INVALID_VERIFICATION_STATE',
