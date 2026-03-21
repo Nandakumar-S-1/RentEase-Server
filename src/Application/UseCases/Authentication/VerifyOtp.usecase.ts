@@ -9,6 +9,10 @@ import { InvalidOtpError, MaxOtpAttemptError, OtpExpiredError } from '@shared/Er
 // import { IJwtService } from '@application/Interfaces/User-Interfaces/IJwtService';
 import { TokenTypes } from '@shared/Types/tokens';
 import { IJwtService } from '@application/Interfaces/Services/IJwtService';
+import { UserRole } from '@shared/Enums/user.role.type';
+import { IOwnerProfileRepository } from '@core/Interfaces/IOwnerRepository';
+import { OwnerProfileEntity } from '@core/Entities/OwnerProfileEntity.entity';
+import { uuidv4 } from 'zod';
 // import { JwtService } from '@infrastructure/Services/JwtService';
 
 @injectable()
@@ -25,6 +29,9 @@ export class VerifyOtpUseCase implements IVerifyOtpUseCase {
 
     @inject(TokenTypes.IJwtService)
     private readonly _jwtService: IJwtService,
+
+    @inject(TokenTypes.IOwnerProfileRepository)
+    private readonly _ownerRepository:IOwnerProfileRepository
   ) { }
 
   private _validateInputOfOTP(dto: IVerifyOtpRequestDTO): void {
@@ -111,7 +118,7 @@ export class VerifyOtpUseCase implements IVerifyOtpUseCase {
     logger.info(`otp verification with the main ${dto.email}`);
     this._validateInputOfOTP(dto);
 
-    // Instead of findByEmail in DB, check Redis for pending registration
+    // Instead of findByEmail in DB, check edis for pending registration
     const pendingUserJson = await this._redisCache.get(`pending_user:${dto.email}`);
     if (!pendingUserJson) {
       // Check if user already exists in DB (maybe already verified)
@@ -137,11 +144,16 @@ export class VerifyOtpUseCase implements IVerifyOtpUseCase {
     const user = UserEntity.create({
       ...userData,
       createdAt: new Date(userData.createdAt),
-      isEmailVerified: true // ot willbe markd as verified before saving
+      isEmailVerified: true // it willbe markd as verified before saving
     });
 
     // Save to ddb for the first time
     const newUser = await this._userRepository.create(user);
+    if(newUser.role===UserRole.OWNER){
+      await this._ownerRepository.create(
+        OwnerProfileEntity.create({id:uuidv4(),userId:newUser.id})
+      )
+    }
     logger.info(`users email has been verified and saved to database`);
 
     await this._clearRedisData(dto.email);

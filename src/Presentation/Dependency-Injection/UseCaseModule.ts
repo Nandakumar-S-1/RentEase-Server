@@ -15,6 +15,8 @@ import { IUserManagement } from '@application/Interfaces/Admin/IUserManagement';
 import { GoogleAuthUseCase } from '@application/UseCases/Authentication/GoogleAuth.usecase';
 import { IRefreshTokenUseCase } from '@application/Interfaces/Auth/IRefreshTokenUseCase';
 import { RefreshTokenUseCase } from '@application/UseCases/Authentication/RefreshToken.usecase';
+import { SubmitVerificationUseCase } from '@application/UseCases/Owner/SubmitVerification.usecase';
+import { VerifyOwnerUseCase } from '@application/UseCases/Owner/VerifyOwner.usecase';
 
 export class UseCaseModule {
   static registerModules(): void {
@@ -43,6 +45,12 @@ export class UseCaseModule {
 
     container.register<IRefreshTokenUseCase>(TokenTypes.IRefreshTokenUseCase,{
       useClass:RefreshTokenUseCase
+    })
+    container.register(TokenTypes.SubmitVerificationUseCase,{
+      useClass:SubmitVerificationUseCase
+    })
+    container.register(TokenTypes.VerifyOwnerUseCase,{
+      useClass:VerifyOwnerUseCase
     })
   }
 }

@@ -3,7 +3,7 @@ import 'dotenv/config';
 import cors from 'cors';
 
 import router from '@presentation/Routes/router';
-import { ErrorHandlerMiddleWare } from '@presentation/Middlewares/ErrorHandlerMiddleware';
+import { ErrorHandlerMiddleWare } from '@presentation/Middlewares/ErrorHandler.middleware';
 import { Request, Response, NextFunction } from 'express';
 export class App {
   private _app!: Application;

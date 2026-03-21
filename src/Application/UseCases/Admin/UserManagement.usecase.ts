@@ -63,7 +63,7 @@ export class UserManagementUseCase implements IUserManagement {
             throw new Error('User not found');
         }
         user.activateUser();
-        user.unSuspendUser(); // Ensure it's not suspended if activated
+        user.unSuspendUser(); // to make sute its not suspended if activated
         await this.userRepository.update(user.id, user);
     }
 
