@@ -8,15 +8,15 @@ import { IOwnerProfileRepository } from '@core/Interfaces/IOwnerRepository';
 import { OwnerProfileRepository } from '@infrastructure/Repositories/OwnerProfile.repository';
 
 export class RepositoryModule {
-  //this is like when a call for Iuserrepo token ,it will give an instance of UserRepository class
-  // tsyringe wills stores: { "IUserRepository" token → UserRepository class }
+    //this is like when a call for Iuserrepo token ,it will give an instance of UserRepository class
+    // tsyringe wills stores: { "IUserRepository" token → UserRepository class }
 
-  static registerModules(): void {
-    container.register<IUserRepository>(TokenTypes.IUserRepository, {
-      useClass: UserRepository,
-    });
-    container.register<IOwnerProfileRepository>(TokenTypes.IOwnerProfileRepository,{
-      useClass:OwnerProfileRepository
-    })
-  }
+    static registerModules(): void {
+        container.register<IUserRepository>(TokenTypes.IUserRepository, {
+            useClass: UserRepository,
+        });
+        container.register<IOwnerProfileRepository>(TokenTypes.IOwnerProfileRepository, {
+            useClass: OwnerProfileRepository,
+        });
+    }
 }

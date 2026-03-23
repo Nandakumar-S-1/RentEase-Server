@@ -1,22 +1,22 @@
-import { IGetAllUsersDTO } from "@application/Data-Transfer-Object/Admin/Res/GetAllUsersDTO";
-import { IUserManagement } from "@application/Interfaces/Admin/IUserManagement";
-import { UserEntity } from "@core/Entities/user.entity";
-import { IUserRepository } from "@core/Interfaces/IUserRepository";
-import { logger } from "@shared/Log/logger";
-import { TokenTypes } from "@shared/Types/tokens";
-import { inject, injectable } from "tsyringe";
+import { IGetAllUsersDTO } from '@application/Data-Transfer-Object/Admin/Res/GetAllUsersDTO';
+import { IUserManagement } from '@application/Interfaces/Admin/IUserManagement';
+import { UserEntity } from '@core/Entities/user.entity';
+import { IUserRepository } from '@core/Interfaces/IUserRepository';
+import { logger } from '@shared/Log/logger';
+import { TokenTypes } from '@shared/Types/tokens';
+import { inject, injectable } from 'tsyringe';
 
 @injectable()
 export class UserManagementUseCase implements IUserManagement {
     constructor(
         @inject(TokenTypes.IUserRepository)
-        private readonly userRepository: IUserRepository
-    ) { }
+        private readonly userRepository: IUserRepository,
+    ) {}
 
     async getUsers(
         page: number = 1,
         limit: number = 10,
-        role?: 'TENANT' | 'OWNER'
+        role?: 'TENANT' | 'OWNER',
     ): Promise<{ users: IGetAllUsersDTO[]; total: number }> {
         logger.info(`Fetching all users for page ${page} with limit ${limit}`);
 
@@ -31,7 +31,7 @@ export class UserManagementUseCase implements IUserManagement {
         const skippable = (page - 1) * limit;
         const paginated = filteredUsers.slice(skippable, skippable + limit);
 
-        const response: IGetAllUsersDTO[] = paginated.map(user => ({
+        const response: IGetAllUsersDTO[] = paginated.map((user) => ({
             id: user.id,
             email: user.email,
             fullname: user.fullname,
@@ -40,7 +40,7 @@ export class UserManagementUseCase implements IUserManagement {
             isEmailVerified: user.isEmailVerified,
             isActive: user.isActive,
             isSuspended: user.isSuspended,
-            createdAt: user.createdAt || new Date()
+            createdAt: user.createdAt || new Date(),
         }));
 
         return { users: response, total };

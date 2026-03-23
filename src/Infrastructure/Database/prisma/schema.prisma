@@ -33,7 +33,7 @@ model User {
   email        String @unique
   passwordHash String
   fullName     String
-  phone        String @unique
+  phone        String? @unique
 
   role      UserRole
   avatarUrl String?
@@ -73,7 +73,7 @@ model OwnerProfile {
   documentUrl   String?
   verificationStatus  VerificationStatus @default(PENDING)
   rejectionReason String?
-  verifiedAt  DateTime?
+  verifiedAt  DateTime? @default(now())
 
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt

@@ -1,35 +1,35 @@
 {
-  "compilerOptions": {
-    "target": "ES2020",
-    "module": "CommonJS",
-    "lib": ["ES2022"],
-    "moduleResolution": "node",
-    "typeRoots": ["./node_modules/@types", "./src/@types"],
-    "rootDir": "./src",
-    "outDir": "./dist",
+    "compilerOptions": {
+        "target": "ES2020",
+        "module": "CommonJS",
+        "lib": ["ES2022"],
+        "moduleResolution": "node",
+        "typeRoots": ["./node_modules/@types", "./src/@types"],
+        "rootDir": "./src",
+        "outDir": "./dist",
 
-    "strict": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "forceConsistentCasingInFileNames": true,
+        "strict": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "forceConsistentCasingInFileNames": true,
 
-    "sourceMap": true,
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "baseUrl": "./src",
-    "paths": {
-      "@core/*": ["Core/*"],
-      "@application/*": ["Application/*"],
-      "@infrastructure/*": ["Infrastructure/*"],
-      "@presentation/*": ["Presentation/*"],
-      "@shared/*": ["Shared/*"]
+        "sourceMap": true,
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "baseUrl": "./src",
+        "paths": {
+            "@core/*": ["Core/*"],
+            "@application/*": ["Application/*"],
+            "@infrastructure/*": ["Infrastructure/*"],
+            "@presentation/*": ["Presentation/*"],
+            "@shared/*": ["Shared/*"]
+        },
+
+        "types": ["node"],
+        "skipLibCheck": true
     },
-
-    "types": ["node"],
-    "skipLibCheck": true
-  },
-  "include": ["src"],
-  "exclude": ["node_modules", "dist"]
+    "include": ["src"],
+    "exclude": ["node_modules", "dist"]
 }
 
 // {

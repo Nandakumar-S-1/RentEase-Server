@@ -7,11 +7,11 @@ import { ServiceModule } from './ServiceModule';
 import { UseCaseModule } from './UseCaseModule';
 
 export class Container_Setup {
-  static registerAll(): void {
-    RepositoryModule.registerModules();
-    UseCaseModule.registerModules();
-    ServiceModule.registerModules();
-  }
+    static registerAll(): void {
+        RepositoryModule.registerModules();
+        UseCaseModule.registerModules();
+        ServiceModule.registerModules();
+    }
 }
 //App starts
 Container_Setup.registerAll();

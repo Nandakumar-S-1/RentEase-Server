@@ -12,24 +12,23 @@ import { asyncHandlerFunction } from '@presentation/Utils/asyncHandler';
 
 @injectable()
 export class OwnerRoutes extends BaseRoute {
-  constructor(private readonly _controller: OwnerVerificationController) {
-    super();
-    this.initializeRoutes();
-  }
-  protected initializeRoutes(): void {
-    this.router.post(
-      OWNER_ROUTES.SUBMIT,
-      authMiddleware,
-      neededRole(UserRole.OWNER),
-      upload.single('document'),
-      validationRequestMiddleware(submitVerificationSchema),
-      asyncHandlerFunction(this._controller.submit),
-    );
-    this.router.get(
-        OWNER_ROUTES.STATUS,
-        authMiddleware,
-        asyncHandlerFunction(this._controller.getStatus)
-    )
-  }
-
+    constructor(private readonly _controller: OwnerVerificationController) {
+        super();
+        this.initializeRoutes();
+    }
+    protected initializeRoutes(): void {
+        this.router.post(
+            OWNER_ROUTES.SUBMIT,
+            authMiddleware,
+            neededRole(UserRole.OWNER),
+            upload.single('document'),
+            validationRequestMiddleware(submitVerificationSchema),
+            asyncHandlerFunction(this._controller.submit),
+        );
+        this.router.get(
+            OWNER_ROUTES.STATUS,
+            authMiddleware,
+            asyncHandlerFunction(this._controller.getStatus),
+        );
+    }
 }
