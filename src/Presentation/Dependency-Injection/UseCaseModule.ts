@@ -1,7 +1,7 @@
 import { Create_User_Usecase } from '@application/UseCases/Authentication/CreateUser.usecase';
 import { ICreateUserUseCase } from '@application/Interfaces/Auth/ICreateUserUseCase';
 import { container } from 'tsyringe';
-import { IVerifyOtpUseCase } from '@application/Interfaces/Auth/IVerifyOtpUseCase ';
+import { IVerifyOtpUseCase } from '@application/Interfaces/Auth/IVerifyOtpUseCase';
 import { VerifyOtpUseCase } from '@application/UseCases/Authentication/VerifyOtp.usecase';
 import { IResendOtpUseCase } from '@application/Interfaces/Auth/IResendOtpUseCase';
 import { TokenTypes } from '@shared/Types/tokens';
@@ -19,38 +19,38 @@ import { SubmitVerificationUseCase } from '@application/UseCases/Owner/SubmitVer
 import { VerifyOwnerUseCase } from '@application/UseCases/Owner/VerifyOwner.usecase';
 
 export class UseCaseModule {
-  static registerModules(): void {
-    //registering interface token to the concrete class
-    container.register<ICreateUserUseCase>(TokenTypes.ICreateUserUseCase, {
-      useClass: Create_User_Usecase,
-    });
-    container.register<IVerifyOtpUseCase>(TokenTypes.IVerifyOtpUseCase, {
-      useClass: VerifyOtpUseCase,
-    });
-    container.register<IResendOtpUseCase>(TokenTypes.IResendOtpUseCase, {
-      useClass: ResendOtpUseCase
-    })
-    container.register<ILoginUserUseCase>(TokenTypes.ILoginUseCase, {
-      useClass: LoginUseCase
-    })
-    container.register<IForgotPasswordUseCase>(TokenTypes.IForgotPasswordUseCase, {
-      useClass: ForgotPasswordUseCase
-    })
-    container.register<IUserManagement>(TokenTypes.UserManagementUseCase, {
-      useClass: UserManagementUseCase
-    })
-    container.register<GoogleAuthUseCase>(TokenTypes.IGoogleAuthUseCase, {
-      useClass: GoogleAuthUseCase
-    })
+    static registerModules(): void {
+        //registering interface token to the concrete class
+        container.register<ICreateUserUseCase>(TokenTypes.ICreateUserUseCase, {
+            useClass: Create_User_Usecase,
+        });
+        container.register<IVerifyOtpUseCase>(TokenTypes.IVerifyOtpUseCase, {
+            useClass: VerifyOtpUseCase,
+        });
+        container.register<IResendOtpUseCase>(TokenTypes.IResendOtpUseCase, {
+            useClass: ResendOtpUseCase,
+        });
+        container.register<ILoginUserUseCase>(TokenTypes.ILoginUseCase, {
+            useClass: LoginUseCase,
+        });
+        container.register<IForgotPasswordUseCase>(TokenTypes.IForgotPasswordUseCase, {
+            useClass: ForgotPasswordUseCase,
+        });
+        container.register<IUserManagement>(TokenTypes.UserManagementUseCase, {
+            useClass: UserManagementUseCase,
+        });
+        container.register<GoogleAuthUseCase>(TokenTypes.IGoogleAuthUseCase, {
+            useClass: GoogleAuthUseCase,
+        });
 
-    container.register<IRefreshTokenUseCase>(TokenTypes.IRefreshTokenUseCase,{
-      useClass:RefreshTokenUseCase
-    })
-    container.register(TokenTypes.SubmitVerificationUseCase,{
-      useClass:SubmitVerificationUseCase
-    })
-    container.register(TokenTypes.VerifyOwnerUseCase,{
-      useClass:VerifyOwnerUseCase
-    })
-  }
+        container.register<IRefreshTokenUseCase>(TokenTypes.IRefreshTokenUseCase, {
+            useClass: RefreshTokenUseCase,
+        });
+        container.register(TokenTypes.SubmitVerificationUseCase, {
+            useClass: SubmitVerificationUseCase,
+        });
+        container.register(TokenTypes.VerifyOwnerUseCase, {
+            useClass: VerifyOwnerUseCase,
+        });
+    }
 }

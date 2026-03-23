@@ -7,9 +7,9 @@ import { IBaseRepository } from 'Core/Interfaces/Base/IBaseRepository';
 //ie , high-level modules eg:- the business logic, don't depend on low-level modules eg:-database code
 //this is inheritence, where base repo is being extended to user repo
 export interface IUserRepository extends IBaseRepository<UserEntity> {
-  findByEmail(email: string): Promise<UserEntity | null>;
-  findByPhone(phone: string): Promise<UserEntity | null>;
-  findById(id: string): Promise<UserEntity | null>;
-  findAll(): Promise<UserEntity[]>;
-  update(id: string, user: UserEntity): Promise<UserEntity>;
+    findByEmail(email: string): Promise<UserEntity | null>;
+    findByPhone(phone: string): Promise<UserEntity | null>;
+    findById(id: string): Promise<UserEntity | null>;
+    findAll(): Promise<UserEntity[]>;
+    update(id: string, user: UserEntity): Promise<UserEntity>;
 }

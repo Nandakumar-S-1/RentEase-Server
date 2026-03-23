@@ -2,7 +2,7 @@ import { inject, injectable } from 'tsyringe';
 import { TokenTypes } from '../../../Shared/Types/tokens';
 import { Request, Response } from 'express';
 import { ICreateUserUseCase } from '@application/Interfaces/Auth/ICreateUserUseCase';
-import { IVerifyOtpUseCase } from '@application/Interfaces/Auth/IVerifyOtpUseCase ';
+import { IVerifyOtpUseCase } from '@application/Interfaces/Auth/IVerifyOtpUseCase';
 import { logger } from '@shared/Log/logger';
 import { ApiResponse } from '@application/Data-Transfer-Object/ApiResponseDTO';
 import { Http_StatusCodes } from '@shared/Enums/Http_StatusCodes';
@@ -71,16 +71,17 @@ export class AuthController {
                 },
             },
         };
-        return res.status(Http_StatusCodes.CREATED).json(response)
+        return res.status(Http_StatusCodes.CREATED).json(response);
     };
 
     login = async (req: Request, res: Response): Promise<Response> => {
-        logger.info('login request')
-        const { email, password } = req.body
+        logger.info('login request');
+        const { email, password } = req.body;
 
         const result = await this._loginUseCase.execute({
-            email, password
-        })
+            email,
+            password,
+        });
         const response: ApiResponse<LoginResponseDTO> = {
             success: true,
             message: Auth_Response_Messages.LOGIN_SUCCESS,
@@ -90,22 +91,20 @@ export class AuthController {
                     email: result.user.email,
                     fullname: result.user.fullname,
                     phone: result.user.phone,
-                    role: result.user.role
+                    role: result.user.role,
                 },
                 accessToken: result.accessToken,
-                refreshToken: result.refreshToken
-            }
-        }
-        return res.status(Http_StatusCodes.OK).json(response)
-    }
+                refreshToken: result.refreshToken,
+            },
+        };
+        return res.status(Http_StatusCodes.OK).json(response);
+    };
 
     googleAuth = async (req: Request, res: Response): Promise<Response> => {
-        logger.info('Auth request for google auth')
-        const { idToken, role } = req.body
+        logger.info('Auth request for google auth');
+        const { idToken, role } = req.body;
 
-        const result = await this._googleAuthUseCase.execute(
-            { idToken, role }
-        )
+        const result = await this._googleAuthUseCase.execute({ idToken, role });
 
         const response: ApiResponse<LoginResponseDTO> = {
             success: true,
@@ -116,22 +115,23 @@ export class AuthController {
                     email: result.user.email,
                     fullname: result.user.fullname,
                     phone: result.user.phone,
-                    role: result.user.role
+                    role: result.user.role,
                 },
                 accessToken: result.accessToken,
-                refreshToken: result.refreshToken
-            }
-        }
-        return res.status(Http_StatusCodes.OK).json(response)
-    }
+                refreshToken: result.refreshToken,
+            },
+        };
+        return res.status(Http_StatusCodes.OK).json(response);
+    };
 
     verifyOtp = async (req: Request, res: Response): Promise<Response> => {
-        const { email, otp } = req.body
-        logger.info(`otp verification req is done on this ${email}`)
+        const { email, otp } = req.body;
+        logger.info(`otp verification req is done on this ${email}`);
 
         const result = await this._verifyOtpUseCase.execute({
-            email, otp
-        })
+            email,
+            otp,
+        });
 
         const response: ApiResponse<LoginResponseDTO> = {
             success: true,
@@ -146,108 +146,113 @@ export class AuthController {
                 },
                 accessToken: result.accessToken,
                 refreshToken: result.refreshToken,
-            }
-        }
-        return res.status(Http_StatusCodes.OK).json(response)
-    }
+            },
+        };
+        return res.status(Http_StatusCodes.OK).json(response);
+    };
 
     resendOtp = async (req: Request, res: Response): Promise<Response> => {
-        const { email } = req.body
-        logger.info('resend otp req')
-        const result = await this._resendOtpUseCase.execute({ email })
+        const { email } = req.body;
+        logger.info('resend otp req');
+        const result = await this._resendOtpUseCase.execute({ email });
 
         const response: ApiResponse<ResendOtpResponseDTO> = {
             success: true,
             message: result.message,
-            data: result
-        }
-        return res.status(Http_StatusCodes.OK).json(response)
-    }
+            data: result,
+        };
+        return res.status(Http_StatusCodes.OK).json(response);
+    };
 
     forgotPassword = async (req: Request, res: Response): Promise<Response> => {
-        const { email } = req.body
-        logger.info('req for forgot password')
+        const { email } = req.body;
+        logger.info('req for forgot password');
 
-        await this._forgotPasswordUsecase.execute({ email })
+        await this._forgotPasswordUsecase.execute({ email });
 
         const response: ApiResponse<null> = {
             success: true,
-            message: Auth_Response_Messages.PASSWORD_RESET_OTP_SENT
-        }
-        return res.status(Http_StatusCodes.OK).json(response)
-    }
+            message: Auth_Response_Messages.PASSWORD_RESET_OTP_SENT,
+        };
+        return res.status(Http_StatusCodes.OK).json(response);
+    };
 
     verifyResetOtp = async (req: Request, res: Response): Promise<Response> => {
-        const { email, otp } = req.body
-        logger.info('Verify reset otp')
+        const { email, otp } = req.body;
+        logger.info('Verify reset otp');
 
-        const redisKey = `resetPassword_otp:${email}`
-        const storedOtp = await this._redisService.get(redisKey)
+        const redisKey = `resetPassword_otp:${email}`;
+        const storedOtp = await this._redisService.get(redisKey);
 
         if (!storedOtp) {
-            throw new InvalidOtpError('Otp Might be expired or not found')
+            throw new InvalidOtpError('Otp Might be expired or not found');
         }
         if (storedOtp !== otp) {
-            throw new InvalidOtpError('Invalid Otp, Try again')
+            throw new InvalidOtpError('Invalid Otp, Try again');
         }
-        await this._redisService.set(`resetPassword_otp:${email}`, 'true', 300)
-        await this._redisService.delete(redisKey)
+        await this._redisService.set(`resetPassword_verified:${email}`, 'true', 300);
+        await this._redisService.delete(redisKey);
 
         const response: ApiResponse<null> = {
             success: true,
-            message: Auth_Response_Messages.OTP_VERIFIED
-        }
-        return res.status(Http_StatusCodes.OK).json(response)
-    }
+            message: Auth_Response_Messages.OTP_VERIFIED,
+        };
+        return res.status(Http_StatusCodes.OK).json(response);
+    };
 
     resetPassword = async (req: Request, res: Response): Promise<Response> => {
-        const { email, newPassword } = req.body
-        logger.info(`Password reset requested for: ${email}`)
+        const { email, newPassword } = req.body;
+        logger.info(`Password reset requested for: ${email}`);
 
-        const isVerified = await this._redisService.get(
-            `resetPassword_verified:${email}`
-        )
+        const isVerified = await this._redisService.get(`resetPassword_verified:${email}`);
 
         if (!isVerified) {
-            throw new Error('otp should be verified first')
+            throw new Error('otp should be verified first');
         }
-        const user = await this._userRepository.findByEmail(email)
+        const user = await this._userRepository.findByEmail(email);
         if (!user) {
-            throw new Error('User not found')
+            throw new Error('User not found');
         }
 
-        const hashedPassword = await this._hashService.hash(newPassword)
-        user.setPassword(hashedPassword)
+        const hashedPassword = await this._hashService.hash(newPassword);
+        user.setPassword(hashedPassword);
 
-        await this._userRepository.update(user.id, user)
-        await this._redisService.delete(`resetPassword_verified:${email}`)
+        await this._userRepository.update(user.id, user);
+        await this._redisService.delete(`resetPassword_verified:${email}`);
 
-        logger.info('password reset was succesful')
+        logger.info('password reset was succesful');
         const response: ApiResponse<null> = {
             success: true,
-            message: Auth_Response_Messages.PASSWORD_RESET_SUCCESS
-        }
-        return res.status(Http_StatusCodes.OK).json(response)
-    }
+            message: Auth_Response_Messages.PASSWORD_RESET_SUCCESS,
+        };
+        return res.status(Http_StatusCodes.OK).json(response);
+    };
 
     refreshToken = async (req: Request, res: Response): Promise<Response> => {
-        const { refreshToken } = req.body
+        const { refreshToken } = req.body;
 
-        logger.info('Refresh Token request')
+        logger.info('Refresh Token request');
         if (!refreshToken) {
             return res.status(Http_StatusCodes.BAD_REQUEST).json({
                 success: false,
-                message: Auth_Response_Messages.MISSING_REFRESH_TOKEN
-            })
+                message: Auth_Response_Messages.MISSING_REFRESH_TOKEN,
+            });
         }
-        const tokens = await this._refreshTokenUseCase.execute(refreshToken)
+        const tokens = await this._refreshTokenUseCase.execute(refreshToken);
 
         const response: ApiResponse<RefreshTokenResponseDTO> = {
             success: true,
             message: Auth_Response_Messages.TOKEN_REFRESHED,
-            data: tokens
-        }
-        return res.status(Http_StatusCodes.OK).json(response)
-    }
+            data: tokens,
+        };
+        return res.status(Http_StatusCodes.OK).json(response);
+    };
 
+    getMe = async (req: Request, res: Response): Promise<Response> => {
+        return res.status(Http_StatusCodes.OK).json({
+            success: true,
+            message: 'User is authenticated and active',
+            data: { user: req.user },
+        });
+    };
 }

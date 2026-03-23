@@ -1,3 +1,3 @@
-export interface ResendOtpResponseDTO{
-    message:string
+export interface ResendOtpResponseDTO {
+    message: string;
 }

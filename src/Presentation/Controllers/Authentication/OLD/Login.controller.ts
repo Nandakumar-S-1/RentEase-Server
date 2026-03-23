@@ -12,7 +12,7 @@
 //         @inject(TokenTypes.ILoginUseCase)
 //         private readonly loginUseCase:ILoginUserUseCase
 //     ) {
-        
+
 //     }
 //     async login(req:Request,res:Response):Promise<Response>{
 //             const {email,password}=req.body

@@ -1,17 +1,16 @@
-import { ApiResponse } from "@application/Data-Transfer-Object/ApiResponseDTO";
-import { UserManagementUseCase } from "@application/UseCases/Admin/UserManagement.usecase";
-import { Http_StatusCodes } from "@shared/Enums/Http_StatusCodes";
-import { TokenTypes } from "@shared/Types/tokens";
-import { Request, Response } from "express";
-import { inject, injectable } from "tsyringe";
+import { ApiResponse } from '@application/Data-Transfer-Object/ApiResponseDTO';
+import { UserManagementUseCase } from '@application/UseCases/Admin/UserManagement.usecase';
+import { Http_StatusCodes } from '@shared/Enums/Http_StatusCodes';
+import { TokenTypes } from '@shared/Types/tokens';
+import { Request, Response } from 'express';
+import { inject, injectable } from 'tsyringe';
 
 @injectable()
 export class UserManagementController {
     constructor(
         @inject(TokenTypes.UserManagementUseCase)
         private readonly _usecase: UserManagementUseCase,
-
-    ) { }
+    ) {}
 
     async getAllUsers(req: Request, res: Response): Promise<Response> {
         const page = parseInt(req.query.page as string) || 1;
@@ -30,9 +29,9 @@ export class UserManagementController {
                     page,
                     limit,
                     total: result.total,
-                    pages: Math.ceil(result.total / limit)
-                }
-            }
+                    pages: Math.ceil(result.total / limit),
+                },
+            },
         };
         return res.status(Http_StatusCodes.OK).json(response);
     }
@@ -75,5 +74,4 @@ export class UserManagementController {
 
         return res.status(Http_StatusCodes.OK).json(response);
     }
-
 }

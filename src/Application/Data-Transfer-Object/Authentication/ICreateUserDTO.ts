@@ -1,12 +1,12 @@
 import { UserRole } from 'Shared/Enums/user.role.type';
 
 export interface ICreateUserDTO {
-  // deffines what the FRONTEND sends to create a user
-  email: string;
-  fullname: string;
-  password: string;
-  phone: string;
-  role: UserRole;
+    // deffines what the FRONTEND sends to create a user
+    email: string;
+    fullname: string;
+    password: string;
+    phone: string | null;
+    role: UserRole;
 }
 
 //it is Contracts for data crossing boundaries

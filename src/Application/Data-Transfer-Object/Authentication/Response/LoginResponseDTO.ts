@@ -3,9 +3,9 @@ export interface LoginResponseDTO {
         id: string;
         email: string;
         fullname: string;
-        phone: string;
+        phone: string | null;
         role: string;
-    },
-    accessToken: string,
-    refreshToken: string
+    };
+    accessToken: string;
+    refreshToken: string;
 }

@@ -3,5 +3,5 @@
 // [findByEmail] This is the O in SOLID (open-closed principle) the base interface is open for extension but closed for modification.
 
 export interface IBaseRepository<T> {
-  create(entity: T): Promise<T>;
+    create(entity: T): Promise<T>;
 }

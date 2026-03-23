@@ -12,7 +12,6 @@
 //     @inject(TokenTypes.IVerifyOtpUseCase)
 //     private readonly verifyOtpUseCase: IVerifyOtpUseCase,
 
-
 //   ) { }
 
 //   async verify(req: Request, res: Response): Promise<Response> {
