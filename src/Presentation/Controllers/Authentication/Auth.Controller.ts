@@ -94,9 +94,16 @@ export class AuthController {
                     role: result.user.role,
                 },
                 accessToken: result.accessToken,
-                refreshToken: result.refreshToken,
             },
         };
+
+        res.cookie('refreshToken', result.refreshToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
+            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+        });
+
         return res.status(Http_StatusCodes.OK).json(response);
     };
 
@@ -118,9 +125,16 @@ export class AuthController {
                     role: result.user.role,
                 },
                 accessToken: result.accessToken,
-                refreshToken: result.refreshToken,
             },
         };
+
+        res.cookie('refreshToken', result.refreshToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+        });
+
         return res.status(Http_StatusCodes.OK).json(response);
     };
 
@@ -145,9 +159,16 @@ export class AuthController {
                     role: result.user.role,
                 },
                 accessToken: result.accessToken,
-                refreshToken: result.refreshToken,
             },
         };
+
+        res.cookie('refreshToken', result.refreshToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+        });
+
         return res.status(Http_StatusCodes.OK).json(response);
     };
 
@@ -229,7 +250,7 @@ export class AuthController {
     };
 
     refreshToken = async (req: Request, res: Response): Promise<Response> => {
-        const { refreshToken } = req.body;
+        const refreshToken = req.body.refreshToken || req.cookies.refreshToken;
 
         logger.info('Refresh Token request');
         if (!refreshToken) {
@@ -243,8 +264,18 @@ export class AuthController {
         const response: ApiResponse<RefreshTokenResponseDTO> = {
             success: true,
             message: Auth_Response_Messages.TOKEN_REFRESHED,
-            data: tokens,
+            data: {
+                accessToken: tokens.accessToken,
+            },
         };
+
+        res.cookie('refreshToken', tokens.refreshToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+        });
+
         return res.status(Http_StatusCodes.OK).json(response);
     };
 

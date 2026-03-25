@@ -24,7 +24,10 @@ const password = z
 const phone = z
     .string()
     .trim()
-    .regex(/^\d{10}$/, 'Phone number must be exactly 10 digits');
+    .regex(/^[7-9]\d{9}$/, 'Phone number must be exactly 10 digits and start with 7, 8, or 9.')
+    .refine((val) => !/^(\d)\1{9}$/.test(val), {
+        message: 'Phone number cannot have all identical digits.',
+    });
 
 const role = z.enum(['TENANT', 'OWNER']);
 

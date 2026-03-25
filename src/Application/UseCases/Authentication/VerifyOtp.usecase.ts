@@ -31,7 +31,7 @@ export class VerifyOtpUseCase implements IVerifyOtpUseCase {
 
         @inject(TokenTypes.IOwnerProfileRepository)
         private readonly _ownerRepository: IOwnerProfileRepository,
-    ) {}
+    ) { }
 
     private _validateInputOfOTP(dto: IVerifyOtpRequestDTO): void {
         if (!dto.email || !dto.otp) {
@@ -48,7 +48,7 @@ export class VerifyOtpUseCase implements IVerifyOtpUseCase {
         }
     }
 
-    private async checkAttemptsCount(email: string): Promise<void> {
+    private async _checkAttemptsCount(email: string): Promise<void> {
         const attemptKey = `otp:attempts:${email}`;
         try {
             const currentAttemptsString = await this._redisCache.get(attemptKey);
@@ -130,7 +130,7 @@ export class VerifyOtpUseCase implements IVerifyOtpUseCase {
             throw new Error('Verification session expired or not found');
         }
 
-        await this.checkAttemptsCount(dto.email);
+        await this._checkAttemptsCount(dto.email);
 
         const storedOtpIs = await this._retreveOtpFromRedis(dto.email);
         if (storedOtpIs !== dto.otp) {

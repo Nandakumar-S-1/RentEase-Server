@@ -6,17 +6,18 @@ import { Http_StatusCodes } from '@shared/Enums/Http_StatusCodes';
 import { TokenTypes } from '@shared/Types/tokens';
 import { uploadToCloudinary } from '@shared/Uploads/cloudinary.service';
 import { Owner_Response_Messages } from '@shared/Types/Messages/Response.messages';
+import { logger } from '@shared/Log/logger';
 
 @injectable()
 export class OwnerVerificationController {
     constructor(
         @inject(TokenTypes.SubmitVerificationUseCase)
         private readonly _submitVerification: ISubmitVerificationUseCase,
-    ) {}
+    ) { }
 
     submit = async (req: Request, res: Response): Promise<Response> => {
         const ownerId = req.user!.id;
-
+        logger.info(`--owner verification started----`);
         const { documentType } = req.body;
 
         if (!req.file) {
@@ -41,7 +42,7 @@ export class OwnerVerificationController {
     };
     getStatus = async (req: Request, res: Response): Promise<Response> => {
         const user = req.user!;
-
+        logger.info(`--owner status fetched----`);
         return res.status(Http_StatusCodes.OK).json({
             success: true,
             message: Owner_Response_Messages.VERIFICATION_STATUS_FETCHED,

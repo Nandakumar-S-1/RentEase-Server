@@ -2,6 +2,7 @@ import express, { Application } from 'express';
 import 'dotenv/config';
 import cors from 'cors';
 
+import cookieParser from 'cookie-parser';
 import router from '@presentation/Routes/router';
 import { ErrorHandlerMiddleWare } from '@presentation/Middlewares/ErrorHandler.middleware';
 import { Request, Response, NextFunction } from 'express';
@@ -39,6 +40,7 @@ export class App {
         );
 
         this._app.use(express.json());
+        this._app.use(cookieParser());
     }
 
     private routeConfigs() {

@@ -6,6 +6,8 @@ import { UserEntity } from 'Core/Entities/user.entity';
 import { IUserRepository } from 'Core/Interfaces/IUserRepository';
 
 //poly
+//this is where the single responsibility principle workd
+//because this class handle only the database operaiton for the user enitty
 // This is where Prisma connects to PostgreSQL. // UserRepository promises to fulfill the IUserRepository contract
 export class UserRepository implements IUserRepository {
     //the repo receives the domain object user entitiy here and convert it to a prisma format  //Implement create() from IBaseRepository (via IUserRepository inheritance)

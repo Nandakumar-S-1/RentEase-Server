@@ -19,44 +19,44 @@ import { PhoneAlreadyExistError, UserAlreadyExistError } from '@shared/Errors/Us
 export class Create_User_Usecase implements ICreateUserUseCase {
     constructor(
         @inject(TokenTypes.IUserRepository) // "When creating this class, look up 'UserRepository' token  // and inject whatever class is registered for that token"
-        private readonly userRepository: IUserRepository, //this decorator will tell the tsyringe to inject the user repository  //Dependency Inversion Principle in action here because the type is an Interface insted of the class UserRepo //nothing but this usecase doesnt know itis using mongo,or postg or any otherdb . //it only know to call findby email in IUserRepository and create in Ibaserepo methods //insted of the usecase to create its own repo, it will receive the repo as parameter
+        private readonly _userRepository: IUserRepository, //this decorator will tell the tsyringe to inject the user repository  //Dependency Inversion Principle in action here because the type is an Interface insted of the class UserRepo //nothing but this usecase doesnt know itis using mongo,or postg or any otherdb . //it only know to call findby email in IUserRepository and create in Ibaserepo methods //insted of the usecase to create its own repo, it will receive the repo as parameter
 
         @inject(TokenTypes.IHashService)
-        private readonly hashService: IHashService,
+        private readonly _hashService: IHashService,
 
         @inject(TokenTypes.IOtpService)
-        private readonly otpService: IOtpService,
+        private readonly _otpService: IOtpService,
 
         @inject(TokenTypes.IMailService)
-        private readonly mailService: IMailService,
+        private readonly _mailService: IMailService,
 
         @inject(TokenTypes.IRedisCache)
-        private readonly redisCache: IRedisCache,
-    ) {}
+        private readonly _redisCache: IRedisCache,
+    ) { }
 
     async execute(dto: ICreateUserDTO): Promise<UserEntity> {
         //this is the logic to execute the usecase //this has no connection to express or rest or anything like that
 
-        const isUserExist = await this.userRepository.findByEmail(dto.email);
+        const isUserExist = await this._userRepository.findByEmail(dto.email);
 
         if (isUserExist) {
             throw new UserAlreadyExistError();
         }
         if (dto.phone) {
-            const isPhoneExist = await this.userRepository.findByPhone(dto.phone);
+            const isPhoneExist = await this._userRepository.findByPhone(dto.phone);
             if (isPhoneExist) {
                 throw new PhoneAlreadyExistError();
             }
         }
 
-        const hashedPasswordIS = await this.hashService.hash(dto.password);
+        const hashedPasswordIS = await this._hashService.hash(dto.password);
         const user = UserMapper.toEntity({
             ...dto,
             password: hashedPasswordIS,
         }); //Convert DTO to Entity using mapper, This adds UUID, prepares data for storage
 
         // Instead of saving to DB, we store the entity data in Redis until verification
-        const otp = this.otpService.generateOTP();
+        const otp = this._otpService.generateOTP();
 
         logger.info(`''''''''''''otp is'''''''''''''''''''${otp}`);
 
@@ -74,14 +74,14 @@ export class Create_User_Usecase implements ICreateUserUseCase {
             createdAt: new Date().toISOString(),
         };
 
-        await this.redisCache.set(
+        await this._redisCache.set(
             `pending_user:${user.email}`,
             JSON.stringify(pendingUserData),
             300,
         );
-        await this.redisCache.set(`otp:${user.email}`, otp, 300);
+        await this._redisCache.set(`otp:${user.email}`, otp, 300);
 
-        await this.mailService.sendMail(
+        await this._mailService.sendMail(
             user.email,
             'verify your Email by typing the otp',
             `your OTP code is ${otp}`,

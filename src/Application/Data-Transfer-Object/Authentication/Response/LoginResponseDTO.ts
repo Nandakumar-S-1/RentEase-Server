@@ -7,5 +7,5 @@ export interface LoginResponseDTO {
         role: string;
     };
     accessToken: string;
-    refreshToken: string;
+    refreshToken?: string;
 }
