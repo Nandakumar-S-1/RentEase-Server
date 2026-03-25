@@ -15,7 +15,7 @@ export class SubmitVerificationUseCase implements ISubmitVerificationUseCase {
     constructor(
         @inject(TokenTypes.IOwnerProfileRepository)
         private readonly _ownerRepository: IOwnerProfileRepository,
-    ) {}
+    ) { }
 
     async execute(dto: SubmitVerificationDTO) {
         const ownerProfile = await this._ownerRepository.findByUserId(dto.ownerId);

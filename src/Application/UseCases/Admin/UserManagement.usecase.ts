@@ -10,8 +10,8 @@ import { inject, injectable } from 'tsyringe';
 export class UserManagementUseCase implements IUserManagement {
     constructor(
         @inject(TokenTypes.IUserRepository)
-        private readonly userRepository: IUserRepository,
-    ) {}
+        private readonly _userRepository: IUserRepository,
+    ) { }
 
     async getUsers(
         page: number = 1,
@@ -20,7 +20,7 @@ export class UserManagementUseCase implements IUserManagement {
     ): Promise<{ users: IGetAllUsersDTO[]; total: number }> {
         logger.info(`Fetching all users for page ${page} with limit ${limit}`);
 
-        const allUsers = await this.userRepository.findAll();
+        const allUsers = await this._userRepository.findAll();
         let filteredUsers = allUsers;
 
         if (role) {
@@ -48,32 +48,32 @@ export class UserManagementUseCase implements IUserManagement {
 
     async suspendUser(userId: string): Promise<void> {
         logger.info(`Suspending user: ${userId}`);
-        const user = await this.userRepository.findById(userId);
+        const user = await this._userRepository.findById(userId);
         if (!user) {
             throw new Error('User not found');
         }
         user.suspendUser();
-        await this.userRepository.update(user.id, user);
+        await this._userRepository.update(user.id, user);
     }
 
     async activateUser(userId: string): Promise<void> {
         logger.info(`Activating user: ${userId}`);
-        const user = await this.userRepository.findById(userId);
+        const user = await this._userRepository.findById(userId);
         if (!user) {
             throw new Error('User not found');
         }
         user.activateUser();
-        user.unSuspendUser(); // to make sute its not suspended if activated
-        await this.userRepository.update(user.id, user);
+        user.unSuspendUser();
+        await this._userRepository.update(user.id, user);
     }
 
     async deactivateUser(userId: string): Promise<void> {
         logger.info(`Deactivating user: ${userId}`);
-        const user = await this.userRepository.findById(userId);
+        const user = await this._userRepository.findById(userId);
         if (!user) {
             throw new Error('User not found');
         }
         user.deactivateUser();
-        await this.userRepository.update(user.id, user);
+        await this._userRepository.update(user.id, user);
     }
 }

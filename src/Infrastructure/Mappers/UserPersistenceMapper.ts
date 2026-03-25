@@ -12,14 +12,14 @@ export class UserPersistenceMapper {
             fullname: raw.fullName,
             passwordHash: raw.passwordHash,
             phone: raw.phone,
-            role: this.mapUserROle(raw.role),
+            role: this._mapUserROle(raw.role),
             isActive: raw.isActive,
             isSuspended: raw.isSuspended,
             isEmailVerified: raw.isEmailVerified,
             createdAt: raw.createdAt,
         });
     }
-    private static mapUserROle(role: PrismaUSerRole): UserRole {
+    private static _mapUserROle(role: PrismaUSerRole): UserRole {
         return role as unknown as UserRole;
     }
 }

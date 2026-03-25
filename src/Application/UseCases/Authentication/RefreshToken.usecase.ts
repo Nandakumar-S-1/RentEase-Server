@@ -16,8 +16,9 @@ export class RefreshTokenUseCase implements IRefreshTokenUseCase {
 
         @inject(TokenTypes.IUserRepository)
         private readonly _userRepository: IUserRepository,
-    ) {}
+    ) { }
     async execute(refreshToken: string): Promise<{ accessToken: string; refreshToken: string }> {
+        logger.info('refresh token usecase started----');
         const payload = this._jwtService.verifyTheRefreshToken(refreshToken);
 
         const user = await this._userRepository.findById(payload.userId);

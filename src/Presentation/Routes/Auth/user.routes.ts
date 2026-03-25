@@ -1,4 +1,4 @@
-import { injectable, inject } from 'tsyringe';
+import { injectable } from 'tsyringe';
 import { BaseRoute } from '../Base/base.route';
 import { asyncHandlerFunction } from '@presentation/Utils/asyncHandler';
 import { AuthController } from '@presentation/Controllers/Authentication/Auth.Controller';

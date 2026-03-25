@@ -1,3 +1,7 @@
+
+//uses tokens insted of class is beacause interfaces doesnt exist at runtime. 
+// so the tokens will be as identifiers used for DI
+
 export const TokenTypes = {
     IUserRepository: 'IUserRepository',
     ICreateUserUseCase: 'ICreateUserUseCase',

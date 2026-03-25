@@ -39,8 +39,8 @@ export class JwtService implements IJwtService {
         this._accessTokenExpiry = process.env.JWT_ACCESS_TOKEN_EXPIRY as SignOptions['expiresIn'];
         this._refreshTokenExpiry = process.env.JWT_REFRESH_TOKEN_EXPIRY as SignOptions['expiresIn'];
     }
-
-    private createAccessToken(payload: ITokenPayloadContent): string {
+    ////encapsulation in action here. the private methods are not exposed to the outside world
+    private _createAccessToken(payload: ITokenPayloadContent): string {
         try {
             const signOptions: SignOptions = {
                 expiresIn: this._accessTokenExpiry,
@@ -56,7 +56,7 @@ export class JwtService implements IJwtService {
         }
     }
 
-    private createRefreshToken(payload: ITokenPayloadContent): string {
+    private _createRefreshToken(payload: ITokenPayloadContent): string {
         try {
             const signOptions: SignOptions = {
                 expiresIn: this._refreshTokenExpiry,
@@ -75,8 +75,8 @@ export class JwtService implements IJwtService {
 
     createPairofJwtTokens(payload: ITokenPayloadContent): ITokenTypes {
         try {
-            const accessToken = this.createAccessToken(payload);
-            const refreshToken = this.createRefreshToken(payload);
+            const accessToken = this._createAccessToken(payload);
+            const refreshToken = this._createRefreshToken(payload);
 
             logger.info('token pair created');
             return {

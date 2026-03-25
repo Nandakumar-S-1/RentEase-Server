@@ -17,6 +17,8 @@ import { IRefreshTokenUseCase } from '@application/Interfaces/Auth/IRefreshToken
 import { RefreshTokenUseCase } from '@application/UseCases/Authentication/RefreshToken.usecase';
 import { SubmitVerificationUseCase } from '@application/UseCases/Owner/SubmitVerification.usecase';
 import { VerifyOwnerUseCase } from '@application/UseCases/Owner/VerifyOwner.usecase';
+import { IVerifyOwnerUseCase } from '@application/Interfaces/Admin/IVerifyOwnerUseCase';
+import { ISubmitVerificationUseCase } from '@application/Interfaces/Owner/ISubmitVerificationUseCase';
 
 export class UseCaseModule {
     static registerModules(): void {
@@ -46,10 +48,10 @@ export class UseCaseModule {
         container.register<IRefreshTokenUseCase>(TokenTypes.IRefreshTokenUseCase, {
             useClass: RefreshTokenUseCase,
         });
-        container.register(TokenTypes.SubmitVerificationUseCase, {
+        container.register<ISubmitVerificationUseCase>(TokenTypes.SubmitVerificationUseCase, {
             useClass: SubmitVerificationUseCase,
         });
-        container.register(TokenTypes.VerifyOwnerUseCase, {
+        container.register<IVerifyOwnerUseCase>(TokenTypes.VerifyOwnerUseCase, {
             useClass: VerifyOwnerUseCase,
         });
     }

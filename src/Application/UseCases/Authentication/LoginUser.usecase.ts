@@ -18,20 +18,20 @@ import { inject, injectable } from 'tsyringe';
 export class LoginUseCase implements ILoginUserUseCase {
     constructor(
         @inject(TokenTypes.IUserRepository)
-        private readonly userReposiory: IUserRepository,
+        private readonly _userRepository: IUserRepository,
 
         @inject(TokenTypes.IHashService)
-        private readonly hashService: IHashService,
+        private readonly _hashService: IHashService,
 
         @inject(TokenTypes.IJwtService)
-        private readonly jwtService: IJwtService,
-    ) {}
+        private readonly _jwtService: IJwtService,
+    ) { }
     async execute(dto: LoginRequestDTO): Promise<LoginResponseDTO> {
         logger.info('login usecase started----');
         if (!dto.email || !dto.password) {
             throw new InvalidCredentialsError();
         }
-        const user = await this.userReposiory.findByEmail(dto.email);
+        const user = await this._userRepository.findByEmail(dto.email);
         if (!user) {
             logger.warn('user with this email does not exist');
             throw new InvalidCredentialsError();
@@ -49,14 +49,14 @@ export class LoginUseCase implements ILoginUserUseCase {
             throw new AccountSuspendedError();
         }
 
-        const isValidPassword = await this.hashService.compare(dto.password, user.password);
+        const isValidPassword = await this._hashService.compare(dto.password, user.password);
         if (!isValidPassword) {
             logger.warn('Written password is incorrect');
             throw new InvalidCredentialsError();
         }
 
         logger.info('Login succesfull.');
-        const token = this.jwtService.createPairofJwtTokens({
+        const token = this._jwtService.createPairofJwtTokens({
             userId: user.id,
             email: user.email,
             role: user.role,

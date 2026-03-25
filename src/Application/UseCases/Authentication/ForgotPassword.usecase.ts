@@ -13,26 +13,26 @@ import { inject, injectable } from 'tsyringe';
 export class ForgotPasswordUseCase implements IForgotPasswordUseCase {
     constructor(
         @inject(TokenTypes.IUserRepository)
-        private readonly userRepository: IUserRepository,
+        private readonly _userRepository: IUserRepository,
         @inject(TokenTypes.IRedisCache)
-        private readonly redisService: IRedisCache,
+        private readonly _redisService: IRedisCache,
         @inject(TokenTypes.IOtpService)
-        private readonly otpService: IOtpService,
+        private readonly _otpService: IOtpService,
         @inject(TokenTypes.IMailService)
-        private readonly mailService: IMailService,
-    ) {}
+        private readonly _mailService: IMailService,
+    ) { }
 
     async execute(dto: ForgotPasswordRequestDto): Promise<void> {
-        const user = await this.userRepository.findByEmail(dto.email);
+        const user = await this._userRepository.findByEmail(dto.email);
         if (!user) {
             logger.warn('user with this mail doesnt exist');
             throw new InvalidCredentialsError();
         }
-        const otp = this.otpService.generateOTP();
+        const otp = this._otpService.generateOTP();
         const redisKey = `resetPassword_otp:${dto.email}`;
 
-        await this.redisService.set(redisKey, otp, 300);
-        await this.mailService.sendMail(
+        await this._redisService.set(redisKey, otp, 300);
+        await this._mailService.sendMail(
             dto.email,
             `Your Password reset OTP`,
             `Your OTP to reset Password is ${otp}`,

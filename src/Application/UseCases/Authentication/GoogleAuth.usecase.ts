@@ -16,20 +16,20 @@ import { inject, injectable } from 'tsyringe';
 export class GoogleAuthUseCase implements IGoogleAuthUseCase {
     constructor(
         @inject(TokenTypes.IUserRepository)
-        private readonly userRepository: IUserRepository,
+        private readonly _userRepository: IUserRepository,
         @inject(TokenTypes.IFirebaseService)
-        private readonly firebaseService: IFirebaseService,
+        private readonly _firebaseService: IFirebaseService,
         @inject(TokenTypes.IJwtService)
-        private readonly jwtService: IJwtService,
+        private readonly _jwtService: IJwtService,
         @inject(TokenTypes.IOwnerProfileRepository)
-        private readonly ownerRepository: IOwnerProfileRepository,
-    ) {}
+        private readonly _ownerRepository: IOwnerProfileRepository,
+    ) { }
 
     async execute(dto: GoogleAuthRequestDTO): Promise<LoginResponseDTO> {
         const { idToken, role } = dto;
-        const { email, fullname } = await this.firebaseService.verifyIdToken(idToken);
+        const { email, fullname } = await this._firebaseService.verifyIdToken(idToken);
 
-        let user = await this.userRepository.findByEmail(email);
+        let user = await this._userRepository.findByEmail(email);
 
         if (!user) {
             logger.info(`Creating new google user: ${email}`);
@@ -44,17 +44,17 @@ export class GoogleAuthUseCase implements IGoogleAuthUseCase {
                 isEmailVerified: true,
             });
 
-            user = await this.userRepository.create(newUser);
+            user = await this._userRepository.create(newUser);
 
             // Create OwnerProfile for OWNER users (same as VerifyOtp)
             if (user.role === UserRole.OWNER) {
-                await this.ownerRepository.create(
+                await this._ownerRepository.create(
                     OwnerProfileEntity.create({ id: crypto.randomUUID(), userId: user.id }),
                 );
             }
         }
 
-        const tokens = this.jwtService.createPairofJwtTokens({
+        const tokens = this._jwtService.createPairofJwtTokens({
             userId: user.id,
             email: user.email,
             role: user.role,

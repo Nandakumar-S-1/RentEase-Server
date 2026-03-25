@@ -6,19 +6,20 @@ import { logger } from '@shared/Log/logger';
 import { Http_StatusCodes } from '@shared/Enums/Http_StatusCodes';
 import { ApiResponse } from '@application/Data-Transfer-Object/ApiResponseDTO';
 import { UserRole } from '@shared/Enums/user.role.type';
+import { LoginResponseDTO } from '@application/Data-Transfer-Object/Authentication/Response/LoginResponseDTO';
 
 @injectable()
 export class AdminLoginController {
     constructor(
         @inject(TokenTypes.ILoginUseCase)
-        private readonly loginUseCase: ILoginUserUseCase,
-    ) {}
+        private readonly _loginUseCase: ILoginUserUseCase,
+    ) { }
 
     async login(req: Request, res: Response): Promise<Response> {
         const { email, password } = req.body;
         logger.info(`adminlogin: ${email}`);
 
-        const result = await this.loginUseCase.execute({
+        const result = await this._loginUseCase.execute({
             email,
             password,
         });
@@ -30,17 +31,7 @@ export class AdminLoginController {
             });
         }
 
-        const response: ApiResponse<{
-            user: {
-                id: string;
-                email: string;
-                fullname: string;
-                phone: string | null;
-                role: string;
-            };
-            accessToken: string;
-            refreshToken: string;
-        }> = {
+        const response: ApiResponse<LoginResponseDTO> = {
             success: true,
             message: 'Admin login successful',
             data: {
@@ -55,6 +46,13 @@ export class AdminLoginController {
                 refreshToken: result.refreshToken,
             },
         };
+
+        res.cookie('refreshToken', result.refreshToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+        });
 
         return res.status(Http_StatusCodes.OK).json(response);
     }
