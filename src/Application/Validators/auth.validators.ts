@@ -1,36 +1,42 @@
 import { z } from 'zod';
-import { UserRole } from '@shared/Enums/user.role.type';
 
-const fullname = z.string()
+const fullname = z
+    .string()
     .trim()
-    .min(2, "Full name must be at least 2 characters")
-    .max(50, "Full name cannot exceed 50 characters");
+    .min(2, 'Full name must be at least 2 characters')
+    .max(50, 'Full name cannot exceed 50 characters');
 
-const email = z.string()
+const email = z
+    .string()
     .trim()
-    .email("Invalid email address")
-    .max(50, "Email cannot exceed 50 characters");
+    .email('Invalid email address')
+    .max(50, 'Email cannot exceed 50 characters');
 
-const password = z.string()
-    .min(8, "Password must be at least 8 characters")
-    .max(30, "Password cannot exceed 30 characters")
-    .regex(/[A-Z]/, "Must include an uppercase letter")
-    .regex(/[a-z]/, "Must include a lowercase letter")
-    .regex(/\d/, "Must include a number")
-    .regex(/[^A-Za-z0-9]/, "Must include a special character");
+const password = z
+    .string()
+    .min(8, 'Password must be at least 8 characters')
+    .max(30, 'Password cannot exceed 30 characters')
+    .regex(/[A-Z]/, 'Must include an uppercase letter')
+    .regex(/[a-z]/, 'Must include a lowercase letter')
+    .regex(/\d/, 'Must include a number')
+    .regex(/[^A-Za-z0-9]/, 'Must include a special character');
 
-const phone = z.string()
+const phone = z
+    .string()
     .trim()
-    .regex(/^\d{10}$/, "Phone number must be exactly 10 digits");
+    .regex(/^[7-9]\d{9}$/, 'Phone number must be exactly 10 digits and start with 7, 8, or 9.')
+    .refine((val) => !/^(\d)\1{9}$/.test(val), {
+        message: 'Phone number cannot have all identical digits.',
+    });
 
-const role = z.enum(["TENANT", "OWNER"]);
+const role = z.enum(['TENANT', 'OWNER']);
 
-const otp = z.string()
+const otp = z
+    .string()
     .trim()
-    .regex(/^\d{6}$/, "OTP must be exactly 6 digits");
+    .regex(/^\d{6}$/, 'OTP must be exactly 6 digits');
 
-
-// dto validation schemas -------------------------------------------- //
+// dto validation schemas --------------------------------------------
 
 export const registerSchema = z.object({
     email,
@@ -42,7 +48,7 @@ export const registerSchema = z.object({
 
 export const loginSchema = z.object({
     email,
-    password: z.string().min(1, "Password is required"),
+    password: z.string().min(1, 'Password is required'),
 });
 
 export const verifyOtpSchema = z.object({
@@ -69,10 +75,10 @@ export const verifyResetOtpSchema = z.object({
 });
 
 export const googleAuthSchema = z.object({
-    idToken: z.string().min(1, "ID Token cannot be empty"),
+    idToken: z.string().min(1, 'ID Token cannot be empty'),
     role,
 });
 
 export const refreshTokenSchema = z.object({
-    refreshToken: z.string().min(1, "Refresh token cannot be empty"),
+    refreshToken: z.string().min(1, 'Refresh token cannot be empty'),
 });

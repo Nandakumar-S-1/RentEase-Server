@@ -8,12 +8,27 @@ export const AUTH_ROUTES = {
     RESET_PASSWORD: '/reset-password',
     GOOGLE_AUTH: '/google-auth',
     REFRESH_TOKEN: '/refresh-token',
+    ME: '/me',
 } as const;
 
 export const ADMIN_ROUTES = {
     LOGIN: '/login',
-    USERS: '/users',
-    VERIFY_OWNER: '/verify-owner',
+    USERS: {
+        BASE: '/users',
+        SUSPEND: '/users/suspend/:id',
+        ACTIVATE: '/users/activate/:id',
+        DEACTIVATE: '/users/deactivate/:id',
+    },
+    OWNER_VERIFICATION: {
+        PENDING: '/owners/pending',
+        VERIFY: '/owners/:ownerId/verify',
+        REJECT: '/owners/:ownerId/reject',
+    },
+} as const;
+
+export const OWNER_ROUTES = {
+    SUBMIT: '/submit-verification',
+    STATUS: '/verification-status',
 } as const;
 
 export const API_PREFIXES = {

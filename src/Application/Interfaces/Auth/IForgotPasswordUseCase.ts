@@ -1,5 +1,5 @@
-import { ForgotPasswordRequestDto } from "@application/Data-Transfer-Object/Authentication/Request/ForgotPasswordDTO";
+import { ForgotPasswordRequestDto } from '@application/Data-Transfer-Object/Authentication/Request/ForgotPasswordDTO';
 
-export interface IForgotPasswordUseCase{
-    execute(dto:ForgotPasswordRequestDto):Promise<void>
+export interface IForgotPasswordUseCase {
+    execute(dto: ForgotPasswordRequestDto): Promise<void>;
 }

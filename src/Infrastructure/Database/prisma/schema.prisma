@@ -21,6 +21,11 @@ enum UserRole {
   TENANT
 }
 
+enum TokenType {
+  EMAIL_VERIFY
+  PASSWORD_RESET
+}
+
 model User {
   //(id:- column name, String:- stored as text/uuid @id :- primary key, default:- autogenerate uuid)
 
@@ -28,7 +33,7 @@ model User {
   email        String @unique
   passwordHash String
   fullName     String
-  phone        String @unique
+  phone        String? @unique
 
   role      UserRole
   avatarUrl String?
@@ -59,12 +64,26 @@ model User {
 
 model OwnerProfile {
   id         String   @id @default(uuid())
-  user_id    String   @unique
-  user       User     @relation(fields: [user_id], references: [id])
+  userId    String   @unique
+  user       User     @relation(fields: [userId], references: [id],onDelete: Cascade)
   bio        String?
   occupation String?
+
+  documentType  String?
+  documentUrl   String?
+  verificationStatus  VerificationStatus @default(PENDING)
+  rejectionReason String?
+  verifiedAt  DateTime? @default(now())
+
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+}
+
+enum VerificationStatus{
+  PENDING
+  SUBMITTED
+  VERIFIED
+  REJECTED
 }
 
 model TenantProfile {
@@ -93,7 +112,7 @@ model VerificationToken {
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  tokenType  String // 'email_verify | 'password_reset'
+  tokenType  TokenType 
   tokenValue String
   isUsed     Boolean @default(false)
 

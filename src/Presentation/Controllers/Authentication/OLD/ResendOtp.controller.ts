@@ -28,10 +28,7 @@
 //   }
 // }
 
-
-
-
-// // How errors are handled: 
+// // How errors are handled:
 // // 1- resendOtpUseCase.execute() throws InvalidOtpError
 // // 2- Controller doesn't catch it (no try-catch blok)
 // // 3- Error bubbles up to asyncHandlerFunction

@@ -1,3 +1,3 @@
 export interface IOtpService {
-  generateOTP(): string;
+    generateOTP(): string;
 }
