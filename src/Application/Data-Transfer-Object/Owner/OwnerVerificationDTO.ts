@@ -1,11 +1,13 @@
+export type documentType= 'PAN' | 'AADHAAR'
+export type verificationStatus= 'VERIFIED' | 'REJECTED';
 export interface SubmitVerificationDTO {
     ownerId: string;
     documentUrl: string;
-    documentType: 'PAN' | 'AADHAAR';
+    documentType: documentType
 }
 
 export interface ReviewVerificationDTO {
     ownerId: string;
-    status: 'VERIFIED' | 'REJECTED';
+    status: verificationStatus
     rejectionReason?: string;
 }
