@@ -10,7 +10,7 @@
 //     constructor(
 //         @inject(TokenTypes.IForgotPasswordUseCase)
 //         private readonly forgotPasswordUsecase:IForgotPasswordUseCase
-    
+
 //     ){}
 
 //     async execute(req:Request,res:Response):Promise<Response>{

@@ -1,3 +1,3 @@
-export interface IFirebaseService{
-    verifyIdToken(token:string):Promise<{email:string,fullname:string}>
+export interface IFirebaseService {
+    verifyIdToken(token: string): Promise<{ email: string; fullname: string }>;
 }

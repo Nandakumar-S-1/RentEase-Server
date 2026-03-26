@@ -1,114 +1,114 @@
 import {
-  ITokenPayloadContent,
-  ITokenTypes,
+    ITokenPayloadContent,
+    ITokenTypes,
 } from '@application/Interfaces/Security/ITokenPayloadContent';
 import { injectable } from 'tsyringe';
 import jwt, { SignOptions } from 'jsonwebtoken';
 import { logger } from '@shared/Log/logger';
 import {
-  accessTokenCreationError,
-  InvalidAccessToken,
-  InvalidRefreshToken,
-  refreshTOkenCreationError,
+    accessTokenCreationError,
+    InvalidAccessToken,
+    InvalidRefreshToken,
+    refreshTOkenCreationError,
 } from '@shared/Errors/JWT_Errors';
 import { IJwtService } from '@application/Interfaces/Services/IJwtService';
 
 @injectable()
 export class JwtService implements IJwtService {
-  private readonly _accessTokenSecret: string;
-  private readonly _refreshTokenSecret: string;
-  private readonly _accessTokenExpiry;
-  private readonly _refreshTokenExpiry;
+    private readonly _accessTokenSecret: string;
+    private readonly _refreshTokenSecret: string;
+    private readonly _accessTokenExpiry;
+    private readonly _refreshTokenExpiry;
 
-  constructor() {
-    if (!process.env.JWT_ACCESS_TOKEN_SECRET) {
-      throw new Error('JWT_ACCESS_TOKEN_SECRET is missing');
+    constructor() {
+        if (!process.env.JWT_ACCESS_TOKEN_SECRET) {
+            throw new Error('JWT_ACCESS_TOKEN_SECRET is missing');
+        }
+        if (!process.env.JWT_REFRESH_TOKEN_SECRET) {
+            throw new Error('JWT_REFRESH_TOKEN_SECRET is missing');
+        }
+        if (!process.env.JWT_ACCESS_TOKEN_EXPIRY) {
+            throw new Error('JWT_ACCESS_TOKEN_EXPIRY is missing');
+        }
+        if (!process.env.JWT_REFRESH_TOKEN_EXPIRY) {
+            throw new Error('JWT_REFRESH_TOKEN_EXPIRY is missing');
+        }
+
+        this._accessTokenSecret = process.env.JWT_ACCESS_TOKEN_SECRET;
+        this._refreshTokenSecret = process.env.JWT_REFRESH_TOKEN_SECRET;
+        this._accessTokenExpiry = process.env.JWT_ACCESS_TOKEN_EXPIRY as SignOptions['expiresIn'];
+        this._refreshTokenExpiry = process.env.JWT_REFRESH_TOKEN_EXPIRY as SignOptions['expiresIn'];
     }
-    if (!process.env.JWT_REFRESH_TOKEN_SECRET) {
-      throw new Error('JWT_REFRESH_TOKEN_SECRET is missing');
+    ////encapsulation in action here. the private methods are not exposed to the outside world
+    private _createAccessToken(payload: ITokenPayloadContent): string {
+        try {
+            const signOptions: SignOptions = {
+                expiresIn: this._accessTokenExpiry,
+                algorithm: 'HS256',
+            };
+            const token = jwt.sign(payload, this._accessTokenSecret, signOptions);
+
+            logger.info(`access token for user id:${payload.userId}`);
+            return token;
+        } catch (error) {
+            logger.error({ error }, 'error creating access token');
+            throw new accessTokenCreationError();
+        }
     }
-    if (!process.env.JWT_ACCESS_TOKEN_EXPIRY) {
-      throw new Error('JWT_ACCESS_TOKEN_EXPIRY is missing');
+
+    private _createRefreshToken(payload: ITokenPayloadContent): string {
+        try {
+            const signOptions: SignOptions = {
+                expiresIn: this._refreshTokenExpiry,
+                algorithm: 'HS256',
+            };
+
+            const token = jwt.sign(payload, this._refreshTokenSecret, signOptions);
+
+            logger.info(`refreshtoken for ${payload.userId} created`);
+            return token;
+        } catch (error) {
+            logger.error({ error }, 'failed creating thee refreshtokn');
+            throw new refreshTOkenCreationError();
+        }
     }
-    if (!process.env.JWT_REFRESH_TOKEN_EXPIRY) {
-      throw new Error('JWT_REFRESH_TOKEN_EXPIRY is missing');
+
+    createPairofJwtTokens(payload: ITokenPayloadContent): ITokenTypes {
+        try {
+            const accessToken = this._createAccessToken(payload);
+            const refreshToken = this._createRefreshToken(payload);
+
+            logger.info('token pair created');
+            return {
+                accessToken,
+                refreshToken,
+            };
+        } catch (error) {
+            logger.error({ error }, 'token creation has failed');
+            throw new Error('JWT pair creation failed');
+        }
     }
 
-    this._accessTokenSecret = process.env.JWT_ACCESS_TOKEN_SECRET;
-    this._refreshTokenSecret = process.env.JWT_REFRESH_TOKEN_SECRET;
-    this._accessTokenExpiry = process.env.JWT_ACCESS_TOKEN_EXPIRY as SignOptions['expiresIn'];
-    this._refreshTokenExpiry = process.env.JWT_REFRESH_TOKEN_EXPIRY as SignOptions['expiresIn'];
-  }
-
-  private createAccessToken(payload: ITokenPayloadContent): string {
-    try {
-      const signOptions: SignOptions = {
-        expiresIn: this._accessTokenExpiry,
-        algorithm: 'HS256',
-      };
-      const token = jwt.sign(payload, this._accessTokenSecret, signOptions);
-
-      logger.info(`access token for user id:${payload.userId}`);
-      return token;
-    } catch (error) {
-      logger.error({ error }, 'error creating access token');
-      throw new accessTokenCreationError();
+    verifyTheAccessToken(token: string): ITokenPayloadContent {
+        try {
+            const decoded = jwt.verify(token, this._accessTokenSecret) as ITokenPayloadContent;
+            logger.info(`${decoded.userId}'s access token verified`);
+            return decoded;
+        } catch (error) {
+            logger.warn({ error }, ' access token verification error');
+            throw new InvalidAccessToken();
+        }
     }
-  }
 
-  private createRefreshToken(payload: ITokenPayloadContent): string {
-    try {
-      const signOptions: SignOptions = {
-        expiresIn: this._refreshTokenExpiry,
-        algorithm: 'HS256',
-      };
+    verifyTheRefreshToken(token: string): ITokenPayloadContent {
+        try {
+            const decoded = jwt.verify(token, this._refreshTokenSecret) as ITokenPayloadContent;
+            logger.info(`${decoded.userId}' s refresh token has verified`);
 
-      const token = jwt.sign(payload, this._refreshTokenSecret, signOptions);
-
-      logger.info(`refreshtoken for ${payload.userId} created`);
-      return token;
-    } catch (error) {
-      logger.error({ error }, 'failed creating thee refreshtokn');
-      throw new refreshTOkenCreationError();
+            return decoded;
+        } catch (error) {
+            logger.warn({ error }, `Refresh token verification failed:`);
+            throw new InvalidRefreshToken();
+        }
     }
-  }
-
-  createPairofJwtTokens(payload: ITokenPayloadContent): ITokenTypes {
-    try {
-      const accessToken = this.createAccessToken(payload);
-      const refreshToken = this.createRefreshToken(payload);
-
-      logger.info('token pair created');
-      return {
-        accessToken,
-        refreshToken,
-      };
-    } catch (error) {
-      logger.error({ error }, 'token creation has failed');
-      throw new Error('JWT pair creation failed');
-    }
-  }
-
-  verifyTheAccessToken(token: string): ITokenPayloadContent {
-    try {
-      const decoded = jwt.verify(token, this._accessTokenSecret) as ITokenPayloadContent;
-      logger.info(`${decoded.userId}'s access token verified`);
-      return decoded;
-    } catch (error) {
-      logger.warn({ error }, ' access token verification error');
-      throw new InvalidAccessToken();
-    }
-  }
-
-  verifyTheRefreshToken(token: string): ITokenPayloadContent {
-    try {
-      const decoded = jwt.verify(token, this._refreshTokenSecret) as ITokenPayloadContent;
-      logger.info(`${decoded.userId}' s refresh token has verified`);
-
-      return decoded;
-    } catch (error) {
-      logger.warn({ error }, `Refresh token verification failed:`);
-      throw new InvalidRefreshToken();
-    }
-  }
 }

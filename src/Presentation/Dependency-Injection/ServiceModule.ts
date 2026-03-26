@@ -1,5 +1,5 @@
 import { IJwtService } from '@application/Interfaces/Services/IJwtService';
-import { IMailService } from '@application/Interfaces/Services/IMailService ';
+import { IMailService } from '@application/Interfaces/Services/IMailService';
 import { IOtpService } from '@application/Interfaces/Services/IOtpService';
 import { IRedisCache } from '@application/Interfaces/Services/IRedisCacheService';
 import { RedisCacheService } from '@infrastructure/Cache/RedisCache.service';
@@ -15,25 +15,25 @@ import { IFirebaseService } from '@application/Interfaces/Services/IFirebaseServ
 import { FirebaseService } from '@infrastructure/Services/FirebaseService';
 
 export class ServiceModule {
-  static registerModules(): void {
-    container.register<IHashService>(TokenTypes.IHashService, {
-      useClass: BcryptHashService,
-    });
-    container.register<IOtpService>(TokenTypes.IOtpService, {
-      useClass: OtpService,
-    });
-    container.register<IMailService>(TokenTypes.IMailService, {
-      //When someone asks for IMailService, create a new instance of MailService.
-      useClass: MailService,
-    });
-    container.register<IRedisCache>(TokenTypes.IRedisCache, {
-      useClass: RedisCacheService,
-    });
-    container.register<IJwtService>(TokenTypes.IJwtService, {
-      useClass: JwtService,
-    })
-    container.register<IFirebaseService>(TokenTypes.IFirebaseService, {
-      useClass: FirebaseService
-    })
-  }
+    static registerModules(): void {
+        container.register<IHashService>(TokenTypes.IHashService, {
+            useClass: BcryptHashService,
+        });
+        container.register<IOtpService>(TokenTypes.IOtpService, {
+            useClass: OtpService,
+        });
+        container.register<IMailService>(TokenTypes.IMailService, {
+            //When someone asks for IMailService, create a new instance of MailService.
+            useClass: MailService,
+        });
+        container.register<IRedisCache>(TokenTypes.IRedisCache, {
+            useClass: RedisCacheService,
+        });
+        container.register<IJwtService>(TokenTypes.IJwtService, {
+            useClass: JwtService,
+        });
+        container.register<IFirebaseService>(TokenTypes.IFirebaseService, {
+            useClass: FirebaseService,
+        });
+    }
 }
