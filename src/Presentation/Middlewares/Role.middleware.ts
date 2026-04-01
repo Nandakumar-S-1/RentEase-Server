@@ -1,5 +1,5 @@
-import { Http_StatusCodes } from '@shared/Enums/Http_StatusCodes';
-import { UserRole } from '@shared/Enums/user.role.type';
+import { Http_StatusCodes } from 'shared/enums/http-status-codes.enum';
+import { UserRole } from 'shared/enums/user-role.enum';
 import { Request, Response, NextFunction } from 'express';
 
 export const neededRole = (...allowedRoles: UserRole[]) => {

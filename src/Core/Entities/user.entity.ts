@@ -1,5 +1,5 @@
-import { UserTypeData } from 'Core/Types/user.types';
-import { UserRole } from 'Shared/Enums/user.role.type';
+import { UserTypeData } from 'core/types/user.types';
+import { UserRole } from 'shared/enums/user-role.enum';
 
 export class UserEntity {
     private constructor(

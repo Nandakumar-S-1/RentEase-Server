@@ -13,6 +13,7 @@ export const AUTH_ROUTES = {
 
 export const ADMIN_ROUTES = {
     LOGIN: '/login',
+    GOOGLE_LOGIN: '/google-login',
     USERS: {
         BASE: '/users',
         SUSPEND: '/users/suspend/:id',
@@ -21,6 +22,7 @@ export const ADMIN_ROUTES = {
     },
     OWNER_VERIFICATION: {
         PENDING: '/owners/pending',
+        DETAILS: '/owners/:ownerId',
         VERIFY: '/owners/:ownerId/verify',
         REJECT: '/owners/:ownerId/reject',
     },
@@ -29,6 +31,11 @@ export const ADMIN_ROUTES = {
 export const OWNER_ROUTES = {
     SUBMIT: '/submit-verification',
     STATUS: '/verification-status',
+} as const;
+
+export const PROFILE_ROUTES = {
+    GET: '/',
+    UPDATE: '/',
 } as const;
 
 export const API_PREFIXES = {

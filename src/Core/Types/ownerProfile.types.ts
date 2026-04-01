@@ -1,4 +1,4 @@
-import { Owner_Verification_Status } from '@shared/Enums/owner.verification.status';
+import { Owner_Verification_Status } from 'shared/enums/owner-verification-status.enum';
 
 export interface OwnerProfileTypeData {
     id: string;

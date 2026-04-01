@@ -1,6 +1,6 @@
 //this file's job is to make sure that DB connection is ready, and handling connection,disconnection shutdowns etc.(like a switch that on and offs database)
 
-import { logger } from '@shared/Log/logger';
+import { logger } from 'shared/log/logger';
 import { prisma } from './prisma/prisma.client';
 
 export async function connectToPostgressDB(): Promise<void> {

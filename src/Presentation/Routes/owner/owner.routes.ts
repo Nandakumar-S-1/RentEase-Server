@@ -1,14 +1,14 @@
 import { injectable } from 'tsyringe';
-import { BaseRoute } from '../Base/base.route';
-import { OwnerVerificationController } from '@presentation/Controllers/Owner/OwnerVerification.controller';
-import { OWNER_ROUTES } from '@shared/Constants/Routes';
-import { authMiddleware } from '@presentation/Middlewares/Auth.middleware';
-import { neededRole } from '@presentation/Middlewares/Role.middleware';
-import { UserRole } from '@shared/Enums/user.role.type';
-import { upload } from '@shared/Uploads/cloudinary.upload';
-import { validationRequestMiddleware } from '@presentation/Middlewares/Validation.middleware';
-import { submitVerificationSchema } from '@application/Validators/owner.validators';
-import { asyncHandlerFunction } from '@presentation/Utils/asyncHandler';
+import { BaseRoute } from '../base/base.route';
+import { OwnerVerificationController } from 'presentation/controllers/owner/owner-verification.controller';
+import { OWNER_ROUTES } from 'shared/constants/routes';
+import { authMiddleware } from 'presentation/middlewares/auth.middleware';
+import { neededRole } from 'presentation/middlewares/role.middleware';
+import { UserRole } from 'shared/enums/user-role.enum';
+import { upload } from 'shared/uploads/cloudinary.upload';
+import { validationRequestMiddleware } from 'presentation/middlewares/validation.middleware';
+import { submitVerificationSchema } from 'application/validators/owner.validators';
+import { asyncHandlerFunction } from 'presentation/Utils/async-handler';
 
 @injectable()
 export class OwnerRoutes extends BaseRoute {

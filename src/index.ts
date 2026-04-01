@@ -1,12 +1,11 @@
 import 'reflect-metadata'; //enable decorator metadata
 import 'dotenv/config';
 
+import 'presentation/dependency-injection/container'; //execute the DI container setup
+import { App } from 'infrastructure/config/app';
 
-import '@presentation/Dependency-Injection/Container'; //execute the DI container setup
-import { App } from '@infrastructure/Config/app';
-
-import { logger } from '@shared/Log/logger';
-import { verifyServices } from '@infrastructure/Connections/verifyServices';
+import { logger } from 'shared/log/logger';
+import { verifyServices } from 'infrastructure/connections/verify-services';
 
 const PORT = process.env.PORT || 3000;
 

@@ -1,5 +1,4 @@
-
-//uses tokens insted of class is beacause interfaces doesnt exist at runtime. 
+//uses tokens insted of class is beacause interfaces doesnt exist at runtime.
 // so the tokens will be as identifiers used for DI
 
 export const TokenTypes = {
@@ -20,6 +19,9 @@ export const TokenTypes = {
     AdminUserManagementUseCase: 'AdminUserManagementUseCase',
     IRefreshTokenUseCase: 'IRefreshTokenUseCase',
     IOwnerProfileRepository: 'IOwnerProfileRepository',
+    ITenantProfileRepository: 'ITenantProfileRepository',
     SubmitVerificationUseCase: 'SubmitVerificationUseCase',
     VerifyOwnerUseCase: 'VerifyOwnerUseCase',
+    GetProfileUseCase: 'GetProfileUseCase',
+    UpdateProfileUseCase: 'UpdateProfileUseCase',
 };
