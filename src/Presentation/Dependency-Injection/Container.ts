@@ -2,9 +2,9 @@
 //its dependencies from outside rather than creating them itself.
 
 // import { container } from 'tsyringe';
-import { RepositoryModule } from './RepositoryModule';
-import { ServiceModule } from './ServiceModule';
-import { UseCaseModule } from './UseCaseModule';
+import { RepositoryModule } from './repository.module';
+import { ServiceModule } from './service.module';
+import { UseCaseModule } from './usecase.module';
 
 export class Container_Setup {
     static registerAll(): void {

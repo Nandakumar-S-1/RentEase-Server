@@ -1,1 +1,1 @@
-export type documentType= 'PAN' | 'AADHAAR'
+export type documentType = 'PAN' | 'AADHAAR';

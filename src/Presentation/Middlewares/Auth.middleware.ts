@@ -1,8 +1,9 @@
-import { IJwtService } from '@application/Interfaces/Services/IJwtService';
-import { IOwnerProfileRepository } from '@core/Interfaces/IOwnerRepository';
-import { IUserRepository } from '@core/Interfaces/IUserRepository';
+import { IJwtService } from 'application/interfaces/services/jwt.service.interface';
+import { IOwnerProfileRepository } from 'core/interfaces/owner-repository.interface';
+import { IUserRepository } from 'core/interfaces/user-repository.interface';
 import { Request, Response, NextFunction } from 'express';
 
+import { ErrorCodes } from 'shared/enums/error-codes.enum';
 import { container } from 'tsyringe';
 
 export const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
@@ -35,7 +36,7 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
             return res.status(401).json({
                 success: false,
                 message: 'Your account has been suspended',
-                code: 'ACCOUNT_SUSPENDED',
+                code: ErrorCodes.ACCOUNT_SUSPENDED,
             });
         }
 
@@ -43,7 +44,7 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
             return res.status(401).json({
                 success: false,
                 message: 'Account is deactivated',
-                code: 'ACCOUNT_DEACTIVATED',
+                code: ErrorCodes.ACCOUNT_DEACTIVATED,
             });
         }
 

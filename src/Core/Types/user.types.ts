@@ -1,4 +1,4 @@
-import { UserRole } from 'Shared/Enums/user.role.type';
+import { UserRole } from 'shared/enums/user-role.enum';
 
 export interface UserTypeData {
     id: string;

@@ -23,3 +23,8 @@ export const Admin_Response_Messages = {
     REJECTION_REASON_REQUIRED: 'Rejection reason should be included',
     PENDING_OWNERS_FETCHED: 'Fetched all pending owners',
 } as const;
+
+export const Profile_Response_Messages = {
+    FETCHED: 'Profile fetched successfully',
+    UPDATED: 'Profile updated successfully',
+} as const;

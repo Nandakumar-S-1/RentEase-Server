@@ -3,9 +3,10 @@ import 'dotenv/config';
 import cors from 'cors';
 
 import cookieParser from 'cookie-parser';
-import router from '@presentation/Routes/router';
-import { ErrorHandlerMiddleWare } from '@presentation/Middlewares/ErrorHandler.middleware';
+import router from 'presentation/routes/router';
+import { ErrorHandlerMiddleWare } from 'presentation/middlewares/error-handler.middleware';
 import { Request, Response, NextFunction } from 'express';
+import { globalLimiter } from 'presentation/middlewares/rate-limiter';
 export class App {
     private _app!: Application;
     constructor() {
@@ -44,7 +45,7 @@ export class App {
     }
 
     private routeConfigs() {
-        this._app.use('/api', router);
+        this._app.use('/api', globalLimiter, router);
         this._app.get('/', (req, res) => {
             res.send('Hello World!');
         });

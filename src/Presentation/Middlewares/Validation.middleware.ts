@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import { ZodObject, ZodError, ZodRawShape } from 'zod';
 import fs from 'fs/promises';
-import { logger } from '@shared/Log/logger';
-import { Http_StatusCodes } from '@shared/Enums/Http_StatusCodes';
+import { logger } from 'shared/log/logger';
+import { Http_StatusCodes } from 'shared/enums/http-status-codes.enum';
 
 export const validationRequestMiddleware = (schema: ZodObject<ZodRawShape>) => {
     return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -11,7 +11,10 @@ export const validationRequestMiddleware = (schema: ZodObject<ZodRawShape>) => {
             next();
         } catch (error) {
             if (error instanceof ZodError) {
-                const requestAny = req as Request & { file?: Express.Multer.File; files?: Express.Multer.File[] };
+                const requestAny = req as Request & {
+                    file?: Express.Multer.File;
+                    files?: Express.Multer.File[];
+                };
 
                 if (requestAny.file) {
                     await fs.unlink(requestAny.file.path).catch(() => {});

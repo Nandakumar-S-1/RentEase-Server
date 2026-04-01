@@ -1,25 +1,25 @@
 import { inject, injectable } from 'tsyringe';
-import { TokenTypes } from '../../../Shared/Types/tokens';
+import { TokenTypes } from '../../../shared/types/tokens';
 import { Request, Response } from 'express';
-import { ICreateUserUseCase } from '@application/Interfaces/Auth/ICreateUserUseCase';
-import { IVerifyOtpUseCase } from '@application/Interfaces/Auth/IVerifyOtpUseCase';
-import { logger } from '@shared/Log/logger';
-import { ApiResponse } from '@application/Data-Transfer-Object/ApiResponseDTO';
-import { Http_StatusCodes } from '@shared/Enums/Http_StatusCodes';
-import { LoginResponseDTO } from '@application/Data-Transfer-Object/Authentication/Response/LoginResponseDTO';
-import { Auth_Response_Messages } from '@shared/Types/Messages/Response.messages';
-import { ILoginUserUseCase } from '@application/Interfaces/Auth/ILoginUserUseCase';
-import { IResendOtpUseCase } from '@application/Interfaces/Auth/IResendOtpUseCase';
-import { IRedisCache } from '@application/Interfaces/Services/IRedisCacheService';
-import { ResendOtpResponseDTO } from '@application/Data-Transfer-Object/Authentication/Response/ResendOtpResponseDTO';
-import { IForgotPasswordUseCase } from '@application/Interfaces/Auth/IForgotPasswordUseCase';
-import { IHashService } from '@application/Interfaces/Services/IHashService';
-import { IUserRepository } from '@core/Interfaces/IUserRepository';
-import { GoogleAuthUseCase } from '@application/UseCases/Authentication/GoogleAuth.usecase';
-import { InvalidOtpError } from '@shared/Errors/OTP_Errors';
-import { IRefreshTokenUseCase } from '@application/Interfaces/Auth/IRefreshTokenUseCase';
-import { RefreshTokenResponseDTO } from '@application/Data-Transfer-Object/Authentication/Response/IRefreshTokenResponseDTO';
-
+import { ICreateUserUseCase } from 'application/interfaces/auth/create-user.usecase.interface';
+import { IVerifyOtpUseCase } from 'application/interfaces/auth/verify-otp.usecase.interface';
+import { logger } from 'shared/log/logger';
+import { ApiResponse } from 'application/dtos/api-response.dto';
+import { Http_StatusCodes } from 'shared/enums/http-status-codes.enum';
+import { LoginResponseDTO } from 'application/dtos/authentication/response/login-response.dto';
+import { Auth_Response_Messages } from 'shared/types/messages/Response.messages';
+import { ILoginUserUseCase } from 'application/interfaces/auth/login-user.usecase.interface';
+import { IResendOtpUseCase } from 'application/interfaces/auth/resend-otp.usecase.interface';
+import { IRedisCache } from 'application/interfaces/services/redis-cache.service.interface';
+import { ResendOtpResponseDTO } from 'application/dtos/authentication/response/resend-otp-response.dto';
+import { IForgotPasswordUseCase } from 'application/interfaces/auth/forgot-password.usecase.interface';
+import { IHashService } from 'application/interfaces/services/hash.service.interface';
+import { IUserRepository } from 'core/interfaces/user-repository.interface';
+import { GoogleAuthUseCase } from 'application/usecases/auth/google-auth.usecase';
+import { InvalidOtpError } from 'shared/errors/otp-errors';
+import { IRefreshTokenUseCase } from 'application/interfaces/auth/refresh-token.usecase.interface';
+import { RefreshTokenResponseDTO } from 'application/dtos/authentication/response/refresh-token-response.dto';
+import { setRefreshTokenCookie } from 'shared/utils/cookieHelper';
 @injectable()
 export class AuthController {
     constructor(
@@ -52,7 +52,7 @@ export class AuthController {
 
         @inject(TokenTypes.IRefreshTokenUseCase)
         private readonly _refreshTokenUseCase: IRefreshTokenUseCase,
-    ) { }
+    ) {}
 
     register = async (req: Request, res: Response): Promise<Response> => {
         logger.info('registered data from the frontend is ', req.body);
@@ -97,12 +97,7 @@ export class AuthController {
             },
         };
 
-        res.cookie('refreshToken', result.refreshToken, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'strict',
-            maxAge: 7 * 24 * 60 * 60 * 1000, 
-        });
+        setRefreshTokenCookie(res, result.refreshToken);
 
         return res.status(Http_StatusCodes.OK).json(response);
     };
@@ -128,12 +123,7 @@ export class AuthController {
             },
         };
 
-        res.cookie('refreshToken', result.refreshToken, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'strict',
-            maxAge: 7 * 24 * 60 * 60 * 1000,
-        });
+        setRefreshTokenCookie(res, result.refreshToken);
 
         return res.status(Http_StatusCodes.OK).json(response);
     };
@@ -162,12 +152,7 @@ export class AuthController {
             },
         };
 
-        res.cookie('refreshToken', result.refreshToken, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'strict',
-            maxAge: 7 * 24 * 60 * 60 * 1000,
-        });
+        setRefreshTokenCookie(res, result.refreshToken);
 
         return res.status(Http_StatusCodes.OK).json(response);
     };
@@ -269,12 +254,7 @@ export class AuthController {
             },
         };
 
-        res.cookie('refreshToken', tokens.refreshToken, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'strict',
-            maxAge: 7 * 24 * 60 * 60 * 1000,
-        });
+        setRefreshTokenCookie(res, tokens.refreshToken);
 
         return res.status(Http_StatusCodes.OK).json(response);
     };

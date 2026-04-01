@@ -1,1 +1,1 @@
-export type userType ='TENANT' | 'OWNER'
+export type userType = 'TENANT' | 'OWNER';
