@@ -18,13 +18,13 @@ export class ProfileRoutes extends BaseRoute {
         this.router.get(
             PROFILE_ROUTES.GET,
             authMiddleware,
-            asyncHandlerFunction(this._controller.getProfile),
+            asyncHandlerFunction(this._controller.getProfile.bind(this._controller)),
         );
         this.router.put(
             PROFILE_ROUTES.UPDATE,
             authMiddleware,
             validationRequestMiddleware(updateProfileSchema),
-            asyncHandlerFunction(this._controller.updateProfile),
+            asyncHandlerFunction(this._controller.updateProfile.bind(this._controller)),
         );
     }
 }

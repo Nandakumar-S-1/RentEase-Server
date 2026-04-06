@@ -23,12 +23,12 @@ export class OwnerRoutes extends BaseRoute {
             neededRole(UserRole.OWNER),
             upload.single('document'),
             validationRequestMiddleware(submitVerificationSchema),
-            asyncHandlerFunction(this._controller.submit),
+            asyncHandlerFunction(this._controller.submit.bind(this._controller)),
         );
         this.router.get(
             OWNER_ROUTES.STATUS,
             authMiddleware,
-            asyncHandlerFunction(this._controller.getStatus),
+            asyncHandlerFunction(this._controller.getStatus.bind(this._controller)),
         );
     }
 }

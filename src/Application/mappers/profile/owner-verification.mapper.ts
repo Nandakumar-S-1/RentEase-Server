@@ -1,6 +1,7 @@
 import { PendingOwnerDTO } from 'application/dtos/owner/response/pending-owner-response.dto';
 import { OwnerProfileEntity } from 'core/entities/owner-profile.entity';
 
+//entity to resp
 export class OwnerVerificationMapper {
     static toResponse(entity: OwnerProfileEntity) {
         return {
