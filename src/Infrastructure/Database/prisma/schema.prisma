@@ -4,7 +4,6 @@
 // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
-
 //----------Database structure is in this file--------
 
 generator client {
@@ -29,8 +28,8 @@ enum TokenType {
 model User {
   //(id:- column name, String:- stored as text/uuid @id :- primary key, default:- autogenerate uuid)
 
-  id           String @id @default(uuid())
-  email        String @unique
+  id           String  @id @default(uuid())
+  email        String  @unique
   passwordHash String
   fullName     String
   phone        String? @unique
@@ -55,7 +54,8 @@ model User {
   tenant_profile TenantProfile?
   admin_profile  AdminProfile?
 
-  tokens VerificationToken[]
+  tokens     VerificationToken[]
+  properties Property[]
 
   @@index([email])
   @@index([phone])
@@ -63,23 +63,23 @@ model User {
 }
 
 model OwnerProfile {
-  id         String   @id @default(uuid())
-  userId    String   @unique
-  user       User     @relation(fields: [userId], references: [id],onDelete: Cascade)
+  id         String  @id @default(uuid())
+  userId     String  @unique
+  user       User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   bio        String?
   occupation String?
 
-  documentType  String?
-  documentUrl   String?
-  verificationStatus  VerificationStatus @default(PENDING)
-  rejectionReason String?
-  verifiedAt  DateTime? @default(now())
+  documentType       String?
+  documentUrl        String?
+  verificationStatus VerificationStatus @default(PENDING)
+  rejectionReason    String?
+  verifiedAt         DateTime?          @default(now())
 
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
-enum VerificationStatus{
+enum VerificationStatus {
   PENDING
   SUBMITTED
   VERIFIED
@@ -112,9 +112,9 @@ model VerificationToken {
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  tokenType  TokenType 
+  tokenType  TokenType
   tokenValue String
-  isUsed     Boolean @default(false)
+  isUsed     Boolean   @default(false)
 
   expiresAt DateTime
   usedAt    DateTime?
@@ -122,4 +122,91 @@ model VerificationToken {
 
   @@index([userId, tokenType])
   @@index([tokenValue])
+}
+
+model Property {
+  id           String @id @default(uuid())
+  ownerId      String
+  owner        User   @relation(fields: [ownerId], references: [id])
+  title        String
+  description  String
+  propertyType String
+  areaSqrt     Int?
+
+  locationDistrict String
+  locationCity     String
+  locationPincode  String
+  fullAddress      String
+
+  latitude        Decimal? @db.Decimal(10, 8)
+  longitude       Decimal? @db.Decimal(11, 8)
+  nearbyLandmarks String?
+
+  monthlyRent         Decimal @db.Decimal(10, 2)
+  depositAmount       Decimal @db.Decimal(10, 2)
+  maintenanceCharges  Decimal @default(0)
+  maintenanceIncluded Boolean @default(true)
+
+  photos         String[]
+  mainPhotoIndex Int      @default(0)
+  videoTourUrl   String?
+
+  status        PropertyVerificationStatus @default(PENDING_APPROVAL)
+  isFeatured    Boolean                    @default(false)
+  availableFrom DateTime?
+
+  viewsCount       Int @default(0)
+  inquiryCount     Int @default(0)
+  wishlistCount    Int @default(0)
+  virtualTourCount Int @default(0)
+
+  approvedBy String?
+  approvedAt DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  details PropertyDetails?
+
+  @@index([ownerId])
+  @@index([status])
+  @@index([locationDistrict, locationCity])
+  @@index([propertyType])
+}
+
+enum PropertyVerificationStatus {
+  PENDING_APPROVAL
+  ACTIVE
+  RENTED
+  UNLISTED
+  REJECTED
+}
+
+model PropertyDetails {
+  id String @id @default(uuid())
+
+  propertyId String   @unique
+  property   Property @relation(fields: [propertyId], references: [id])
+
+  bhk              Int?
+  bathrooms        Int?
+  floorNumber      String?
+  totalFloors      Int?
+  propertyAge      String?
+  facingDirection  String?
+  furnishingStatus String?
+
+  landType      String?
+  isCornerPlot  Boolean?
+  roadWidthFeet Int?
+
+  shoptype   String?
+  hasParking Boolean?
+
+  preferredTenantType Json?
+  petsAllowed         Boolean @default(false)
+  smokingAllowed      Boolean @default(false)
+  maximumOccupants    Int?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

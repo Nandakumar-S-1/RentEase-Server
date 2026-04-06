@@ -8,6 +8,7 @@ import { injectable } from 'tsyringe';
 
 @injectable()
 export class OwnerProfileRepository implements IOwnerProfileRepository {
+
     async create(entity: OwnerProfileEntity): Promise<OwnerProfileEntity> {
         const result = await prisma.ownerProfile.create({
             data: {
@@ -46,7 +47,6 @@ export class OwnerProfileRepository implements IOwnerProfileRepository {
         });
         return OwnerProfilePersistenceMapper.toEntity(result);
     }
-
     async updateVerificationStatus(
         userId: string,
         status: Owner_Verification_Status.VERIFIED | Owner_Verification_Status.REJECTED,
@@ -65,7 +65,6 @@ export class OwnerProfileRepository implements IOwnerProfileRepository {
         logger.info(`Owner ${userId} verification status updated to ${status}`);
         return OwnerProfilePersistenceMapper.toEntity(result);
     }
-
     async save(entity: OwnerProfileEntity): Promise<OwnerProfileEntity> {
         const result = await prisma.ownerProfile.update({
             where: { userId: entity.userId },
@@ -80,7 +79,6 @@ export class OwnerProfileRepository implements IOwnerProfileRepository {
 
         return OwnerProfilePersistenceMapper.toEntity(result);
     }
-
     async findAllPending(): Promise<OwnerProfileEntity[]> {
         const result = await prisma.ownerProfile.findMany({
             where: {

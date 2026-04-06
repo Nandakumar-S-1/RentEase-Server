@@ -41,4 +41,6 @@ export const PROFILE_ROUTES = {
 export const API_PREFIXES = {
     AUTH: '/users',
     ADMIN: '/admin',
+    OWNER: '/owner',
+    PROFILE: '/profile',
 } as const;

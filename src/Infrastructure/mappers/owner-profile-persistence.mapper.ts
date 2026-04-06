@@ -3,6 +3,7 @@ import { OwnerProfileTypeData } from 'core/types/ownerProfile.types';
 import { OwnerProfile } from '@prisma/client';
 import { Owner_Verification_Status } from 'shared/enums/owner-verification-status.enum';
 
+//db to entity
 export class OwnerProfilePersistenceMapper {
     static toEntity(prisma: OwnerProfile): OwnerProfileEntity {
         const data: OwnerProfileTypeData = {
