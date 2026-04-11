@@ -8,7 +8,7 @@ export class PropertyEntity{
         private  _title:string,
         private   _description:string,
         private readonly _propertyType:PropertyType,
-        private _areaSqft:number|null,
+        private _areaSqrt:number|null,
         private _locationDistrict:string,
         private _locationCity:string,
         private _locationPincode:string,
@@ -77,7 +77,7 @@ export class PropertyEntity{
             data.wishlistCount ?? 0,
 
             data.approvedBy ?? null,
-            data.aprovedAt ??new Date(),
+            data.approvedAt ?? null,
 
             data.createdAt ?? new Date(),
             data.updatedAt ?? new Date(),
@@ -99,6 +99,60 @@ export class PropertyEntity{
     get photos() {
         return this._photos;
     }
+
+    get title(){
+        return this._title
+    }
+
+    get description(){
+        return this._description
+    }
+    get propertyType(){
+        return this._propertyType
+    }
+    get locationDistrict(){
+        return this._locationDistrict
+    }
+    get locationCity(){
+        return this._locationCity
+    }
+    get locationPincode(){
+        return this._locationPincode
+    }
+    get fullAddress(){
+        return this._fullAddress
+    }
+    get monthleyRent(){
+        return this._monthlyRent
+    }
+    get depositAmount(){
+        return this._depositAmount
+    }
+    get maintenanceCharges(){
+        return this._maintenanceCharges
+    }
+    get maintenanceIncluded(){
+        return this._maintenanceIncluded
+    }
+    get primaryPhotoIndex(){
+        return this._primaryPhotoIndex
+    }
+
+    get videoToursUrl(){
+        return this._videoTourUrl
+    }
+get approvedBy(){
+    return this._approvedBy
+}
+get approvedAt(){
+    return this._approvedAt
+}
+get createdAt(){
+    return this._createdAt
+}
+get updatedAt(){
+    return this._updatedAt
+}
 
     approve(adminId:string):void{
         if(this._status !==PropertyStatus.PENDING_APPROVAL){

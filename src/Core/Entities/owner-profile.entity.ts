@@ -12,7 +12,7 @@ export class OwnerProfileEntity {
         private readonly _userId: string,
         private _bio: string | null,
         private _occupation: string | null,
-        //verification fields
+        //fields 4 veriffication 
         private _documentUrl: string | null,
         private _documentType: string | null,
         private _verificationStatus: Owner_Verification_Status,

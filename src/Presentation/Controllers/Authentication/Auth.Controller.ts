@@ -52,7 +52,7 @@ export class AuthController {
 
         @inject(TokenTypes.IRefreshTokenUseCase)
         private readonly _refreshTokenUseCase: IRefreshTokenUseCase,
-    ) {}
+    ) { }
 
     register = async (req: Request, res: Response): Promise<Response> => {
         logger.info('registered data from the frontend is ', req.body);
@@ -68,6 +68,7 @@ export class AuthController {
                     fullname: user.fullname,
                     phone: user.phone,
                     role: user.role,
+                    avatarUrl: user.avatarUrl,
                 },
             },
         };
@@ -92,11 +93,11 @@ export class AuthController {
                     fullname: result.user.fullname,
                     phone: result.user.phone,
                     role: result.user.role,
+                    avatarUrl: result.user.avatarUrl,
                 },
                 accessToken: result.accessToken,
             },
         };
-
         setRefreshTokenCookie(res, result.refreshToken);
 
         return res.status(Http_StatusCodes.OK).json(response);
@@ -118,6 +119,7 @@ export class AuthController {
                     fullname: result.user.fullname,
                     phone: result.user.phone,
                     role: result.user.role,
+                    avatarUrl: result.user.avatarUrl,
                 },
                 accessToken: result.accessToken,
             },
@@ -147,6 +149,7 @@ export class AuthController {
                     fullname: result.user.fullname,
                     phone: result.user.phone,
                     role: result.user.role,
+                    avatarUrl: result.user.avatarUrl,
                 },
                 accessToken: result.accessToken,
             },
@@ -235,7 +238,7 @@ export class AuthController {
     };
 
     refreshToken = async (req: Request, res: Response): Promise<Response> => {
-        const refreshToken = req.body.refreshToken || req.cookies.refreshToken;
+        const refreshToken = req.cookies.refreshToken;
 
         logger.info('Refresh Token request');
         if (!refreshToken) {

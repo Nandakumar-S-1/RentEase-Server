@@ -69,6 +69,8 @@ export class OwnerProfileRepository implements IOwnerProfileRepository {
         const result = await prisma.ownerProfile.update({
             where: { userId: entity.userId },
             data: {
+                bio: entity.bio,
+                occupation: entity.occupation,
                 documentType: entity.documentType,
                 documentUrl: entity.documentUrl,
                 verificationStatus: entity.verificationStatus,

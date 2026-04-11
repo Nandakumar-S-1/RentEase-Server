@@ -4,6 +4,7 @@ import { IOwnerProfileRepository } from 'core/interfaces/owner-repository.interf
 import { ITenantProfileRepository } from 'core/interfaces/tenant-repository.interface';
 import { TokenTypes } from 'shared/types/tokens';
 import { inject, injectable } from 'tsyringe';
+import { logger } from 'shared/log/logger';
 
 @injectable()
 export class GetProfileUseCase implements IGetProfileUseCase {
@@ -19,15 +20,16 @@ export class GetProfileUseCase implements IGetProfileUseCase {
     async execute(userId: string, role: string) {
         const user = await this._userRepo.findById(userId);
         if (!user) {
+            logger.warn(`pprofile fetching failed: user ${userId} not found`);
             throw new Error('User not found');
         }
 
-        // base user info shared by both roles
         const profileData: Record<string, unknown> = {
             fullName: user.fullname,
             email: user.email,
             phone: user.phone,
             role: user.role,
+            avatarUrl: user.avatarUrl,
             createdAt: user.createdAt,
         };
 

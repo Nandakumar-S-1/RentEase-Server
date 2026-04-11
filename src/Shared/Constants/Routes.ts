@@ -36,6 +36,7 @@ export const OWNER_ROUTES = {
 export const PROFILE_ROUTES = {
     GET: '/',
     UPDATE: '/',
+    AVATAR: '/avatar',
 } as const;
 
 export const API_PREFIXES = {
@@ -43,4 +44,12 @@ export const API_PREFIXES = {
     ADMIN: '/admin',
     OWNER: '/owner',
     PROFILE: '/profile',
+    PROPERTY:'/properties'
 } as const;
+
+export const PROPERTY_ROUTES = {
+    CREATE: '/',
+    UPDATE: '/:id',
+    DELETE: '/:id',
+    GET_BY_OWNER: '/owner',
+}

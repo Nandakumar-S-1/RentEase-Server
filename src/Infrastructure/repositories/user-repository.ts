@@ -4,6 +4,7 @@ import { UserPersistenceMapper } from 'infrastructure/mappers/user-persistence.m
 import { logger } from 'shared/log/logger';
 import { UserEntity } from 'core/entities/user.entity';
 import { IUserRepository } from 'core/interfaces/user-repository.interface';
+import { UserAvatarUpdateFailedError, UserUpdateFailedError } from '@shared/errors/user-errors';
 
 //poly
 //this is where the single responsibility principle workd
@@ -21,6 +22,7 @@ export class UserRepository implements IUserRepository {
                 role: user.role,
                 passwordHash: user.password,
                 fullName: user.fullname,
+                avatarUrl: user.avatarUrl,
                 isEmailVerified: user.isEmailVerified,
                 isActive: user.isActive,
                 isSuspended: user.isSuspended,
@@ -64,6 +66,7 @@ export class UserRepository implements IUserRepository {
                     email: user.email,
                     phone: user.phone ?? undefined,
                     fullName: user.fullname,
+                    avatarUrl: user.avatarUrl,
                     isEmailVerified: user.isEmailVerified,
                     isActive: user.isActive,
                     isSuspended: user.isSuspended,
@@ -74,7 +77,20 @@ export class UserRepository implements IUserRepository {
             return UserPersistenceMapper.toEntity(res);
         } catch (error) {
             logger.error({ error }, `Error updating user with ID: ${id}`);
-            throw new Error('Failed to update user');
+            throw new UserUpdateFailedError()
+        }
+    }
+
+    async updateAvatar(id: string, avatarUrl: string): Promise<UserEntity> {
+        try {
+            const res = await prisma.user.update({
+                where: { id },
+                data: { avatarUrl },
+            });
+            return UserPersistenceMapper.toEntity(res);
+        } catch (error) {
+            logger.error({ error }, `Error updating avatar for user: ${id}`);
+            throw new UserAvatarUpdateFailedError()
         }
     }
 }

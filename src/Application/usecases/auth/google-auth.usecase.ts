@@ -11,6 +11,7 @@ import { UserRole } from 'shared/enums/user-role.enum';
 import { logger } from 'shared/log/logger';
 import { TokenTypes } from 'shared/types/tokens';
 import { inject, injectable } from 'tsyringe';
+import { AccountNotActiveError, AccountSuspendedError } from 'shared/errors/login-errors';
 
 @injectable()
 export class GoogleAuthUseCase implements IGoogleAuthUseCase {
@@ -23,11 +24,13 @@ export class GoogleAuthUseCase implements IGoogleAuthUseCase {
         private readonly _jwtService: IJwtService,
         @inject(TokenTypes.IOwnerProfileRepository)
         private readonly _ownerRepository: IOwnerProfileRepository,
-    ) {}
+    ) { }
 
     async execute(dto: GoogleAuthRequestDTO): Promise<LoginResponseDTO> {
         const { idToken, role } = dto;
         const { email, fullname } = await this._firebaseService.verifyIdToken(idToken);
+
+        logger.info(`Google auth attempt for: ${email}`);
 
         let user = await this._userRepository.findByEmail(email);
 
@@ -45,13 +48,20 @@ export class GoogleAuthUseCase implements IGoogleAuthUseCase {
             });
 
             user = await this._userRepository.create(newUser);
-
-            // Create OwnerProfile for OWNER users (same as VerifyOtp)
             if (user.role === UserRole.OWNER) {
                 await this._ownerRepository.create(
                     OwnerProfileEntity.create({ id: crypto.randomUUID(), userId: user.id }),
                 );
             }
+        }
+
+        if (!user.isActive) {
+            logger.warn(`Account with email ${email} is deactivated`);
+            throw new AccountNotActiveError();
+        }
+        if (user.isSuspended) {
+            logger.warn(`Account with email ${email} is suspended`);
+            throw new AccountSuspendedError();
         }
 
         const tokens = this._jwtService.createPairofJwtTokens({
@@ -60,6 +70,8 @@ export class GoogleAuthUseCase implements IGoogleAuthUseCase {
             role: user.role,
         });
 
+        logger.info(`Google auth successful for ${email}. Tokens issued.`);
+
         return {
             user: {
                 id: user.id,
@@ -67,6 +79,7 @@ export class GoogleAuthUseCase implements IGoogleAuthUseCase {
                 fullname: user.fullname,
                 phone: user.phone ?? null,
                 role: user.role,
+                avatarUrl: user.avatarUrl,
             },
             accessToken: tokens.accessToken,
             refreshToken: tokens.refreshToken,

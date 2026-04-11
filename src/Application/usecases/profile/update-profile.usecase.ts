@@ -6,6 +6,7 @@ import { ITenantProfileRepository } from 'core/interfaces/tenant-repository.inte
 import { UserEntity } from 'core/entities/user.entity';
 import { TokenTypes } from 'shared/types/tokens';
 import { inject, injectable } from 'tsyringe';
+import { logger } from 'shared/log/logger';
 
 @injectable()
 export class UpdateProfileUseCase implements IUpdateProfileUseCase {
@@ -21,8 +22,11 @@ export class UpdateProfileUseCase implements IUpdateProfileUseCase {
     async execute(dto: UpdateProfileDTO) {
         const user = await this._userRepo.findById(dto.userId);
         if (!user) {
+            logger.warn(`Profile update failed: User ${dto.userId} not found`);
             throw new Error('User not found');
         }
+
+        logger.info(`Updating profile for user ${dto.userId} (${dto.role})`);
 
         // rebuild user entity with updated fields for the repo update call
         const updatedUserData = UserEntity.create({
@@ -35,12 +39,13 @@ export class UpdateProfileUseCase implements IUpdateProfileUseCase {
             isActive: user.isActive,
             isSuspended: user.isSuspended,
             isEmailVerified: user.isEmailVerified,
+            avatarUrl: dto.avatarUrl ?? user.avatarUrl,
             createdAt: user.createdAt,
         });
 
         const updatedUser = await this._userRepo.update(dto.userId, updatedUserData);
 
-        // update role-specific profile fields
+        // update role specific profile fields
         if (dto.role === 'OWNER') {
             const ownerProfile = await this._ownerRepo.findByUserId(dto.userId);
             if (ownerProfile) {
@@ -64,6 +69,7 @@ export class UpdateProfileUseCase implements IUpdateProfileUseCase {
             email: updatedUser.email,
             phone: updatedUser.phone,
             role: updatedUser.role,
+            avatarUrl: updatedUser.avatarUrl,
         };
     }
 }

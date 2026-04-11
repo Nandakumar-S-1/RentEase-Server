@@ -8,6 +8,8 @@ import { IOwnerProfileRepository } from 'core/interfaces/owner-repository.interf
 import { OwnerProfileRepository } from 'infrastructure/repositories/owner-profile.repository';
 import { ITenantProfileRepository } from 'core/interfaces/tenant-repository.interface';
 import { TenantProfileRepository } from 'infrastructure/repositories/tenant-profile.repository';
+import { IPropertyRepository } from '@core/interfaces/property-repository.interface';
+import { PropertyRepository } from '@infrastructure/repositories/property.repository';
 
 export class RepositoryModule {
     //this is like when a call for Iuserrepo token ,it will give an instance of UserRepository class
@@ -23,5 +25,8 @@ export class RepositoryModule {
         container.register<ITenantProfileRepository>(TokenTypes.ITenantProfileRepository, {
             useClass: TenantProfileRepository,
         });
+        container.register<IPropertyRepository>(TokenTypes.IPropertyRepository,{
+            useClass:PropertyRepository
+        })
     }
 }

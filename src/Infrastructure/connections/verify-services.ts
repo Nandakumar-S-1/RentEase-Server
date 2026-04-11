@@ -10,5 +10,5 @@ export async function verifyServices() {
 
     const mailService = container.resolve(MailService); //nodemailer otp connection
     await mailService.verifyConnection();
-    logger.info('mailer has been connected correctly');
+    // logger.info('mailer has been connected correctly');
 }

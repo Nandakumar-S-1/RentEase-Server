@@ -10,6 +10,7 @@ export interface IVerifyOtpUseCase {
             fullname: string;
             phone: string | null;
             role: UserRole;
+            avatarUrl: string | null;
         };
         refreshToken: string;
         accessToken: string;

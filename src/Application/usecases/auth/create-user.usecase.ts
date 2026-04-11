@@ -40,11 +40,13 @@ export class Create_User_Usecase implements ICreateUserUseCase {
         const isUserExist = await this._userRepository.findByEmail(dto.email);
 
         if (isUserExist) {
+            logger.warn(`User registration failed: Email ${dto.email} already exists`);
             throw new UserAlreadyExistError();
         }
         if (dto.phone) {
             const isPhoneExist = await this._userRepository.findByPhone(dto.phone);
             if (isPhoneExist) {
+                logger.warn(`User registration failed: Phone ${dto.phone} already exists`);
                 throw new PhoneAlreadyExistError();
             }
         }
@@ -86,6 +88,8 @@ export class Create_User_Usecase implements ICreateUserUseCase {
             'verify your Email by typing the otp',
             `your OTP code is ${otp}`,
         );
+
+        logger.info(`Verification OTP sent to ${user.email}. Registration pending.`);
 
         return user;
     }

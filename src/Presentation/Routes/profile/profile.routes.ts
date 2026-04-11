@@ -6,6 +6,7 @@ import { authMiddleware } from 'presentation/middlewares/auth.middleware';
 import { validationRequestMiddleware } from 'presentation/middlewares/validation.middleware';
 import { updateProfileSchema } from 'application/validators/profile.validators';
 import { asyncHandlerFunction } from 'presentation/Utils/async-handler';
+import { upload } from 'shared/uploads/cloudinary.upload';
 
 @injectable()
 export class ProfileRoutes extends BaseRoute {
@@ -25,6 +26,12 @@ export class ProfileRoutes extends BaseRoute {
             authMiddleware,
             validationRequestMiddleware(updateProfileSchema),
             asyncHandlerFunction(this._controller.updateProfile.bind(this._controller)),
+        );
+        this.router.post(
+            PROFILE_ROUTES.AVATAR,
+            authMiddleware,
+            upload.single('avatar'),
+            asyncHandlerFunction(this._controller.uploadAvatar.bind(this._controller)),
         );
     }
 }
