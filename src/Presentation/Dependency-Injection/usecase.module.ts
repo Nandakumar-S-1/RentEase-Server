@@ -22,6 +22,8 @@ import { ISubmitVerificationUseCase } from 'application/interfaces/owner/submit-
 import { IGetProfileUseCase, IUpdateProfileUseCase } from 'application/interfaces/profile/profile.usecase.interface';
 import { GetProfileUseCase } from 'application/usecases/profile/get-profile.usecase';
 import { UpdateProfileUseCase } from 'application/usecases/profile/update-profile.usecase';
+import { CreatePropertyUseCase } from '@application/usecases/property/create-property.usecase';
+import { ICreatePropertyUseCase } from '@application/interfaces/profile/property.usecase.interface';
 
 export class UseCaseModule {
     static registerModules(): void {
@@ -63,5 +65,8 @@ export class UseCaseModule {
         container.register<IUpdateProfileUseCase>(TokenTypes.UpdateProfileUseCase, {
             useClass: UpdateProfileUseCase,
         });
+        container.register<ICreatePropertyUseCase>(TokenTypes.ICreatePropertyUseCase,{
+            useClass:CreatePropertyUseCase
+        })
     }
 }

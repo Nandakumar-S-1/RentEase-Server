@@ -5,4 +5,5 @@ export interface UpdateProfileDTO {
     phone?: string;
     bio?: string;
     occupation?: string;
+    avatarUrl?: string;
 }

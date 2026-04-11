@@ -5,6 +5,7 @@ export interface LoginResponseDTO {
         fullname: string;
         phone: string | null;
         role: string;
+        avatarUrl: string | null;
     };
     accessToken: string;
     refreshToken?: string;

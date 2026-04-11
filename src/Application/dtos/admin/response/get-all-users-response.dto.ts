@@ -9,5 +9,6 @@ export interface IGetAllUsersDTO {
     isEmailVerified: boolean;
     isActive: boolean;
     isSuspended: boolean;
+    avatarUrl?: string | null;
     createdAt: Date;
 }

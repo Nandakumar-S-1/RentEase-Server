@@ -10,5 +10,6 @@ export interface UserTypeData {
     isActive?: boolean;
     isSuspended?: boolean;
     isEmailVerified?: boolean;
+    avatarUrl?: string | null;
     createdAt?: Date;
 }

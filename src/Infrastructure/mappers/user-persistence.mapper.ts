@@ -16,6 +16,7 @@ export class UserPersistenceMapper {
             isActive: raw.isActive,
             isSuspended: raw.isSuspended,
             isEmailVerified: raw.isEmailVerified,
+            avatarUrl: raw.avatarUrl,
             createdAt: raw.createdAt,
         });
     }

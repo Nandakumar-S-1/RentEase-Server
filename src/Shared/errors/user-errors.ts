@@ -20,3 +20,23 @@ export class PhoneAlreadyExistError extends ProjectErrors {
         );
     }
 }
+
+export class UserUpdateFailedError extends ProjectErrors {
+    constructor() {
+        super(
+            Http_StatusCodes.INTERNAL_SERVER_ERROR,
+            'USER_UPDATE_FAILED',
+            'Failed to update user'
+        );
+    }
+}
+
+export class UserAvatarUpdateFailedError extends ProjectErrors {
+    constructor() {
+        super(
+            Http_StatusCodes.INTERNAL_SERVER_ERROR,
+            'USER_AVATAR_UPDATE_FAILED',
+            'Failed to update user avatar'
+        );
+    }
+}

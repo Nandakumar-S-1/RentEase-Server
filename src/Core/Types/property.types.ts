@@ -35,7 +35,7 @@ export type PropertyTypeData ={
     wishlistCount?:number
 
     approvedBy?:string
-    aprovedAt?:Date
+    approvedAt?:Date
     createdAt?:Date
     updatedAt?:Date 
 }

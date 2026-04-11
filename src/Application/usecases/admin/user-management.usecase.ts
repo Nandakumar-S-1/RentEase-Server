@@ -41,6 +41,7 @@ export class UserManagementUseCase implements IUserManagement {
             isEmailVerified: user.isEmailVerified,
             isActive: user.isActive,
             isSuspended: user.isSuspended,
+            avatarUrl: user.avatarUrl,
             createdAt: user.createdAt || new Date(),
         }));
 

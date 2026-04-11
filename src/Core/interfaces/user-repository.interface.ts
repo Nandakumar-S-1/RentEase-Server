@@ -13,6 +13,7 @@ export interface IUserRepository extends IBaseRepository<UserEntity> {
     findById(id: string): Promise<UserEntity | null>;
     findAll(): Promise<UserEntity[]>;
     update(id: string, user: UserEntity): Promise<UserEntity>;
+    updateAvatar(id: string, avatarUrl: string): Promise<UserEntity>;
 }
 
 // here is also the liskov subst priciple comes. in a way that base repo is extended to user repo.

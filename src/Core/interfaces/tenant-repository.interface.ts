@@ -1,7 +1,7 @@
 import { TenantProfileEntity } from 'core/entities/tenant-profile.entity';
+import { IBaseRepository } from './base/base-repository.interface';
 
-export interface ITenantProfileRepository {
+export interface ITenantProfileRepository extends IBaseRepository<TenantProfileEntity>{
     findByUserId(userId: string): Promise<TenantProfileEntity | null>;
-    create(entity: TenantProfileEntity): Promise<TenantProfileEntity>;
     save(entity: TenantProfileEntity): Promise<TenantProfileEntity>;
 }

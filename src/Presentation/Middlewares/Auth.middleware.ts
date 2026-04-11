@@ -1,3 +1,5 @@
+import { UserRole } from '@shared/enums/user-role.enum';
+import { TokenTypes } from '@shared/types/tokens';
 import { IJwtService } from 'application/interfaces/services/jwt.service.interface';
 import { IOwnerProfileRepository } from 'core/interfaces/owner-repository.interface';
 import { IUserRepository } from 'core/interfaces/user-repository.interface';
@@ -8,9 +10,9 @@ import { container } from 'tsyringe';
 
 export const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const jwtService = container.resolve<IJwtService>('IJwtService');
-        const userRepo = container.resolve<IUserRepository>('IUserRepository');
-        const ownerRepo = container.resolve<IOwnerProfileRepository>('IOwnerProfileRepository');
+        const jwtService = container.resolve<IJwtService>(TokenTypes.IJwtService);
+        const userRepo = container.resolve<IUserRepository>(TokenTypes.IUserRepository);
+        const ownerRepo = container.resolve<IOwnerProfileRepository>(TokenTypes.IOwnerProfileRepository);
 
         const authHeader = req.headers.authorization;
 
@@ -49,7 +51,7 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
         }
 
         let verificationStatus;
-        if (user.role === 'OWNER') {
+        if (user.role === UserRole.OWNER) {
             const owner = await ownerRepo.findByUserId(user.id);
             verificationStatus = owner?.verificationStatus;
         }
