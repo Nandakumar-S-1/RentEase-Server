@@ -1,10 +1,10 @@
 import { ResendOtpRequestDTO } from 'application/dtos/authentication/request/resend-otp-request.dto';
 import { ResendOtpResponseDTO } from 'application/dtos/authentication/response/resend-otp-response.dto';
 import { IResendOtpUseCase } from 'application/interfaces/auth/resend-otp.usecase.interface';
-import { IMailService } from 'application/interfaces/services/mail.service.interface';
-import { IOtpService } from 'application/interfaces/services/otp.service.interface';
-import { IRedisCache } from 'application/interfaces/services/redis-cache.service.interface';
-import { IUserRepository } from 'core/interfaces/user-repository.interface';
+import { IMailService } from '@application/interfaces/services/mail.service.interface';
+import { IOtpService } from '@application/interfaces/services/otp.service.interface';
+import { IRedisCache } from '@application/interfaces/services/redis-cache.service.interface';
+import { IUserRepository } from '@core/interfaces/repository/user-repository.interface';
 import { InvalidOtpError } from 'shared/errors/otp-errors';
 import { logger } from 'shared/log/logger';
 import { TokenTypes } from 'shared/types/tokens';

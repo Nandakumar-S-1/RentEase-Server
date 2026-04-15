@@ -1,9 +1,9 @@
 import { ForgotPasswordRequestDto } from 'application/dtos/authentication/request/forgot-password-request.dto';
 import { IForgotPasswordUseCase } from 'application/interfaces/auth/forgot-password.usecase.interface';
-import { IMailService } from 'application/interfaces/services/mail.service.interface';
-import { IOtpService } from 'application/interfaces/services/otp.service.interface';
-import { IRedisCache } from 'application/interfaces/services/redis-cache.service.interface';
-import { IUserRepository } from 'core/interfaces/user-repository.interface';
+import { IMailService } from '@application/interfaces/services/mail.service.interface';
+import { IOtpService } from '@application/interfaces/services/otp.service.interface';
+import { IRedisCache } from '@application/interfaces/services/redis-cache.service.interface';
+import { IUserRepository } from '@core/interfaces/repository/user-repository.interface';
 import { InvalidCredentialsError } from 'shared/errors/login-errors';
 import { logger } from 'shared/log/logger';
 import { TokenTypes } from 'shared/types/tokens';

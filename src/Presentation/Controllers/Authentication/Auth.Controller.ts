@@ -10,16 +10,16 @@ import { LoginResponseDTO } from 'application/dtos/authentication/response/login
 import { Auth_Response_Messages } from 'shared/types/messages/Response.messages';
 import { ILoginUserUseCase } from 'application/interfaces/auth/login-user.usecase.interface';
 import { IResendOtpUseCase } from 'application/interfaces/auth/resend-otp.usecase.interface';
-import { IRedisCache } from 'application/interfaces/services/redis-cache.service.interface';
+import { IRedisCache } from '@application/interfaces/services/redis-cache.service.interface';
 import { ResendOtpResponseDTO } from 'application/dtos/authentication/response/resend-otp-response.dto';
 import { IForgotPasswordUseCase } from 'application/interfaces/auth/forgot-password.usecase.interface';
-import { IHashService } from 'application/interfaces/services/hash.service.interface';
-import { IUserRepository } from 'core/interfaces/user-repository.interface';
+import { IHashService } from '@application/interfaces/services/hash.service.interface';
+import { IUserRepository } from '@core/interfaces/repository/user-repository.interface';
 import { GoogleAuthUseCase } from 'application/usecases/auth/google-auth.usecase';
 import { InvalidOtpError } from 'shared/errors/otp-errors';
 import { IRefreshTokenUseCase } from 'application/interfaces/auth/refresh-token.usecase.interface';
 import { RefreshTokenResponseDTO } from 'application/dtos/authentication/response/refresh-token-response.dto';
-import { setRefreshTokenCookie } from 'shared/utils/cookieHelper';
+import { clearRefreshTokenCookie, setRefreshTokenCookie } from 'shared/utils/cookieHelper';
 @injectable()
 export class AuthController {
     constructor(
@@ -259,6 +259,15 @@ export class AuthController {
 
         setRefreshTokenCookie(res, tokens.refreshToken);
 
+        return res.status(Http_StatusCodes.OK).json(response);
+    };
+
+    logout = async (_req: Request, res: Response): Promise<Response> => {
+        clearRefreshTokenCookie(res);
+        const response: ApiResponse<null> = {
+            success: true,
+            message: Auth_Response_Messages.LOGOUT_SUCCESS,
+        };
         return res.status(Http_StatusCodes.OK).json(response);
     };
 

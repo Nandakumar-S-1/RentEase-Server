@@ -1,5 +1,5 @@
 import pino from 'pino';
-import { ILogger } from 'application/interfaces/services/logger.service.interface';
+import { ILogger } from '@application/interfaces/services/logger.service.interface';
 
 const isDev = process.env.NODE_ENV !== 'production';
 

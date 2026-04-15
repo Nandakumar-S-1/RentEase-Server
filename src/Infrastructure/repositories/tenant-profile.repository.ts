@@ -1,5 +1,5 @@
 import { TenantProfileEntity } from 'core/entities/tenant-profile.entity';
-import { ITenantProfileRepository } from 'core/interfaces/tenant-repository.interface';
+import { ITenantProfileRepository } from '@core/interfaces/repository/tenant-repository.interface';
 import { prisma } from 'infrastructure/database/prisma/prisma.client';
 import { TenantProfilePersistenceMapper } from 'infrastructure/mappers/tenant-profile-persistence.mapper';
 import { injectable } from 'tsyringe';

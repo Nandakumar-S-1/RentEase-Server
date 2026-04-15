@@ -1,4 +1,4 @@
-import { IRedisCache } from 'application/interfaces/services/redis-cache.service.interface';
+import { IRedisCache } from '@application/interfaces/services/redis-cache.service.interface';
 import { redisClient } from './redis.client';
 
 export class RedisCacheService implements IRedisCache {

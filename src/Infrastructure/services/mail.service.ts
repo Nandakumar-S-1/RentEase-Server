@@ -1,4 +1,4 @@
-import { IMailService } from 'application/interfaces/services/mail.service.interface';
+import { IMailService } from '@application/interfaces/services/mail.service.interface';
 import { injectable } from 'tsyringe';
 import nodemailer from 'nodemailer';
 import { emailConfig } from 'infrastructure/config/email.config';

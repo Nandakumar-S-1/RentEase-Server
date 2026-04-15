@@ -1,4 +1,4 @@
-import { IFirebaseService } from 'application/interfaces/services/firebase.service.interface';
+import { IFirebaseService } from '@application/interfaces/services/firebase.service.interface';
 import * as admin from 'firebase-admin';
 
 export class FirebaseService implements IFirebaseService {

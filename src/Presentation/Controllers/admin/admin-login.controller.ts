@@ -44,6 +44,7 @@ export class AdminLoginController {
                     fullname: result.user.fullname,
                     phone: result.user.phone,
                     role: result.user.role,
+                    avatarUrl: result.user.avatarUrl,
                 },
                 accessToken: result.accessToken,
                 refreshToken: result.refreshToken,
@@ -54,6 +55,7 @@ export class AdminLoginController {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             sameSite: 'strict',
+            path: '/',
             maxAge: 7 * 24 * 60 * 60 * 1000,
         });
 
@@ -86,6 +88,7 @@ export class AdminLoginController {
                     fullname: result.user.fullname,
                     phone: result.user.phone,
                     role: result.user.role,
+                    avatarUrl: result.user.avatarUrl,
                 },
                 accessToken: result.accessToken,
                 refreshToken: result.refreshToken,
@@ -96,6 +99,7 @@ export class AdminLoginController {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             sameSite: 'strict',
+            path: '/',
             maxAge: 7 * 24 * 60 * 60 * 1000,
         });
 

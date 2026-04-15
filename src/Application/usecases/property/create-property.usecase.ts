@@ -3,7 +3,7 @@ import { CreatePropertyResponseDTO } from "@application/dtos/property/res/create
 import { ICreatePropertyUseCase } from "@application/interfaces/profile/property.usecase.interface";
 import { PropertyResponseMapper } from "@application/mappers/property/property-response.mapper";
 import { PropertyMapper } from "@application/mappers/property/property.mapper";
-import { IPropertyRepository } from "@core/interfaces/property-repository.interface";
+import { IPropertyRepository } from "@core/interfaces/repository/property-repository.interface";
 import { TokenTypes } from "@shared/types/tokens";
 import { inject, injectable } from "tsyringe";
 

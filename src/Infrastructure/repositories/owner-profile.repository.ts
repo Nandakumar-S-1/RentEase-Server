@@ -1,5 +1,5 @@
 import { OwnerProfileEntity } from 'core/entities/owner-profile.entity';
-import { IOwnerProfileRepository } from 'core/interfaces/owner-repository.interface';
+import { IOwnerProfileRepository } from '@core/interfaces/repository/owner-repository.interface';
 import { prisma } from 'infrastructure/database/prisma/prisma.client';
 import { OwnerProfilePersistenceMapper } from 'infrastructure/mappers/owner-profile-persistence.mapper';
 import { Owner_Verification_Status } from 'shared/enums/owner-verification-status.enum';

@@ -50,6 +50,10 @@ export class UserRoutes extends BaseRoute {
             validationRequestMiddleware(refreshTokenSchema),
             asyncHandlerFunction(this._authController.refreshToken.bind(this._authController)),
         );
+        this.router.post(
+            AUTH_ROUTES.LOGOUT,
+            asyncHandlerFunction(this._authController.logout.bind(this._authController)),
+        );
         this.router.get(
             AUTH_ROUTES.ME,
             authMiddleware,

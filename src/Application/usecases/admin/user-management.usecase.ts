@@ -2,7 +2,7 @@ import { IGetUsersRequestDTO } from 'application/dtos/admin/request/get-users-re
 import { IGetAllUsersDTO } from 'application/dtos/admin/response/get-all-users-response.dto';
 import { IUserManagement } from 'application/interfaces/admin/user-management.interface';
 import { UserEntity } from 'core/entities/user.entity';
-import { IUserRepository } from 'core/interfaces/user-repository.interface';
+import { IUserRepository } from '@core/interfaces/repository/user-repository.interface';
 import { logger } from 'shared/log/logger';
 import { TokenTypes } from 'shared/types/tokens';
 import { inject, injectable } from 'tsyringe';

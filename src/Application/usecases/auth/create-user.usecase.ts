@@ -1,12 +1,12 @@
 import { ICreateUserDTO } from 'application/dtos/authentication/create-user-response.dto';
 import { ICreateUserUseCase } from 'application/interfaces/auth/create-user.usecase.interface';
-import { IMailService } from 'application/interfaces/services/mail.service.interface';
-import { IOtpService } from 'application/interfaces/services/otp.service.interface';
-import { IRedisCache } from 'application/interfaces/services/redis-cache.service.interface';
+import { IMailService } from '@application/interfaces/services/mail.service.interface';
+import { IOtpService } from '@application/interfaces/services/otp.service.interface';
+import { IRedisCache } from '@application/interfaces/services/redis-cache.service.interface';
 import { UserMapper } from 'application/mappers/auth/user.mapper';
 import { UserEntity } from 'core/entities/user.entity';
-import { IUserRepository } from 'core/interfaces/user-repository.interface';
-import { IHashService } from 'application/interfaces/services/hash.service.interface';
+import { IUserRepository } from '@core/interfaces/repository/user-repository.interface';
+import { IHashService } from '@application/interfaces/services/hash.service.interface';
 import { logger } from 'shared/log/logger';
 import { TokenTypes } from 'shared/types/tokens';
 import { inject, injectable } from 'tsyringe';
@@ -16,7 +16,7 @@ import { PhoneAlreadyExistError, UserAlreadyExistError } from 'shared/errors/use
 //this class represents a specific single operation.which is creating new user // Single Responsibility Principle
 
 @injectable()
-export class Create_User_Usecase implements ICreateUserUseCase {
+export class CreateUserUseCase implements ICreateUserUseCase {
     constructor(
         @inject(TokenTypes.IUserRepository) // "When creating this class, look up 'UserRepository' token  // and inject whatever class is registered for that token"
         private readonly _userRepository: IUserRepository, //this decorator will tell the tsyringe to inject the user repository  //Dependency Inversion Principle in action here because the type is an Interface insted of the class UserRepo //nothing but this usecase doesnt know itis using mongo,or postg or any otherdb . //it only know to call findby email in IUserRepository and create in Ibaserepo methods //insted of the usecase to create its own repo, it will receive the repo as parameter

@@ -1,5 +1,5 @@
 import { PropertyEntity } from "@core/entities/property.entity";
-import { IPropertyRepository } from "@core/interfaces/property-repository.interface";
+import { IPropertyRepository } from "@core/interfaces/repository/property-repository.interface";
 import { prisma } from "@infrastructure/database/prisma/prisma.client";
 import { PropertyPersistenceMapper } from "@infrastructure/mappers/property-persistence.mapper";
 import { PropertyVerificationStatus } from "@prisma/client";
@@ -24,16 +24,28 @@ export class PropertyRepository implements IPropertyRepository{
         }
         return PropertyPersistenceMapper.toEntity(requiredProperty)
     }
-    async findByOwnerId(ownerId: string): Promise<PropertyEntity[]> {
+    async findByOwnerId(ownerId: string, status?: string, skip?: number, take?: number): Promise<PropertyEntity[]> {
         const ownersProperty = await prisma.property.findMany({
-            where:{
-                ownerId
+            where: {
+                ownerId,
+                ...(status && { status: status as PropertyVerificationStatus })
             },
-            orderBy:{
-                createdAt:'desc'
+            skip,
+            take,
+            orderBy: {
+                createdAt: 'desc'
             }
         })
         return ownersProperty.map(PropertyPersistenceMapper.toEntity)
+    }
+
+    async countByOwnerId(ownerId: string, status?: string): Promise<number> {
+        return await prisma.property.count({
+            where: {
+                ownerId,
+                ...(status && { status: status as PropertyVerificationStatus })
+            }
+        })
     }
     async findPending(): Promise<PropertyEntity[]> {
         const pendingProperties =  await prisma.property.findMany({

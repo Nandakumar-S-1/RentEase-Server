@@ -1,4 +1,4 @@
-import { IBaseRepository } from './base/base-repository.interface';
+import { IBaseRepository } from '../base/base-repository.interface';
 import { OwnerProfileEntity } from 'core/entities/owner-profile.entity';
 import { Owner_Verification_Status } from 'shared/enums/owner-verification-status.enum';
 
