@@ -8,6 +8,7 @@ export const AUTH_ROUTES = {
     RESET_PASSWORD: '/reset-password',
     GOOGLE_AUTH: '/google-auth',
     REFRESH_TOKEN: '/refresh-token',
+    LOGOUT: '/logout',
     ME: '/me',
 } as const;
 
@@ -52,4 +53,5 @@ export const PROPERTY_ROUTES = {
     UPDATE: '/:id',
     DELETE: '/:id',
     GET_BY_OWNER: '/owner',
+    LIST:'/properties'
 }

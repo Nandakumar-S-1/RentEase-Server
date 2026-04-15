@@ -1,8 +1,8 @@
 import { UserRole } from '@shared/enums/user-role.enum';
 import { TokenTypes } from '@shared/types/tokens';
-import { IJwtService } from 'application/interfaces/services/jwt.service.interface';
-import { IOwnerProfileRepository } from 'core/interfaces/owner-repository.interface';
-import { IUserRepository } from 'core/interfaces/user-repository.interface';
+import { IJwtService } from '@application/interfaces/services/jwt.service.interface';
+import { IOwnerProfileRepository } from '@core/interfaces/repository/owner-repository.interface';
+import { IUserRepository } from '@core/interfaces/repository/user-repository.interface';
 import { Request, Response, NextFunction } from 'express';
 
 import { ErrorCodes } from 'shared/enums/error-codes.enum';
@@ -59,7 +59,10 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
         req.user = {
             id: user.id,
             email: user.email,
+            fullname: user.fullname,
+            phone: user.phone ?? '',
             role: user.role,
+            avatarUrl: user.avatarUrl,
             verificationStatus,
         };
 

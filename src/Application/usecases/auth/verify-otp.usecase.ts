@@ -1,16 +1,16 @@
 import { IVerifyOtpRequestDTO } from 'application/dtos/authentication/request/verify-otp-request.dto';
 import { IVerifyOtpUseCase } from 'application/interfaces/auth/verify-otp.usecase.interface';
-import { IRedisCache } from 'application/interfaces/services/redis-cache.service.interface';
+import { IRedisCache } from '@application/interfaces/services/redis-cache.service.interface';
 import { UserEntity } from 'core/entities/user.entity';
-import { IUserRepository } from 'core/interfaces/user-repository.interface';
+import { IUserRepository } from '@core/interfaces/repository/user-repository.interface';
 import { inject, injectable } from 'tsyringe';
 import { logger } from 'shared/log/logger';
 import { InvalidOtpError, MaxOtpAttemptError, OtpExpiredError } from 'shared/errors/otp-errors';
 
 import { TokenTypes } from 'shared/types/tokens';
-import { IJwtService } from 'application/interfaces/services/jwt.service.interface';
+import { IJwtService } from '@application/interfaces/services/jwt.service.interface';
 import { UserRole } from 'shared/enums/user-role.enum';
-import { IOwnerProfileRepository } from 'core/interfaces/owner-repository.interface';
+import { IOwnerProfileRepository } from '@core/interfaces/repository/owner-repository.interface';
 import { OwnerProfileEntity } from 'core/entities/owner-profile.entity';
 import { v4 as uuidv4 } from 'uuid';
 

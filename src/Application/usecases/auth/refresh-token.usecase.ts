@@ -1,6 +1,6 @@
 import { IRefreshTokenUseCase } from 'application/interfaces/auth/refresh-token.usecase.interface';
-import { IJwtService } from 'application/interfaces/services/jwt.service.interface';
-import { IUserRepository } from 'core/interfaces/user-repository.interface';
+import { IJwtService } from '@application/interfaces/services/jwt.service.interface';
+import { IUserRepository } from '@core/interfaces/repository/user-repository.interface';
 import { Http_StatusCodes } from 'shared/enums/http-status-codes.enum';
 import { ProjectErrors } from 'shared/errors/base/base.error'; 
 import { InvalidRefreshToken } from 'shared/errors/jwt-errors';

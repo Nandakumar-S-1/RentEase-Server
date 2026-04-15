@@ -1,4 +1,4 @@
-import { Create_User_Usecase } from 'application/usecases/auth/create-user.usecase';
+import { CreateUserUseCase } from 'application/usecases/auth/create-user.usecase';
 import { ICreateUserUseCase } from 'application/interfaces/auth/create-user.usecase.interface';
 import { container } from 'tsyringe';
 import { IVerifyOtpUseCase } from 'application/interfaces/auth/verify-otp.usecase.interface';
@@ -23,13 +23,14 @@ import { IGetProfileUseCase, IUpdateProfileUseCase } from 'application/interface
 import { GetProfileUseCase } from 'application/usecases/profile/get-profile.usecase';
 import { UpdateProfileUseCase } from 'application/usecases/profile/update-profile.usecase';
 import { CreatePropertyUseCase } from '@application/usecases/property/create-property.usecase';
-import { ICreatePropertyUseCase } from '@application/interfaces/profile/property.usecase.interface';
+import { ICreatePropertyUseCase, IGetMyPropertiesUseCase } from '@application/interfaces/profile/property.usecase.interface';
+import { GetMyPropertiesUseCase } from '@application/usecases/property/get-my-properties.usecase';
 
 export class UseCaseModule {
     static registerModules(): void {
         //registering interface token to the concrete class
         container.register<ICreateUserUseCase>(TokenTypes.ICreateUserUseCase, {
-            useClass: Create_User_Usecase,
+            useClass: CreateUserUseCase,
         });
         container.register<IVerifyOtpUseCase>(TokenTypes.IVerifyOtpUseCase, {
             useClass: VerifyOtpUseCase,
@@ -67,6 +68,9 @@ export class UseCaseModule {
         });
         container.register<ICreatePropertyUseCase>(TokenTypes.ICreatePropertyUseCase,{
             useClass:CreatePropertyUseCase
+        })
+        container.register<IGetMyPropertiesUseCase>(TokenTypes.IGetMyPropertiesUseCase, {
+            useClass: GetMyPropertiesUseCase
         })
     }
 }

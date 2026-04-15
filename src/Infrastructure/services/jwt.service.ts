@@ -11,7 +11,7 @@ import {
     InvalidRefreshToken,
     refreshTOkenCreationError,
 } from 'shared/errors/jwt-errors';
-import { IJwtService } from 'application/interfaces/services/jwt.service.interface';
+import { IJwtService } from '@application/interfaces/services/jwt.service.interface';
 
 @injectable()
 export class JwtService implements IJwtService {

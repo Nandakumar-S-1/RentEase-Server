@@ -1,8 +1,8 @@
 import { UpdateProfileDTO } from 'application/dtos/profile/update-profile.dto';
 import { IUpdateProfileUseCase } from 'application/interfaces/profile/profile.usecase.interface';
-import { IUserRepository } from 'core/interfaces/user-repository.interface';
-import { IOwnerProfileRepository } from 'core/interfaces/owner-repository.interface';
-import { ITenantProfileRepository } from 'core/interfaces/tenant-repository.interface';
+import { IUserRepository } from '@core/interfaces/repository/user-repository.interface';
+import { IOwnerProfileRepository } from '@core/interfaces/repository/owner-repository.interface';
+import { ITenantProfileRepository } from '@core/interfaces/repository/tenant-repository.interface';
 import { UserEntity } from 'core/entities/user.entity';
 import { TokenTypes } from 'shared/types/tokens';
 import { inject, injectable } from 'tsyringe';

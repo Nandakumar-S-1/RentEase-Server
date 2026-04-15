@@ -1,7 +1,7 @@
 import { SubmitVerificationDTO } from 'application/dtos/owner/request/owner-verification-request.dto';
 import { ISubmitVerificationUseCase } from 'application/interfaces/owner/submit-verification.usecase.interface';
 import { OwnerVerificationMapper } from 'application/mappers/profile/owner-verification.mapper';
-import { IOwnerProfileRepository } from 'core/interfaces/owner-repository.interface';
+import { IOwnerProfileRepository } from '@core/interfaces/repository/owner-repository.interface';
 import { Owner_Verification_Status } from 'shared/enums/owner-verification-status.enum';
 import {
     DocumentAlreadySubmittedError,

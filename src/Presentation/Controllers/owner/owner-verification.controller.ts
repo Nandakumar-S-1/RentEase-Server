@@ -7,7 +7,7 @@ import { TokenTypes } from 'shared/types/tokens';
 import { uploadToCloudinary } from 'shared/uploads/cloudinary.service';
 import { Owner_Response_Messages } from 'shared/types/messages/Response.messages';
 import { logger } from 'shared/log/logger';
-import { IOwnerProfileRepository } from 'core/interfaces/owner-repository.interface';
+import { IOwnerProfileRepository } from '@core/interfaces/repository/owner-repository.interface';
 import { Owner_Verification_Status } from 'shared/enums/owner-verification-status.enum';
 
 @injectable()

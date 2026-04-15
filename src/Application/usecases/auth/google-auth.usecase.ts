@@ -1,11 +1,11 @@
 import { GoogleAuthRequestDTO } from 'application/dtos/authentication/request/google-auth-request.dto';
 import { LoginResponseDTO } from 'application/dtos/authentication/response/login-response.dto';
 import { IGoogleAuthUseCase } from 'application/interfaces/auth/google-auth.usecase.interface';
-import { IFirebaseService } from 'application/interfaces/services/firebase.service.interface';
-import { IJwtService } from 'application/interfaces/services/jwt.service.interface';
+import { IFirebaseService } from '@application/interfaces/services/firebase.service.interface';
+import { IJwtService } from '@application/interfaces/services/jwt.service.interface';
 import { UserEntity } from 'core/entities/user.entity';
-import { IUserRepository } from 'core/interfaces/user-repository.interface';
-import { IOwnerProfileRepository } from 'core/interfaces/owner-repository.interface';
+import { IUserRepository } from '@core/interfaces/repository/user-repository.interface';
+import { IOwnerProfileRepository } from '@core/interfaces/repository/owner-repository.interface';
 import { OwnerProfileEntity } from 'core/entities/owner-profile.entity';
 import { UserRole } from 'shared/enums/user-role.enum';
 import { logger } from 'shared/log/logger';

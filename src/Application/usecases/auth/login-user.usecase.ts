@@ -1,9 +1,9 @@
 import { LoginRequestDTO } from 'application/dtos/authentication/request/login-request.dto';
 import { LoginResponseDTO } from 'application/dtos/authentication/response/login-response.dto';
 import { ILoginUserUseCase } from 'application/interfaces/auth/login-user.usecase.interface';
-import { IHashService } from 'application/interfaces/services/hash.service.interface';
-import { IJwtService } from 'application/interfaces/services/jwt.service.interface';
-import { IUserRepository } from 'core/interfaces/user-repository.interface';
+import { IHashService } from '@application/interfaces/services/hash.service.interface';
+import { IJwtService } from '@application/interfaces/services/jwt.service.interface';
+import { IUserRepository } from '@core/interfaces/repository/user-repository.interface';
 import {
     AccountNotActiveError,
     AccountSuspendedError,

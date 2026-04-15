@@ -3,7 +3,7 @@ import { prisma } from 'infrastructure/database/prisma/prisma.client';
 import { UserPersistenceMapper } from 'infrastructure/mappers/user-persistence.mapper';
 import { logger } from 'shared/log/logger';
 import { UserEntity } from 'core/entities/user.entity';
-import { IUserRepository } from 'core/interfaces/user-repository.interface';
+import { IUserRepository } from '@core/interfaces/repository/user-repository.interface';
 import { UserAvatarUpdateFailedError, UserUpdateFailedError } from '@shared/errors/user-errors';
 
 //poly

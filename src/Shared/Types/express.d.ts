@@ -8,7 +8,10 @@ declare global {
             user?: {
                 id: string;
                 email: string;
+                fullname: string;
+                phone: string;
                 role: UserRole;
+                avatarUrl?: string | null;
                 verificationStatus?: Owner_Verification_Status;
             };
         }
