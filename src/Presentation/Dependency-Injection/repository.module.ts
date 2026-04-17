@@ -25,8 +25,8 @@ export class RepositoryModule {
         container.register<ITenantProfileRepository>(TokenTypes.ITenantProfileRepository, {
             useClass: TenantProfileRepository,
         });
-        container.register<IPropertyRepository>(TokenTypes.IPropertyRepository,{
-            useClass:PropertyRepository
-        })
+        container.register<IPropertyRepository>(TokenTypes.IPropertyRepository, {
+            useClass: PropertyRepository,
+        });
     }
 }

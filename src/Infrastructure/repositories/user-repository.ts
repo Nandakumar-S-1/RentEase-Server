@@ -77,7 +77,7 @@ export class UserRepository implements IUserRepository {
             return UserPersistenceMapper.toEntity(res);
         } catch (error) {
             logger.error({ error }, `Error updating user with ID: ${id}`);
-            throw new UserUpdateFailedError()
+            throw new UserUpdateFailedError();
         }
     }
 
@@ -90,7 +90,7 @@ export class UserRepository implements IUserRepository {
             return UserPersistenceMapper.toEntity(res);
         } catch (error) {
             logger.error({ error }, `Error updating avatar for user: ${id}`);
-            throw new UserAvatarUpdateFailedError()
+            throw new UserAvatarUpdateFailedError();
         }
     }
 }

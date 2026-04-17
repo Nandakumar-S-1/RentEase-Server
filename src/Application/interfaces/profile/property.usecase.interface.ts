@@ -1,9 +1,9 @@
-import { CreatePropertyDTO } from "@application/dtos/property/property.dto";
-import { CreatePropertyResponseDTO } from "@application/dtos/property/res/create-property-response.dto";
-import { PropertyStatus } from "@shared/enums/property-type-status.enum";
+import { CreatePropertyDTO } from '@application/dtos/property/property.dto';
+import { CreatePropertyResponseDTO } from '@application/dtos/property/res/create-property-response.dto';
+import { PropertyStatus } from '@shared/enums/property-type-status.enum';
 
 export interface ICreatePropertyUseCase {
-    execute(dto: CreatePropertyDTO): Promise<CreatePropertyResponseDTO>
+    execute(dto: CreatePropertyDTO): Promise<CreatePropertyResponseDTO>;
 }
 
 export interface GetMyPropertiesDTO {
@@ -14,6 +14,7 @@ export interface GetMyPropertiesDTO {
 }
 
 export interface PaginatedPropertyResponse {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     properties: any[];
     total: number;
     page: number;

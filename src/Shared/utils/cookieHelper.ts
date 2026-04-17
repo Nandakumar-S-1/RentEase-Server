@@ -18,5 +18,6 @@ export const setRefreshTokenCookie = (res: Response, refreshToken?: string): voi
         secure: secureCookie,
         sameSite: 'lax',
         path: '/',
-        maxAge: 7 * 24 * 60 * 60 * 1000,     });
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
 };

@@ -45,7 +45,7 @@ export const API_PREFIXES = {
     ADMIN: '/admin',
     OWNER: '/owner',
     PROFILE: '/profile',
-    PROPERTY:'/properties'
+    PROPERTY: '/properties',
 } as const;
 
 export const PROPERTY_ROUTES = {
@@ -54,5 +54,5 @@ export const PROPERTY_ROUTES = {
     DELETE: '/:id',
     UPLOAD_PHOTOS_URLS: '/photos/upload-urls',
     GET_BY_OWNER: '/owner',
-    LIST:'/properties'
-}
+    LIST: '/properties',
+};

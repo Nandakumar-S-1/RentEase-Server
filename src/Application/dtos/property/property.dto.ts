@@ -1,18 +1,18 @@
 export interface CreatePropertyDTO {
-    ownerId: string
-    title: string
-    description: string
-    propertyType: string
+    ownerId: string;
+    title: string;
+    description: string;
+    propertyType: string;
 
-    locationDistrict: string,
-    locationCity: string
-    locationPinCode: string
-    fullAddress: string
+    locationDistrict: string;
+    locationCity: string;
+    locationPinCode: string;
+    fullAddress: string;
 
-    monthlyRent: number
-    depositAmount: number
-    photos?: string[]
-    primaryPhotoIndex?: number
+    monthlyRent: number;
+    depositAmount: number;
+    photos?: string[];
+    primaryPhotoIndex?: number;
 }
 
 export interface UploadPropertyPhotosDTO {

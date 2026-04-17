@@ -3,9 +3,9 @@ import { BaseRoute } from '../base/base.route';
 import { asyncHandlerFunction } from 'presentation/Utils/async-handler';
 import { UserManagementController } from 'presentation/controllers/admin/user-management.controller';
 import { AdminLoginController } from 'presentation/controllers/admin/admin-login.controller';
-import { ADMIN_ROUTES } from 'shared/constants/routes';
+import { ADMIN_ROUTES } from '@shared/constants/routes';
 import { AdminOwnerVerificationController } from 'presentation/controllers/admin/admin-owner-verification.controller';
-import { authMiddleware } from 'presentation/middlewares/auth.middleware';
+import { authMiddleware } from '@presentation/middlewares/temp';
 import { neededRole } from 'presentation/middlewares/role.middleware';
 import { UserRole } from 'shared/enums/user-role.enum';
 

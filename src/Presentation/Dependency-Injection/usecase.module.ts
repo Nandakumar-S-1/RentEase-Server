@@ -19,11 +19,17 @@ import { SubmitVerificationUseCase } from 'application/usecases/owner/submit-ver
 import { VerifyOwnerUseCase } from 'application/usecases/owner/verify-owner.usecase';
 import { IVerifyOwnerUseCase } from 'application/interfaces/admin/verify-owner.usecase.interface';
 import { ISubmitVerificationUseCase } from 'application/interfaces/owner/submit-verification.usecase.interface';
-import { IGetProfileUseCase, IUpdateProfileUseCase } from 'application/interfaces/profile/profile.usecase.interface';
+import {
+    IGetProfileUseCase,
+    IUpdateProfileUseCase,
+} from 'application/interfaces/profile/profile.usecase.interface';
 import { GetProfileUseCase } from 'application/usecases/profile/get-profile.usecase';
 import { UpdateProfileUseCase } from 'application/usecases/profile/update-profile.usecase';
 import { CreatePropertyUseCase } from '@application/usecases/property/create-property.usecase';
-import { ICreatePropertyUseCase, IGetMyPropertiesUseCase } from '@application/interfaces/profile/property.usecase.interface';
+import {
+    ICreatePropertyUseCase,
+    IGetMyPropertiesUseCase,
+} from '@application/interfaces/profile/property.usecase.interface';
 import { GetMyPropertiesUseCase } from '@application/usecases/property/get-my-properties.usecase';
 
 export class UseCaseModule {
@@ -66,11 +72,11 @@ export class UseCaseModule {
         container.register<IUpdateProfileUseCase>(TokenTypes.UpdateProfileUseCase, {
             useClass: UpdateProfileUseCase,
         });
-        container.register<ICreatePropertyUseCase>(TokenTypes.ICreatePropertyUseCase,{
-            useClass:CreatePropertyUseCase
-        })
+        container.register<ICreatePropertyUseCase>(TokenTypes.ICreatePropertyUseCase, {
+            useClass: CreatePropertyUseCase,
+        });
         container.register<IGetMyPropertiesUseCase>(TokenTypes.IGetMyPropertiesUseCase, {
-            useClass: GetMyPropertiesUseCase
-        })
+            useClass: GetMyPropertiesUseCase,
+        });
     }
 }

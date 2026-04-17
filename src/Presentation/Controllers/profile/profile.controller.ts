@@ -1,6 +1,9 @@
 import { Request, Response } from 'express';
 import { inject, injectable } from 'tsyringe';
-import { IGetProfileUseCase, IUpdateProfileUseCase } from 'application/interfaces/profile/profile.usecase.interface';
+import {
+    IGetProfileUseCase,
+    IUpdateProfileUseCase,
+} from 'application/interfaces/profile/profile.usecase.interface';
 import { Http_StatusCodes } from 'shared/enums/http-status-codes.enum';
 import { TokenTypes } from 'shared/types/tokens';
 import { Profile_Response_Messages } from 'shared/types/messages/Response.messages';
@@ -14,7 +17,7 @@ export class ProfileController {
         private readonly _getProfile: IGetProfileUseCase,
         @inject(TokenTypes.UpdateProfileUseCase)
         private readonly _updateProfile: IUpdateProfileUseCase,
-    ) { }
+    ) {}
 
     getProfile = async (req: Request, res: Response): Promise<Response> => {
         const userId = req.user!.id;
@@ -65,7 +68,7 @@ export class ProfileController {
             userId,
             role: req.user!.role,
             avatarUrl,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } as any);
 
         return res.status(Http_StatusCodes.OK).json({

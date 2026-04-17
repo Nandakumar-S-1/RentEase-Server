@@ -25,7 +25,7 @@ export class GoogleAuthUseCase implements IGoogleAuthUseCase {
         private readonly _jwtService: IJwtService,
         @inject(TokenTypes.IOwnerProfileRepository)
         private readonly _ownerRepository: IOwnerProfileRepository,
-    ) { }
+    ) {}
 
     async execute(dto: GoogleAuthRequestDTO): Promise<LoginResult> {
         const { idToken, role } = dto;
@@ -49,7 +49,7 @@ export class GoogleAuthUseCase implements IGoogleAuthUseCase {
             });
             user = await this._userRepository.create(newUser);
 
-            logger.info(`new google user is ${user}`)
+            logger.info(`new google user is ${user}`);
             if (user.role === UserRole.OWNER) {
                 await this._ownerRepository.create(
                     OwnerProfileEntity.create({ id: crypto.randomUUID(), userId: user.id }),
@@ -68,7 +68,7 @@ export class GoogleAuthUseCase implements IGoogleAuthUseCase {
             userId: user.id,
             email: user.email,
             role: user.role,
-        })
+        });
         logger.info(`google auth successful for ${email}. Tokens issued.`);
 
         return {

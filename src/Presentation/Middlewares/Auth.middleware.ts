@@ -12,7 +12,9 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
     try {
         const jwtService = container.resolve<IJwtService>(TokenTypes.IJwtService);
         const userRepo = container.resolve<IUserRepository>(TokenTypes.IUserRepository);
-        const ownerRepo = container.resolve<IOwnerProfileRepository>(TokenTypes.IOwnerProfileRepository);
+        const ownerRepo = container.resolve<IOwnerProfileRepository>(
+            TokenTypes.IOwnerProfileRepository,
+        );
 
         const authHeader = req.headers.authorization;
 

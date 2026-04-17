@@ -26,7 +26,7 @@ export class UserUpdateFailedError extends ProjectErrors {
         super(
             Http_StatusCodes.INTERNAL_SERVER_ERROR,
             'USER_UPDATE_FAILED',
-            'Failed to update user'
+            'Failed to update user',
         );
     }
 }
@@ -36,7 +36,7 @@ export class UserAvatarUpdateFailedError extends ProjectErrors {
         super(
             Http_StatusCodes.INTERNAL_SERVER_ERROR,
             'USER_AVATAR_UPDATE_FAILED',
-            'Failed to update user avatar'
+            'Failed to update user avatar',
         );
     }
 }

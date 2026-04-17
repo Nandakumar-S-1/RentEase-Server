@@ -1,7 +1,7 @@
 import { connectToRedis } from 'infrastructure/cache/redis.client';
 import { connectToPostgressDB } from 'infrastructure/database/postgress';
 import { MailService } from 'infrastructure/services/mail.service';
-import { logger } from 'shared/log/logger';
+// import { logger } from 'shared/log/logger';
 import { container } from 'tsyringe';
 
 export async function verifyServices() {

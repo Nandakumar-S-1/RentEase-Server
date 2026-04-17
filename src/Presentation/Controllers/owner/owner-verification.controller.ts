@@ -55,7 +55,8 @@ export class OwnerVerificationController {
         }
 
         const ownerProfile = await this._ownerRepository.findByUserId(userId);
-        const verificationStatus = ownerProfile?.verificationStatus ?? Owner_Verification_Status.PENDING;
+        const verificationStatus =
+            ownerProfile?.verificationStatus ?? Owner_Verification_Status.PENDING;
 
         logger.info(`--owner status fetched----`);
         return res.status(Http_StatusCodes.OK).json({

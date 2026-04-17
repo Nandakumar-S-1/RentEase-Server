@@ -8,7 +8,6 @@ import { injectable } from 'tsyringe';
 
 @injectable()
 export class OwnerProfileRepository implements IOwnerProfileRepository {
-
     async create(entity: OwnerProfileEntity): Promise<OwnerProfileEntity> {
         const result = await prisma.ownerProfile.create({
             data: {

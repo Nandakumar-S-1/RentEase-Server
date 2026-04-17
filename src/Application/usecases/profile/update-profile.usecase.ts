@@ -50,7 +50,8 @@ export class UpdateProfileUseCase implements IUpdateProfileUseCase {
             const ownerProfile = await this._ownerRepo.findByUserId(dto.userId);
             if (ownerProfile) {
                 if (dto.bio !== undefined) ownerProfile.updateBio(dto.bio ?? null);
-                if (dto.occupation !== undefined) ownerProfile.updateOccupation(dto.occupation ?? null);
+                if (dto.occupation !== undefined)
+                    ownerProfile.updateOccupation(dto.occupation ?? null);
                 await this._ownerRepo.save(ownerProfile);
             }
         }
@@ -59,7 +60,8 @@ export class UpdateProfileUseCase implements IUpdateProfileUseCase {
             const tenantProfile = await this._tenantRepo.findByUserId(dto.userId);
             if (tenantProfile) {
                 if (dto.bio !== undefined) tenantProfile.updateBio(dto.bio ?? null);
-                if (dto.occupation !== undefined) tenantProfile.updateOccupation(dto.occupation ?? null);
+                if (dto.occupation !== undefined)
+                    tenantProfile.updateOccupation(dto.occupation ?? null);
                 await this._tenantRepo.save(tenantProfile);
             }
         }

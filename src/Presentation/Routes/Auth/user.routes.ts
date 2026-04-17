@@ -1,10 +1,10 @@
 import { injectable } from 'tsyringe';
 import { BaseRoute } from '../base/base.route';
 import { asyncHandlerFunction } from 'presentation/Utils/async-handler';
-import { AuthController } from 'presentation/controllers/authentication/auth.controller';
-import { AUTH_ROUTES } from 'shared/constants/routes';
-import { validationRequestMiddleware } from 'presentation/middlewares/validation.middleware';
-import { authMiddleware } from 'presentation/middlewares/auth.middleware';
+import { AuthController } from '@presentation/controllers/authentication/Auth.Controller';
+import { AUTH_ROUTES } from '@shared/constants/routes';
+import { validationRequestMiddleware } from '@presentation/middlewares/validation.middleware';
+import { authMiddleware } from '@presentation/middlewares/Auth.middleware';
 import {
     registerSchema,
     loginSchema,

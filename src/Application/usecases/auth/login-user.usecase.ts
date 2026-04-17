@@ -1,5 +1,8 @@
 import { LoginRequestDTO } from 'application/dtos/authentication/request/login-request.dto';
-import { ILoginUserUseCase, LoginResult } from 'application/interfaces/auth/login-user.usecase.interface';
+import {
+    ILoginUserUseCase,
+    LoginResult,
+} from 'application/interfaces/auth/login-user.usecase.interface';
 import { IHashService } from '@application/interfaces/services/hash.service.interface';
 import { IJwtService } from '@application/interfaces/services/jwt.service.interface';
 import { IUserRepository } from '@core/interfaces/repository/user-repository.interface';

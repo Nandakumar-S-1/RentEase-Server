@@ -1,7 +1,4 @@
-import {
-    ITokenPayloadContent,
-    ITokenTypes,
-} from 'application/interfaces/security/token.types';
+import { ITokenPayloadContent, ITokenTypes } from 'application/interfaces/security/token.types';
 import { injectable } from 'tsyringe';
 import jwt, { SignOptions } from 'jsonwebtoken';
 import { logger } from 'shared/log/logger';

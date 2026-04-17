@@ -52,7 +52,7 @@ export class AuthController {
 
         @inject(TokenTypes.IRefreshTokenUseCase)
         private readonly _refreshTokenUseCase: IRefreshTokenUseCase,
-    ) { }
+    ) {}
 
     register = async (req: Request, res: Response): Promise<Response> => {
         logger.info('registered data from the frontend is ', req.body);
