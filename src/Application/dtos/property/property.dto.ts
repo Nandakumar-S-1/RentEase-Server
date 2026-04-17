@@ -11,7 +11,8 @@ export interface CreatePropertyDTO {
 
     monthlyRent: number
     depositAmount: number
-    // photos?:string[]
+    photos?: string[]
+    primaryPhotoIndex?: number
 }
 
 export interface UploadPropertyPhotosDTO {

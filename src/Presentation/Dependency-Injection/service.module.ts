@@ -2,12 +2,14 @@ import { IJwtService } from '@application/interfaces/services/jwt.service.interf
 import { IMailService } from '@application/interfaces/services/mail.service.interface';
 import { IOtpService } from '@application/interfaces/services/otp.service.interface';
 import { IRedisCache } from '@application/interfaces/services/redis-cache.service.interface';
+import { IS3Service } from '@application/interfaces/services/s3.service.interface';
 import { RedisCacheService } from 'infrastructure/cache/redis-cache.service';
 import { IHashService } from '@application/interfaces/services/hash.service.interface';
 import { BcryptHashService } from 'infrastructure/services/bcrypt-hash.service';
 import { JwtService } from 'infrastructure/services/jwt.service';
 import { MailService } from 'infrastructure/services/mail.service';
 import { OtpService } from 'infrastructure/services/otp.service';
+import { S3Service } from 'infrastructure/services/s3.service';
 
 import { container } from 'tsyringe';
 import { TokenTypes } from 'shared/types/tokens';
@@ -34,6 +36,10 @@ export class ServiceModule {
         });
         container.register<IFirebaseService>(TokenTypes.IFirebaseService, {
             useClass: FirebaseService,
+        });
+
+        container.register<IS3Service>(TokenTypes.IS3Service, {
+            useClass: S3Service,
         });
     }
 }

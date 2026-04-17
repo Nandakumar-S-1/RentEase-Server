@@ -8,6 +8,7 @@ import { Http_StatusCodes } from 'shared/enums/http-status-codes.enum';
 import { ApiResponse } from 'application/dtos/api-response.dto';
 import { UserRole } from 'shared/enums/user-role.enum';
 import { LoginResponseDTO } from 'application/dtos/authentication/response/login-response.dto';
+import { setRefreshTokenCookie } from 'shared/utils/cookieHelper';
 
 @injectable()
 export class AdminLoginController {
@@ -47,17 +48,11 @@ export class AdminLoginController {
                     avatarUrl: result.user.avatarUrl,
                 },
                 accessToken: result.accessToken,
-                refreshToken: result.refreshToken,
+                // refreshToken: result.refreshToken,
             },
         };
 
-        res.cookie('refreshToken', result.refreshToken, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'strict',
-            path: '/',
-            maxAge: 7 * 24 * 60 * 60 * 1000,
-        });
+        setRefreshTokenCookie(res, result.refreshToken);
 
         return res.status(Http_StatusCodes.OK).json(response);
     }
@@ -91,17 +86,11 @@ export class AdminLoginController {
                     avatarUrl: result.user.avatarUrl,
                 },
                 accessToken: result.accessToken,
-                refreshToken: result.refreshToken,
+                // refreshToken: result.refreshToken,
             },
         };
 
-        res.cookie('refreshToken', result.refreshToken, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'strict',
-            path: '/',
-            maxAge: 7 * 24 * 60 * 60 * 1000,
-        });
+        setRefreshTokenCookie(res, result.refreshToken);
 
         return res.status(Http_StatusCodes.OK).json(response);
     }

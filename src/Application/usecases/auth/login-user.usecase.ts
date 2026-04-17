@@ -1,6 +1,5 @@
 import { LoginRequestDTO } from 'application/dtos/authentication/request/login-request.dto';
-import { LoginResponseDTO } from 'application/dtos/authentication/response/login-response.dto';
-import { ILoginUserUseCase } from 'application/interfaces/auth/login-user.usecase.interface';
+import { ILoginUserUseCase, LoginResult } from 'application/interfaces/auth/login-user.usecase.interface';
 import { IHashService } from '@application/interfaces/services/hash.service.interface';
 import { IJwtService } from '@application/interfaces/services/jwt.service.interface';
 import { IUserRepository } from '@core/interfaces/repository/user-repository.interface';
@@ -26,7 +25,7 @@ export class LoginUseCase implements ILoginUserUseCase {
         @inject(TokenTypes.IJwtService)
         private readonly _jwtService: IJwtService,
     ) {}
-    async execute(dto: LoginRequestDTO): Promise<LoginResponseDTO> {
+    async execute(dto: LoginRequestDTO): Promise<LoginResult> {
         logger.info('login usecase started----');
         if (!dto.email || !dto.password) {
             throw new InvalidCredentialsError();

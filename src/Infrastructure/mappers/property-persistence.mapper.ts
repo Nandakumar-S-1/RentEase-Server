@@ -84,7 +84,7 @@ export class PropertyPersistenceMapper {
             maintenanceIncluded: entity.maintenanceIncluded,
 
             photos: entity.photos,
-            primaryPhotoIndex: entity.primaryPhotoIndex,
+            mainPhotoIndex: entity.primaryPhotoIndex,
             videoTourUrl: entity.videoToursUrl,
 
             status: this._mapStatusToPrisma(entity.status),

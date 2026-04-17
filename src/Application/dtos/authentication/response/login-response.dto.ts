@@ -8,5 +8,4 @@ export interface LoginResponseDTO {
         avatarUrl: string | null;
     };
     accessToken: string;
-    refreshToken?: string;
 }
