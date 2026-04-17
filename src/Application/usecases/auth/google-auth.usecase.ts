@@ -1,5 +1,5 @@
 import { GoogleAuthRequestDTO } from 'application/dtos/authentication/request/google-auth-request.dto';
-import { LoginResponseDTO } from 'application/dtos/authentication/response/login-response.dto';
+// import { LoginResponseDTO } from 'application/dtos/authentication/response/login-response.dto';
 import { IGoogleAuthUseCase } from 'application/interfaces/auth/google-auth.usecase.interface';
 import { IFirebaseService } from '@application/interfaces/services/firebase.service.interface';
 import { IJwtService } from '@application/interfaces/services/jwt.service.interface';
@@ -12,6 +12,7 @@ import { logger } from 'shared/log/logger';
 import { TokenTypes } from 'shared/types/tokens';
 import { inject, injectable } from 'tsyringe';
 import { AccountNotActiveError, AccountSuspendedError } from 'shared/errors/login-errors';
+import { LoginResult } from '@application/interfaces/auth/login-user.usecase.interface';
 
 @injectable()
 export class GoogleAuthUseCase implements IGoogleAuthUseCase {
@@ -26,7 +27,7 @@ export class GoogleAuthUseCase implements IGoogleAuthUseCase {
         private readonly _ownerRepository: IOwnerProfileRepository,
     ) { }
 
-    async execute(dto: GoogleAuthRequestDTO): Promise<LoginResponseDTO> {
+    async execute(dto: GoogleAuthRequestDTO): Promise<LoginResult> {
         const { idToken, role } = dto;
         const { email, fullname } = await this._firebaseService.verifyIdToken(idToken);
 
@@ -46,15 +47,15 @@ export class GoogleAuthUseCase implements IGoogleAuthUseCase {
                 role: role,
                 isEmailVerified: true,
             });
-
             user = await this._userRepository.create(newUser);
+
+            logger.info(`new google user is ${user}`)
             if (user.role === UserRole.OWNER) {
                 await this._ownerRepository.create(
                     OwnerProfileEntity.create({ id: crypto.randomUUID(), userId: user.id }),
                 );
             }
         }
-
         if (!user.isActive) {
             logger.warn(`Account with email ${email} is deactivated`);
             throw new AccountNotActiveError();
@@ -63,24 +64,23 @@ export class GoogleAuthUseCase implements IGoogleAuthUseCase {
             logger.warn(`Account with email ${email} is suspended`);
             throw new AccountSuspendedError();
         }
-
         const tokens = this._jwtService.createPairofJwtTokens({
             userId: user.id,
             email: user.email,
             role: user.role,
-        });
-
-        logger.info(`Google auth successful for ${email}. Tokens issued.`);
+        })
+        logger.info(`google auth successful for ${email}. Tokens issued.`);
 
         return {
-            user: {
-                id: user.id,
-                email: user.email,
-                fullname: user.fullname,
-                phone: user.phone ?? null,
-                role: user.role,
-                avatarUrl: user.avatarUrl,
-            },
+            // user: {
+            //     id: user.id,
+            //     email: user.email,
+            //     fullname: user.fullname,
+            //     phone: user.phone ?? null,
+            //     role: user.role,
+            //     avatarUrl: user.avatarUrl,
+            // },
+            user,
             accessToken: tokens.accessToken,
             refreshToken: tokens.refreshToken,
         };

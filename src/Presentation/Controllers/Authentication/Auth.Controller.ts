@@ -76,9 +76,8 @@ export class AuthController {
     };
 
     login = async (req: Request, res: Response): Promise<Response> => {
-        logger.info('login request');
+        logger.info('login request init');
         const { email, password } = req.body;
-
         const result = await this._loginUseCase.execute({
             email,
             password,
@@ -242,7 +241,7 @@ export class AuthController {
 
         logger.info('Refresh Token request');
         if (!refreshToken) {
-            return res.status(Http_StatusCodes.BAD_REQUEST).json({
+            return res.status(Http_StatusCodes.UN_AUTHORIZED).json({
                 success: false,
                 message: Auth_Response_Messages.MISSING_REFRESH_TOKEN,
             });

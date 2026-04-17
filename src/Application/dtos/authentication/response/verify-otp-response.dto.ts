@@ -4,5 +4,4 @@ import { UserEntity } from 'core/entities/user.entity';
 export interface VerifyOtpResponseDTO {
     user: UserEntity;
     accessToken: string;
-    refreshToken: string;
 }

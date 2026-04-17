@@ -20,7 +20,8 @@ export class PropertyMapper{
             monthlyRent:dto.monthlyRent,
             depositAmount:dto.depositAmount,
 
-            photos:dto.photos ?? []
+            photos:dto.photos ?? [],
+            primaryPhotoIndex:dto.primaryPhotoIndex ?? 0,
         })
     }
 

@@ -52,6 +52,7 @@ export const PROPERTY_ROUTES = {
     CREATE: '/',
     UPDATE: '/:id',
     DELETE: '/:id',
+    UPLOAD_PHOTOS_URLS: '/photos/upload-urls',
     GET_BY_OWNER: '/owner',
     LIST:'/properties'
 }

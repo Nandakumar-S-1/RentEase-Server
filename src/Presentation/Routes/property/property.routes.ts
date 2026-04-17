@@ -15,6 +15,15 @@ export class PropertyRoutes extends BaseRoute{
     }
     protected initializeRoutes(): void {
         this.router.post(
+            PROPERTY_ROUTES.UPLOAD_PHOTOS_URLS,
+            authMiddleware,
+            neededRole(UserRole.OWNER),
+            asyncHandlerFunction(
+                this._controller.uploadPropertyPhotoUrls.bind(this._controller),
+            ),
+        );
+
+        this.router.post(
             PROPERTY_ROUTES.CREATE,
             authMiddleware,
             neededRole(UserRole.OWNER),
