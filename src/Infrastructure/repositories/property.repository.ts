@@ -80,4 +80,26 @@ export class PropertyRepository implements IPropertyRepository {
         property.unlist(); //entity method
         await this.update(property);
     }
+
+    async findAll(status?: string, skip?: number, take?: number): Promise<PropertyEntity[]> {
+        const properties = await prisma.property.findMany({
+            where: {
+                ...(status && { status: status as PropertyVerificationStatus }),
+            },
+            skip,
+            take,
+            orderBy: {
+                createdAt: 'desc',
+            },
+        });
+        return properties.map(PropertyPersistenceMapper.toEntity);
+    }
+
+    async countAll(status?: string): Promise<number> {
+        return await prisma.property.count({
+            where: {
+                ...(status && { status: status as PropertyVerificationStatus }),
+            },
+        });
+    }
 }

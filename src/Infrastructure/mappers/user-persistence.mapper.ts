@@ -12,7 +12,7 @@ export class UserPersistenceMapper {
             fullname: raw.fullName,
             passwordHash: raw.passwordHash,
             phone: raw.phone,
-            role: this._mapUserROle(raw.role),
+            role: UserPersistenceMapper._mapUserROle(raw.role),
             isActive: raw.isActive,
             isSuspended: raw.isSuspended,
             isEmailVerified: raw.isEmailVerified,

@@ -48,7 +48,6 @@ export class AdminLoginController {
                     avatarUrl: result.user.avatarUrl,
                 },
                 accessToken: result.accessToken,
-                // refreshToken: result.refreshToken,
             },
         };
 
@@ -86,7 +85,6 @@ export class AdminLoginController {
                     avatarUrl: result.user.avatarUrl,
                 },
                 accessToken: result.accessToken,
-                // refreshToken: result.refreshToken,
             },
         };
 

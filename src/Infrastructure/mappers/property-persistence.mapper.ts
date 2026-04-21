@@ -31,7 +31,7 @@ export class PropertyPersistenceMapper {
             primaryPhotoIndex: raw.mainPhotoIndex ?? 0,
             videoTourUrl: raw.videoTourUrl ?? undefined,
 
-            status: this._mapStatus(raw.status),
+            status: PropertyPersistenceMapper._mapStatus(raw.status),
             isFeatured: raw.isFeatured ?? false,
             availableFrom: raw.availableFrom ?? undefined,
 
@@ -87,7 +87,7 @@ export class PropertyPersistenceMapper {
             mainPhotoIndex: entity.primaryPhotoIndex,
             videoTourUrl: entity.videoToursUrl,
 
-            status: this._mapStatusToPrisma(entity.status),
+            status: PropertyPersistenceMapper._mapStatusToPrisma(entity.status),
             approvedBy: entity.approvedBy,
             approvedAt: entity.approvedAt,
             createdAt: entity.createdAt,

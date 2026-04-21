@@ -6,9 +6,15 @@ import { Http_StatusCodes } from '@shared/enums/http-status-codes.enum';
 import {
     ICreatePropertyUseCase,
     IGetMyPropertiesUseCase,
-} from '@application/interfaces/profile/property.usecase.interface';
+    IGetAllPropertiesUseCase,
+} from '@application/interfaces/property/property.usecase.interface';
 import { IS3Service } from '@application/interfaces/services/s3.service.interface';
+import { IModerationService } from '@application/interfaces/services/moderation.service.interface';
 import { PropertyStatus } from '@shared/enums/property-type-status.enum';
+import { ResponseHandler } from '../../utils/response-handler';
+import { Property_Response_Messages } from '@shared/types/messages/Response.messages';
+import { BadRequestError } from '@shared/errors/common-errors';
+import axios from 'axios';
 
 @injectable()
 export class PropertyController {
@@ -17,26 +23,72 @@ export class PropertyController {
         private readonly _createPropertyUseCase: ICreatePropertyUseCase,
         @inject(TokenTypes.IGetMyPropertiesUseCase)
         private readonly _getMyPropertiesUseCase: IGetMyPropertiesUseCase,
+        @inject(TokenTypes.IGetAllPropertiesUseCase)
+        private readonly _getAllPropertiesUseCase: IGetAllPropertiesUseCase,
         @inject(TokenTypes.IS3Service)
         private readonly _s3Service: IS3Service,
+        @inject(TokenTypes.IModerationService)
+        private readonly _moderationService: IModerationService,
     ) {}
+
+    getAllProperties = async (req: Request, res: Response): Promise<Response> => {
+        logger.info('fetching all properties for search');
+        const { status, page = 1, limit = 10 } = req.query;
+
+        const result = await this._getAllPropertiesUseCase.execute({
+            status: status as PropertyStatus,
+            page: Number(page),
+            limit: Number(limit),
+        });
+
+        return ResponseHandler.success(res, result, Property_Response_Messages.FETCHED);
+    };
     createProperty = async (req: Request, res: Response): Promise<Response> => {
         logger.info('initiating property creation');
-        //here overriding TypeScript .Skip safety checks Assume req.user exists
         const ownerId = req.user!.id;
         const dto = {
             ...req.body,
             ownerId,
         };
+
+        // Image Moderation Check
+        if (dto.photos && Array.isArray(dto.photos)) {
+            logger.info(`Moderating ${dto.photos.length} property photos...`);
+            for (const url of dto.photos) {
+                try {
+                    const response = await axios.get(url, { responseType: 'arraybuffer' });
+                    const buffer = Buffer.from(response.data);
+                    const moderation = await this._moderationService.checkImage(buffer);
+
+                    if (moderation.status === 'UNSAFE') {
+                        logger.warn(`Property creation blocked: Unsafe image detected at ${url}`);
+                        return ResponseHandler.error(
+                            res,
+                            `One or more images failed safety moderation: ${moderation.reason}`,
+                            Http_StatusCodes.BAD_REQUEST
+                        );
+                    }
+                } catch (error) {
+                    logger.error(`Failed to moderate image at ${url}:`, error);
+                    // We continue if it's just a network error fetching the image, 
+                    // or we could be strict. Let's be strict for safety.
+                    return ResponseHandler.error(
+                        res,
+                        "Failed to perform safety check on property images.",
+                        Http_StatusCodes.INTERNAL_SERVER_ERROR
+                    );
+                }
+            }
+        }
+
         const property = await this._createPropertyUseCase.execute(dto);
-        return res.status(Http_StatusCodes.CREATED).json({
-            success: true,
-            data: property,
-        });
+
+        logger.info(`creted the property ${property}`)
+        return ResponseHandler.success(res, property, Property_Response_Messages.CREATED, Http_StatusCodes.CREATED);
     };
 
     getMyProperties = async (req: Request, res: Response): Promise<Response> => {
-        logger.info('fetching owner properties');
+        logger.info('fetching owner propert');
         const ownerId = req.user!.id;
         const { status, page = 1, limit = 10 } = req.query;
 
@@ -47,10 +99,7 @@ export class PropertyController {
             limit: Number(limit),
         });
 
-        return res.status(Http_StatusCodes.OK).json({
-            success: true,
-            data: result,
-        });
+        return ResponseHandler.success(res, result, Property_Response_Messages.FETCHED);
     };
 
     uploadPropertyPhotoUrls = async (req: Request, res: Response): Promise<Response> => {
@@ -60,19 +109,13 @@ export class PropertyController {
         };
 
         if (!Array.isArray(files) || files.length === 0) {
-            return res.status(Http_StatusCodes.BAD_REQUEST).json({
-                success: false,
-                message: 'Files are required',
-            });
+            throw new BadRequestError(Property_Response_Messages.FILES_REQUIRED);
         }
 
         const awsBucket = process.env.AWS_BUCKET_NAME;
         const awsRegion = process.env.AWS_REGION;
         if (!awsBucket || !awsRegion) {
-            return res.status(Http_StatusCodes.INTERNAL_SERVER_ERROR).json({
-                success: false,
-                message: 'S3 is not configured',
-            });
+            return ResponseHandler.error(res, Property_Response_Messages.S3_CONFIG_ERROR, Http_StatusCodes.INTERNAL_SERVER_ERROR);
         }
 
         const uploads = await Promise.all(
@@ -93,9 +136,8 @@ export class PropertyController {
             }),
         );
 
-        return res.status(Http_StatusCodes.OK).json({
-            success: true,
-            data: { uploads },
-        });
+        logger.info(`propertuy photos uplods`)
+
+        return ResponseHandler.success(res, { uploads }, Property_Response_Messages.PHOTOS_UPLOADED);
     };
 }

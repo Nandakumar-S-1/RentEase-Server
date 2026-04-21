@@ -27,5 +27,7 @@ export const TokenTypes = {
     IPropertyRepository: 'IPropertyRepository',
     ICreatePropertyUseCase: 'ICreatePropertyUseCase',
     IGetMyPropertiesUseCase: 'IGetMyPropertiesUseCase',
+    IGetAllPropertiesUseCase: 'IGetAllPropertiesUseCase',
     IS3Service: 'IS3Service',
+    IModerationService: 'IModerationService',
 };

@@ -7,15 +7,15 @@ export type PropertyTypeData = {
     description: string;
     propertyType: PropertyType;
 
-    areaSqft?: number;
+    areaSqft?: number | null;
     locationDistrict: string;
     locationCity: string;
     locationPincode: string;
     fullAddress: string;
 
-    latitude?: number;
-    longitude?: number;
-    nearbyLandmarks?: string;
+    latitude?: number | null;
+    longitude?: number | null;
+    nearbyLandmarks?: string | null;
 
     monthlyRent: number;
     depositAmount: number;

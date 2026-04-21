@@ -1,6 +1,6 @@
 import { CreatePropertyDTO } from '@application/dtos/property/property.dto';
 import { CreatePropertyResponseDTO } from '@application/dtos/property/res/create-property-response.dto';
-import { ICreatePropertyUseCase } from '@application/interfaces/profile/property.usecase.interface';
+import { ICreatePropertyUseCase } from '@application/interfaces/property/property.usecase.interface';
 import { PropertyResponseMapper } from '@application/mappers/property/property-response.mapper';
 import { PropertyMapper } from '@application/mappers/property/property.mapper';
 import { IPropertyRepository } from '@core/interfaces/repository/property-repository.interface';

@@ -2,10 +2,10 @@ import { injectable } from 'tsyringe';
 import { BaseRoute } from '../base/base.route';
 import { ProfileController } from 'presentation/controllers/profile/profile.controller';
 import { PROFILE_ROUTES } from '@shared/constants/routes';
-import { authMiddleware } from '@presentation/middlewares/temp';
+import { authMiddleware } from '@presentation/middlewares/auth.middleware';
 import { validationRequestMiddleware } from '@presentation/middlewares/validation.middleware';
 import { updateProfileSchema } from 'application/validators/profile.validators';
-import { asyncHandlerFunction } from 'presentation/Utils/async-handler';
+import { asyncHandlerFunction } from '@presentation/utils/async-handler';
 import { upload } from 'shared/uploads/cloudinary.upload';
 
 @injectable()

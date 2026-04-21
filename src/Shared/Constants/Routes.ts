@@ -54,5 +54,5 @@ export const PROPERTY_ROUTES = {
     DELETE: '/:id',
     UPLOAD_PHOTOS_URLS: '/photos/upload-urls',
     GET_BY_OWNER: '/owner',
-    LIST: '/properties',
+    LIST: '/',
 };

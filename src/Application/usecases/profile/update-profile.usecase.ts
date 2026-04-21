@@ -7,6 +7,7 @@ import { UserEntity } from 'core/entities/user.entity';
 import { TokenTypes } from 'shared/types/tokens';
 import { inject, injectable } from 'tsyringe';
 import { logger } from 'shared/log/logger';
+import { UserRole } from '@shared/enums/user-role.enum';
 
 @injectable()
 export class UpdateProfileUseCase implements IUpdateProfileUseCase {
@@ -46,7 +47,7 @@ export class UpdateProfileUseCase implements IUpdateProfileUseCase {
         const updatedUser = await this._userRepo.update(dto.userId, updatedUserData);
 
         // update role specific profile fields
-        if (dto.role === 'OWNER') {
+        if (dto.role === UserRole.OWNER) {
             const ownerProfile = await this._ownerRepo.findByUserId(dto.userId);
             if (ownerProfile) {
                 if (dto.bio !== undefined) ownerProfile.updateBio(dto.bio ?? null);
@@ -56,7 +57,7 @@ export class UpdateProfileUseCase implements IUpdateProfileUseCase {
             }
         }
 
-        if (dto.role === 'TENANT') {
+        if (dto.role === UserRole.TENANT) {
             const tenantProfile = await this._tenantRepo.findByUserId(dto.userId);
             if (tenantProfile) {
                 if (dto.bio !== undefined) tenantProfile.updateBio(dto.bio ?? null);

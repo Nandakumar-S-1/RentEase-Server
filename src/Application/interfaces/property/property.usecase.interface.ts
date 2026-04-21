@@ -24,3 +24,14 @@ export interface PaginatedPropertyResponse {
 export interface IGetMyPropertiesUseCase {
     execute(dto: GetMyPropertiesDTO): Promise<PaginatedPropertyResponse>;
 }
+
+export interface GetAllPropertiesDTO {
+    status?: PropertyStatus;
+    page: number;
+    limit: number;
+}
+
+export interface IGetAllPropertiesUseCase {
+    execute(dto: GetAllPropertiesDTO): Promise<PaginatedPropertyResponse>;
+}
+

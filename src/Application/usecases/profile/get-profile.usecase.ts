@@ -5,6 +5,7 @@ import { ITenantProfileRepository } from '@core/interfaces/repository/tenant-rep
 import { TokenTypes } from 'shared/types/tokens';
 import { inject, injectable } from 'tsyringe';
 import { logger } from 'shared/log/logger';
+import { UserRole } from '@shared/enums/user-role.enum';
 
 @injectable()
 export class GetProfileUseCase implements IGetProfileUseCase {
@@ -33,7 +34,7 @@ export class GetProfileUseCase implements IGetProfileUseCase {
             createdAt: user.createdAt,
         };
 
-        if (role === 'OWNER') {
+        if (role === UserRole.OWNER) {
             const ownerProfile = await this._ownerRepo.findByUserId(userId);
             if (ownerProfile) {
                 profileData.bio = ownerProfile.bio;
@@ -45,7 +46,7 @@ export class GetProfileUseCase implements IGetProfileUseCase {
             }
         }
 
-        if (role === 'TENANT') {
+        if (role === UserRole.TENANT) {
             const tenantProfile = await this._tenantRepo.findByUserId(userId);
             if (tenantProfile) {
                 profileData.bio = tenantProfile.bio;

@@ -21,6 +21,11 @@ export class PropertyMapper {
 
             photos: dto.photos ?? [],
             primaryPhotoIndex: dto.primaryPhotoIndex ?? 0,
+
+            areaSqft: dto.areaSqft,
+            latitude: dto.latitude,
+            longitude: dto.longitude,
+            nearbyLandmarks: dto.nearbyLandmarks,
         });
     }
 }

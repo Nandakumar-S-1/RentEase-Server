@@ -15,6 +15,8 @@ import { container } from 'tsyringe';
 import { TokenTypes } from 'shared/types/tokens';
 import { IFirebaseService } from '@application/interfaces/services/firebase.service.interface';
 import { FirebaseService } from 'infrastructure/services/firebase.service';
+import { IModerationService } from '@application/interfaces/services/moderation.service.interface';
+import { ModerationService } from 'infrastructure/services/moderation.service';
 
 export class ServiceModule {
     static registerModules(): void {
@@ -40,6 +42,9 @@ export class ServiceModule {
 
         container.register<IS3Service>(TokenTypes.IS3Service, {
             useClass: S3Service,
+        });
+        container.register<IModerationService>(TokenTypes.IModerationService, {
+            useClass: ModerationService,
         });
     }
 }

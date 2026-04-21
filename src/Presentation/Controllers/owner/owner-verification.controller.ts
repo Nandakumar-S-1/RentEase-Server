@@ -9,6 +9,7 @@ import { Owner_Response_Messages } from 'shared/types/messages/Response.messages
 import { logger } from 'shared/log/logger';
 import { IOwnerProfileRepository } from '@core/interfaces/repository/owner-repository.interface';
 import { Owner_Verification_Status } from 'shared/enums/owner-verification-status.enum';
+import { IModerationService } from '@application/interfaces/services/moderation.service.interface';
 
 @injectable()
 export class OwnerVerificationController {
@@ -17,7 +18,9 @@ export class OwnerVerificationController {
         private readonly _submitVerification: ISubmitVerificationUseCase,
         @inject(TokenTypes.IOwnerProfileRepository)
         private readonly _ownerRepository: IOwnerProfileRepository,
-    ) {}
+        @inject(TokenTypes.IModerationService)
+        private readonly _moderationService: IModerationService,
+    ) { }
 
     submit = async (req: Request, res: Response): Promise<Response> => {
         const ownerId = req.user!.id;
@@ -28,6 +31,14 @@ export class OwnerVerificationController {
             return res.status(Http_StatusCodes.BAD_REQUEST).json({
                 success: false,
                 message: Owner_Response_Messages.DOCUMENT_REQUIRED,
+            });
+        }
+        const moderation = await this._moderationService.checkImage(req.file.buffer);
+        if (moderation.status === 'UNSAFE') {
+            logger.warn(`Owner verification document blocked: Unsafe content detected`);
+            return res.status(Http_StatusCodes.BAD_REQUEST).json({
+                success: false,
+                message: `Document failed safety moderation: ${moderation.reason}`,
             });
         }
 

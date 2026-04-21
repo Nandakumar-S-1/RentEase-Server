@@ -13,6 +13,11 @@ export interface CreatePropertyDTO {
     depositAmount: number;
     photos?: string[];
     primaryPhotoIndex?: number;
+
+    areaSqft?: number | null;
+    latitude?: number | null;
+    longitude?: number | null;
+    nearbyLandmarks?: string | null;
 }
 
 export interface UploadPropertyPhotosDTO {

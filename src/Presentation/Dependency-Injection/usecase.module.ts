@@ -29,8 +29,10 @@ import { CreatePropertyUseCase } from '@application/usecases/property/create-pro
 import {
     ICreatePropertyUseCase,
     IGetMyPropertiesUseCase,
-} from '@application/interfaces/profile/property.usecase.interface';
+    IGetAllPropertiesUseCase,
+} from '@application/interfaces/property/property.usecase.interface';
 import { GetMyPropertiesUseCase } from '@application/usecases/property/get-my-properties.usecase';
+import { GetAllPropertiesUseCase } from '@application/usecases/property/get-all-properties.usecase';
 
 export class UseCaseModule {
     static registerModules(): void {
@@ -77,6 +79,9 @@ export class UseCaseModule {
         });
         container.register<IGetMyPropertiesUseCase>(TokenTypes.IGetMyPropertiesUseCase, {
             useClass: GetMyPropertiesUseCase,
+        });
+        container.register<IGetAllPropertiesUseCase>(TokenTypes.IGetAllPropertiesUseCase, {
+            useClass: GetAllPropertiesUseCase,
         });
     }
 }

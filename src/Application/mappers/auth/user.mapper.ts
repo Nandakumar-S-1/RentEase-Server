@@ -1,4 +1,5 @@
 import { ICreateUserDTO } from 'application/dtos/authentication/create-user-response.dto';
+import { UserResponseDTO } from 'application/dtos/user/user-response.dto';
 import { UserEntity } from 'core/entities/user.entity';
 
 //Incoming => Domain(like Convering external input into valid domain entity)
@@ -18,5 +19,19 @@ export class UserMapper {
             phone: dto.phone,
             role: dto.role,
         });
+    }
+
+    static toResponseDTO(user: UserEntity): UserResponseDTO {
+        return {
+            id: user.id,
+            email: user.email,
+            fullname: user.fullname,
+            phone: user.phone,
+            role: user.role,
+            avatarUrl: user.avatarUrl,
+            isSuspended: user.isSuspended,
+            isActive: user.isActive,
+            isEmailVerified: user.isEmailVerified,
+        };
     }
 }
