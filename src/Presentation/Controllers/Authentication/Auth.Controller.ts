@@ -51,7 +51,7 @@ export class AuthController {
 
         @inject(TokenTypes.IRefreshTokenUseCase)
         private readonly _refreshTokenUseCase: IRefreshTokenUseCase,
-    ) { }
+    ) {}
 
     register = async (req: Request, res: Response): Promise<Response> => {
         logger.info('registered data from the frontend is ', req.body);
@@ -143,11 +143,7 @@ export class AuthController {
 
         await this._forgotPasswordUsecase.execute({ email });
 
-        return ResponseHandler.success(
-            res,
-            null,
-            Auth_Response_Messages.PASSWORD_RESET_OTP_SENT,
-        );
+        return ResponseHandler.success(res, null, Auth_Response_Messages.PASSWORD_RESET_OTP_SENT);
     };
 
     verifyResetOtp = async (req: Request, res: Response): Promise<Response> => {
@@ -190,11 +186,7 @@ export class AuthController {
         await this._redisService.delete(`resetPassword_verified:${email}`);
 
         logger.info('password reset was succesful');
-        return ResponseHandler.success(
-            res,
-            null,
-            Auth_Response_Messages.PASSWORD_RESET_SUCCESS,
-        );
+        return ResponseHandler.success(res, null, Auth_Response_Messages.PASSWORD_RESET_SUCCESS);
     };
 
     refreshToken = async (req: Request, res: Response): Promise<Response> => {

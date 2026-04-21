@@ -1,8 +1,8 @@
 import { IPropertyRepository } from '@core/interfaces/repository/property-repository.interface';
-import { 
-    GetAllPropertiesDTO, 
-    IGetAllPropertiesUseCase, 
-    PaginatedPropertyResponse 
+import {
+    GetAllPropertiesDTO,
+    IGetAllPropertiesUseCase,
+    PaginatedPropertyResponse,
 } from '@application/interfaces/property/property.usecase.interface';
 import { TokenTypes } from '@shared/types/tokens';
 import { inject, injectable } from 'tsyringe';

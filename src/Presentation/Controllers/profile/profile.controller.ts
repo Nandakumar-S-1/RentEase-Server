@@ -21,7 +21,7 @@ export class ProfileController {
         private readonly _updateProfile: IUpdateProfileUseCase,
         @inject(TokenTypes.IModerationService)
         private readonly _moderationService: IModerationService,
-    ) { }
+    ) {}
 
     getProfile = async (req: Request, res: Response): Promise<Response> => {
         const userId = req.user!.id;
@@ -59,7 +59,7 @@ export class ProfileController {
             return ResponseHandler.error(
                 res,
                 `Avatar failed safety moderation: ${moderation.reason}`,
-                Http_StatusCodes.BAD_REQUEST
+                Http_StatusCodes.BAD_REQUEST,
             );
         }
 

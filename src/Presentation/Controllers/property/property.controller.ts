@@ -65,17 +65,17 @@ export class PropertyController {
                         return ResponseHandler.error(
                             res,
                             `One or more images failed safety moderation: ${moderation.reason}`,
-                            Http_StatusCodes.BAD_REQUEST
+                            Http_StatusCodes.BAD_REQUEST,
                         );
                     }
                 } catch (error) {
                     logger.error(`Failed to moderate image at ${url}:`, error);
-                    // We continue if it's just a network error fetching the image, 
+                    // We continue if it's just a network error fetching the image,
                     // or we could be strict. Let's be strict for safety.
                     return ResponseHandler.error(
                         res,
-                        "Failed to perform safety check on property images.",
-                        Http_StatusCodes.INTERNAL_SERVER_ERROR
+                        'Failed to perform safety check on property images.',
+                        Http_StatusCodes.INTERNAL_SERVER_ERROR,
                     );
                 }
             }
@@ -83,8 +83,13 @@ export class PropertyController {
 
         const property = await this._createPropertyUseCase.execute(dto);
 
-        logger.info(`creted the property ${property}`)
-        return ResponseHandler.success(res, property, Property_Response_Messages.CREATED, Http_StatusCodes.CREATED);
+        logger.info(`creted the property ${property}`);
+        return ResponseHandler.success(
+            res,
+            property,
+            Property_Response_Messages.CREATED,
+            Http_StatusCodes.CREATED,
+        );
     };
 
     getMyProperties = async (req: Request, res: Response): Promise<Response> => {
@@ -115,7 +120,11 @@ export class PropertyController {
         const awsBucket = process.env.AWS_BUCKET_NAME;
         const awsRegion = process.env.AWS_REGION;
         if (!awsBucket || !awsRegion) {
-            return ResponseHandler.error(res, Property_Response_Messages.S3_CONFIG_ERROR, Http_StatusCodes.INTERNAL_SERVER_ERROR);
+            return ResponseHandler.error(
+                res,
+                Property_Response_Messages.S3_CONFIG_ERROR,
+                Http_StatusCodes.INTERNAL_SERVER_ERROR,
+            );
         }
 
         const uploads = await Promise.all(
@@ -136,8 +145,12 @@ export class PropertyController {
             }),
         );
 
-        logger.info(`propertuy photos uplods`)
+        logger.info(`propertuy photos uplods`);
 
-        return ResponseHandler.success(res, { uploads }, Property_Response_Messages.PHOTOS_UPLOADED);
+        return ResponseHandler.success(
+            res,
+            { uploads },
+            Property_Response_Messages.PHOTOS_UPLOADED,
+        );
     };
 }

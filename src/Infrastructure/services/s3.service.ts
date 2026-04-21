@@ -15,12 +15,11 @@ export class S3Service implements IS3Service {
         const result = new PutObjectCommand({
             Bucket: process.env.AWS_BUCKET_NAME,
             Key: key,
-            ContentType: contentType
+            ContentType: contentType,
         });
         const expiryValue = process.env.S3_EXPIRY_TIME;
-        const expirySeconds = expiryValue && !isNaN(Number(expiryValue)) 
-            ? Number(expiryValue) 
-            : 3600;
+        const expirySeconds =
+            expiryValue && !isNaN(Number(expiryValue)) ? Number(expiryValue) : 3600;
         const uploadUrl = await getSignedUrl(s3b, result, {
             expiresIn: expirySeconds,
         });

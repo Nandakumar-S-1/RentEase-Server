@@ -34,4 +34,3 @@ export interface GetAllPropertiesDTO {
 export interface IGetAllPropertiesUseCase {
     execute(dto: GetAllPropertiesDTO): Promise<PaginatedPropertyResponse>;
 }
-

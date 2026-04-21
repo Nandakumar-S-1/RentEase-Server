@@ -2,14 +2,9 @@
     "compilerOptions": {
         "target": "ES2020",
         "module": "node16",
-        "lib": [
-            "ES2022"
-        ],
+        "lib": ["ES2022"],
         "moduleResolution": "node16",
-        "typeRoots": [
-            "./node_modules/@types",
-            "./src/@types"
-        ],
+        "typeRoots": ["./node_modules/@types", "./src/@types"],
         "rootDir": "./src",
         "outDir": "./dist",
         "strict": true,
@@ -22,34 +17,17 @@
         // "ignoreDeprecations": "6.0",
         "baseUrl": "./src",
         "paths": {
-            "@core/*": [
-                "core/*"
-            ],
-            "@application/*": [
-                "application/*"
-            ],
-            "@infrastructure/*": [
-                "infrastructure/*"
-            ],
-            "@presentation/*": [
-                "presentation/*"
-            ],
-            "@shared/*": [
-                "shared/*"
-            ]
+            "@core/*": ["core/*"],
+            "@application/*": ["application/*"],
+            "@infrastructure/*": ["infrastructure/*"],
+            "@presentation/*": ["presentation/*"],
+            "@shared/*": ["shared/*"]
         },
-        "types": [
-            "node"
-        ],
+        "types": ["node"],
         "skipLibCheck": true
     },
-    "include": [
-        "src"
-    ],
-    "exclude": [
-        "node_modules",
-        "dist"
-    ]
+    "include": ["src"],
+    "exclude": ["node_modules", "dist"]
 }
 // {
 //   // Visit https://aka.ms/tsconfig to read more about this file

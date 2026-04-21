@@ -1,5 +1,8 @@
 import vision from '@google-cloud/vision';
-import { IModerationService, ModerationResult } from '@application/interfaces/services/moderation.service.interface';
+import {
+    IModerationService,
+    ModerationResult,
+} from '@application/interfaces/services/moderation.service.interface';
 import { injectable } from 'tsyringe';
 import { logger } from '@shared/log/logger';
 
@@ -10,7 +13,9 @@ export class ModerationService implements IModerationService {
     constructor() {
         const keyPath = process.env.FIREBASE_IMAGE_API_SERVICE_ACCOUNT_PATH;
         if (!keyPath) {
-            logger.error('FIREBASE_IMAGE_API_SERVICE_ACCOUNT_PATH is not defined in environment variables');
+            logger.error(
+                'FIREBASE_IMAGE_API_SERVICE_ACCOUNT_PATH is not defined in environment variables',
+            );
             throw new Error('Google Vision credentials path is missing');
         }
 
@@ -37,9 +42,11 @@ export class ModerationService implements IModerationService {
             const violations: string[] = [];
 
             if (unsafeLevels.includes(String(detections.adult))) violations.push('Adult Content');
-            if (unsafeLevels.includes(String(detections.violence))) violations.push('Violent Content');
+            if (unsafeLevels.includes(String(detections.violence)))
+                violations.push('Violent Content');
             if (unsafeLevels.includes(String(detections.racy))) violations.push('Racy Content');
-            if (unsafeLevels.includes(String(detections.medical))) violations.push('Medical Content');
+            if (unsafeLevels.includes(String(detections.medical)))
+                violations.push('Medical Content');
             if (unsafeLevels.includes(String(detections.spoof))) violations.push('Spoof Content');
 
             if (violations.length > 0) {

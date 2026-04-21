@@ -20,7 +20,7 @@ export class OwnerVerificationController {
         private readonly _ownerRepository: IOwnerProfileRepository,
         @inject(TokenTypes.IModerationService)
         private readonly _moderationService: IModerationService,
-    ) { }
+    ) {}
 
     submit = async (req: Request, res: Response): Promise<Response> => {
         const ownerId = req.user!.id;

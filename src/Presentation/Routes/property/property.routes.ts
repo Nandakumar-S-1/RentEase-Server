@@ -4,7 +4,7 @@ import { PropertyController } from '@presentation/controllers/property/property.
 import { authMiddleware } from '@presentation/middlewares/auth.middleware';
 import { neededRole } from '@presentation/middlewares/role.middleware';
 import { UserRole } from '@shared/enums/user-role.enum';
-import { asyncHandlerFunction } from '@presentation/utils/async-handler'; 
+import { asyncHandlerFunction } from '@presentation/utils/async-handler';
 import { PROPERTY_ROUTES } from '@shared/constants/routes';
 
 import { validationRequestMiddleware } from '@presentation/middlewares/validation.middleware';
@@ -28,6 +28,7 @@ export class PropertyRoutes extends BaseRoute {
             PROPERTY_ROUTES.CREATE,
             authMiddleware,
             neededRole(UserRole.OWNER),
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             validationRequestMiddleware(createPropertySchema as any),
             asyncHandlerFunction(this._controller.createProperty.bind(this._controller)),
         );
