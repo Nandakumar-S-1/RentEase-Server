@@ -5,6 +5,10 @@ import { logger } from '@shared/log/logger';
 import { Http_StatusCodes } from '@shared/enums/http-status-codes.enum';
 import {
     ICreatePropertyUseCase,
+    IGetPropertyByIdUseCase,
+    IUpdatePropertyUseCase,
+    IUnlistPropertyUseCase,
+    IDeletePropertyUseCase,
     IGetMyPropertiesUseCase,
     IGetAllPropertiesUseCase,
 } from '@application/interfaces/property/property.usecase.interface';
@@ -21,6 +25,14 @@ export class PropertyController {
     constructor(
         @inject(TokenTypes.ICreatePropertyUseCase)
         private readonly _createPropertyUseCase: ICreatePropertyUseCase,
+        @inject(TokenTypes.IGetPropertyByIdUseCase)
+        private readonly _getPropertyByIdUseCase: IGetPropertyByIdUseCase,
+        @inject(TokenTypes.IUpdatePropertyUseCase)
+        private readonly _updatePropertyUseCase: IUpdatePropertyUseCase,
+        @inject(TokenTypes.IUnlistPropertyUseCase)
+        private readonly _unlistPropertyUseCase: IUnlistPropertyUseCase,
+        @inject(TokenTypes.IDeletePropertyUseCase)
+        private readonly _deletePropertyUseCase: IDeletePropertyUseCase,
         @inject(TokenTypes.IGetMyPropertiesUseCase)
         private readonly _getMyPropertiesUseCase: IGetMyPropertiesUseCase,
         @inject(TokenTypes.IGetAllPropertiesUseCase)
@@ -34,15 +46,24 @@ export class PropertyController {
     getAllProperties = async (req: Request, res: Response): Promise<Response> => {
         logger.info('fetching all properties for search');
         const { status, page = 1, limit = 10 } = req.query;
+        const queryStatus = req.user ? (status as PropertyStatus) : PropertyStatus.APPROVED;
 
         const result = await this._getAllPropertiesUseCase.execute({
-            status: status as PropertyStatus,
+            status: queryStatus,
             page: Number(page),
             limit: Number(limit),
         });
 
         return ResponseHandler.success(res, result, Property_Response_Messages.FETCHED);
     };
+
+    getPropertyById = async (req: Request, res: Response): Promise<Response> => {
+        logger.info(`fetching property by id: ${req.params.id}`);
+        const id = req.params.id as string;
+        const result = await this._getPropertyByIdUseCase.execute(id);
+        return ResponseHandler.success(res, result, Property_Response_Messages.FETCHED);
+    };
+
     createProperty = async (req: Request, res: Response): Promise<Response> => {
         logger.info('initiating property creation');
         const ownerId = req.user!.id;
@@ -51,7 +72,7 @@ export class PropertyController {
             ownerId,
         };
 
-        // Image Moderation Check
+        // image ai Check
         if (dto.photos && Array.isArray(dto.photos)) {
             logger.info(`Moderating ${dto.photos.length} property photos...`);
             for (const url of dto.photos) {
@@ -70,8 +91,6 @@ export class PropertyController {
                     }
                 } catch (error) {
                     logger.error(`Failed to moderate image at ${url}:`, error);
-                    // We continue if it's just a network error fetching the image,
-                    // or we could be strict. Let's be strict for safety.
                     return ResponseHandler.error(
                         res,
                         'Failed to perform safety check on property images.',
@@ -105,6 +124,27 @@ export class PropertyController {
         });
 
         return ResponseHandler.success(res, result, Property_Response_Messages.FETCHED);
+    };
+
+    updateProperty = async (req: Request, res: Response): Promise<Response> => {
+        logger.info(`updating property: ${req.params.id}`);
+        const id = req.params.id as string;
+        const result = await this._updatePropertyUseCase.execute(id, req.body);
+        return ResponseHandler.success(res, result, Property_Response_Messages.UPDATED);
+    };
+
+    unlistProperty = async (req: Request, res: Response): Promise<Response> => {
+        logger.info(`unlisting property: ${req.params.id}`);
+        const id = req.params.id as string;
+        await this._unlistPropertyUseCase.execute(id);
+        return ResponseHandler.success(res, null, Property_Response_Messages.UNLISTED);
+    };
+
+    deleteProperty = async (req: Request, res: Response): Promise<Response> => {
+        logger.info(`deleting property: ${req.params.id}`);
+        const id = req.params.id as string;
+        await this._deletePropertyUseCase.execute(id);
+        return ResponseHandler.success(res, null, Property_Response_Messages.DELETED);
     };
 
     uploadPropertyPhotoUrls = async (req: Request, res: Response): Promise<Response> => {

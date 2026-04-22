@@ -2,6 +2,7 @@ import { IGetProfileUseCase } from 'application/interfaces/profile/profile.useca
 import { IUserRepository } from '@core/interfaces/repository/user-repository.interface';
 import { IOwnerProfileRepository } from '@core/interfaces/repository/owner-repository.interface';
 import { ITenantProfileRepository } from '@core/interfaces/repository/tenant-repository.interface';
+import { IPropertyRepository } from '@core/interfaces/repository/property-repository.interface';
 import { TokenTypes } from 'shared/types/tokens';
 import { inject, injectable } from 'tsyringe';
 import { logger } from 'shared/log/logger';
@@ -16,12 +17,14 @@ export class GetProfileUseCase implements IGetProfileUseCase {
         private readonly _ownerRepo: IOwnerProfileRepository,
         @inject(TokenTypes.ITenantProfileRepository)
         private readonly _tenantRepo: ITenantProfileRepository,
-    ) {}
+        @inject(TokenTypes.IPropertyRepository)
+        private readonly _propertyRepo: IPropertyRepository,
+    ) { }
 
     async execute(userId: string, role: string) {
         const user = await this._userRepo.findById(userId);
         if (!user) {
-            logger.warn(`pprofile fetching failed: user ${userId} not found`);
+            logger.warn(`profile fetching failed: user ${userId} not found`);
             throw new Error('User not found');
         }
 
@@ -43,6 +46,9 @@ export class GetProfileUseCase implements IGetProfileUseCase {
                 profileData.documentType = ownerProfile.documentType;
                 profileData.documentUrl = ownerProfile.documentUrl;
                 profileData.verifiedAt = ownerProfile.verifiedAt;
+
+                const listingsCount = await this._propertyRepo.countByOwnerId(userId);
+                profileData.listingsCount = listingsCount;
             }
         }
 

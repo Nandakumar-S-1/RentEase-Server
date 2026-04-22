@@ -35,7 +35,6 @@ export class PropertyRoutes extends BaseRoute {
 
         this.router.get(
             PROPERTY_ROUTES.LIST,
-            authMiddleware,
             asyncHandlerFunction(this._controller.getAllProperties.bind(this._controller)),
         );
 
@@ -44,6 +43,32 @@ export class PropertyRoutes extends BaseRoute {
             authMiddleware,
             neededRole(UserRole.OWNER),
             asyncHandlerFunction(this._controller.getMyProperties.bind(this._controller)),
+        );
+
+        this.router.get(
+            PROPERTY_ROUTES.GET_BY_ID,
+            asyncHandlerFunction(this._controller.getPropertyById.bind(this._controller)),
+        );
+
+        this.router.put(
+            '/:id',
+            authMiddleware,
+            neededRole(UserRole.OWNER),
+            asyncHandlerFunction(this._controller.updateProperty.bind(this._controller)),
+        );
+
+        this.router.patch(
+            '/:id/unlist',
+            authMiddleware,
+            neededRole(UserRole.OWNER),
+            asyncHandlerFunction(this._controller.unlistProperty.bind(this._controller)),
+        );
+
+        this.router.delete(
+            '/:id',
+            authMiddleware,
+            neededRole(UserRole.OWNER),
+            asyncHandlerFunction(this._controller.deleteProperty.bind(this._controller)),
         );
     }
 }

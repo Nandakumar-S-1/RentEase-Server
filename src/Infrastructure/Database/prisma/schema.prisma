@@ -56,10 +56,23 @@ model User {
 
   tokens     VerificationToken[]
   properties Property[]
+  wishlist   Wishlist[]
 
   @@index([email])
   @@index([phone])
   @@index([role])
+}
+
+model Wishlist {
+  id         String   @id @default(uuid())
+  userId     String
+  propertyId String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+
+  @@unique([userId, propertyId])
+  @@index([userId])
 }
 
 model OwnerProfile {
@@ -165,7 +178,9 @@ model Property {
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
 
-  details PropertyDetails?
+  details          PropertyDetails?
+  serviceProviders ServiceProvider[]
+  wishlist         Wishlist[]
 
   @@index([ownerId])
   @@index([status])
@@ -203,10 +218,30 @@ model PropertyDetails {
   hasParking Boolean?
 
   preferredTenantType Json?
-  petsAllowed         Boolean @default(false)
-  smokingAllowed      Boolean @default(false)
+  petsAllowed         Boolean  @default(false)
+  smokingAllowed      Boolean  @default(false)
   maximumOccupants    Int?
+  amenities           String[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model ServiceProvider {
+  id                   String    @id @default(uuid())
+  property_id          String
+  property             Property  @relation(fields: [property_id], references: [id], onDelete: Cascade)
+  provider_type        String    @db.VarChar(50)
+  provider_name        String    @db.VarChar(255)
+  phone                String    @db.VarChar(20)
+  typical_charges_min  Decimal?  @db.Decimal(8, 2)
+  typical_charges_max  Decimal?  @db.Decimal(8, 2)
+  rating               Decimal?  @default(0) @db.Decimal(3, 2)
+  total_jobs_completed Int?      @default(0)
+  is_active            Boolean?  @default(true)
+  created_at           DateTime? @default(now())
+  updated_at           DateTime? @default(now())
+
+  @@index([property_id])
+  @@index([provider_type])
 }

@@ -49,4 +49,7 @@ export const Property_Response_Messages = {
     PHOTOS_UPLOADED: 'Property photos uploaded successfully',
     FILES_REQUIRED: 'Atleast one file is required',
     S3_CONFIG_ERROR: 'Storage service configuration error',
+    UPDATED: 'Property updated successfully',
+    UNLISTED: 'Property unlisted successfully',
+    DELETED: 'Property deleted successfully',
 } as const;

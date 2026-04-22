@@ -3,28 +3,29 @@ export type PropertyDetailsTypeData = {
     propertyId: string;
 
     // house,flat,PG
-    bhk?: number;
-    bathrooms?: number;
-    floorNumber?: string;
-    totalFloors?: number;
-    propertyAge?: string;
-    facingDirection?: string;
-    furnishingStatus?: string;
+    bhk?: number | null;
+    bathrooms?: number | null;
+    floorNumber?: string | null;
+    totalFloors?: number | null;
+    propertyAge?: string | null;
+    facingDirection?: string | null;
+    furnishingStatus?: string | null;
 
     //land
-    landType?: string; // residential, commercial, agricultural
-    isCornerPlot?: boolean;
-    roadWidthFeet?: number;
+    landType?: string | null; // residential, commercial, farmland
+    isCornerPlot?: boolean | null;
+    roadWidthFeet?: number | null;
 
     // shop
-    shopType?: string; // retail, office, warehouse
-    hasParking?: boolean;
-    parkingSpaces?: number;
+    shopType?: string | null; // retail, office, warehouse
+    hasParking?: boolean | null;
+    parkingSpaces?: number | null;
 
-    preferredTenantType?: string[];
-    petsAllowed?: boolean;
-    smokingAllowed?: boolean;
-    maximumOccupants?: number;
+    preferredTenantType?: string[] | null;
+    petsAllowed?: boolean | null;
+    smokingAllowed?: boolean | null;
+    maximumOccupants?: number | null;
+    amenities: string[];
 
     createdAt?: Date;
     updatedAt?: Date;

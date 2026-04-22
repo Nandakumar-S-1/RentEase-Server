@@ -30,9 +30,27 @@ import {
     ICreatePropertyUseCase,
     IGetMyPropertiesUseCase,
     IGetAllPropertiesUseCase,
+    IVerifyPropertyUseCase,
 } from '@application/interfaces/property/property.usecase.interface';
 import { GetMyPropertiesUseCase } from '@application/usecases/property/get-my-properties.usecase';
 import { GetAllPropertiesUseCase } from '@application/usecases/property/get-all-properties.usecase';
+import { VerifyPropertyUseCase } from '@application/usecases/property/verify-property.usecase';
+import { GetPropertyByIdUseCase } from '@application/usecases/property/get-property-by-id.usecase';
+import { UpdatePropertyUseCase } from '@application/usecases/property/update-property.usecase';
+import {
+    UnlistPropertyUseCase,
+    DeletePropertyUseCase,
+} from '@application/usecases/property/unlist-delete-property.usecase';
+import { ServiceProviderUseCase } from '@application/usecases/property/service-provider.usecase';
+import { WishlistUseCase } from '@application/usecases/property/wishlist.usecase';
+import {
+    IGetPropertyByIdUseCase,
+    IUpdatePropertyUseCase,
+    IUnlistPropertyUseCase,
+    IDeletePropertyUseCase,
+    IServiceProviderUseCase,
+    IWishlistUseCase,
+} from '@application/interfaces/property/property.usecase.interface';
 
 export class UseCaseModule {
     static registerModules(): void {
@@ -77,11 +95,32 @@ export class UseCaseModule {
         container.register<ICreatePropertyUseCase>(TokenTypes.ICreatePropertyUseCase, {
             useClass: CreatePropertyUseCase,
         });
+        container.register<IGetPropertyByIdUseCase>(TokenTypes.IGetPropertyByIdUseCase, {
+            useClass: GetPropertyByIdUseCase,
+        });
+        container.register<IUpdatePropertyUseCase>(TokenTypes.IUpdatePropertyUseCase, {
+            useClass: UpdatePropertyUseCase,
+        });
+        container.register<IUnlistPropertyUseCase>(TokenTypes.IUnlistPropertyUseCase, {
+            useClass: UnlistPropertyUseCase,
+        });
+        container.register<IDeletePropertyUseCase>(TokenTypes.IDeletePropertyUseCase, {
+            useClass: DeletePropertyUseCase,
+        });
+        container.register<IServiceProviderUseCase>(TokenTypes.IServiceProviderUseCase, {
+            useClass: ServiceProviderUseCase,
+        });
+        container.register<IWishlistUseCase>(TokenTypes.IWishlistUseCase, {
+            useClass: WishlistUseCase,
+        });
         container.register<IGetMyPropertiesUseCase>(TokenTypes.IGetMyPropertiesUseCase, {
             useClass: GetMyPropertiesUseCase,
         });
         container.register<IGetAllPropertiesUseCase>(TokenTypes.IGetAllPropertiesUseCase, {
             useClass: GetAllPropertiesUseCase,
+        });
+        container.register<IVerifyPropertyUseCase>(TokenTypes.IVerifyPropertyUseCase, {
+            useClass: VerifyPropertyUseCase,
         });
     }
 }

@@ -6,7 +6,7 @@ import {
 } from '@application/interfaces/property/property.usecase.interface';
 import { TokenTypes } from '@shared/types/tokens';
 import { inject, injectable } from 'tsyringe';
-import { PropertyPersistenceMapper } from '@infrastructure/mappers/property-persistence.mapper';
+import { PropertyResponseMapper } from '@application/mappers/property/property-response.mapper';
 
 @injectable()
 export class GetAllPropertiesUseCase implements IGetAllPropertiesUseCase {
@@ -25,7 +25,7 @@ export class GetAllPropertiesUseCase implements IGetAllPropertiesUseCase {
         ]);
 
         return {
-            properties: properties.map(PropertyPersistenceMapper.toResponseDTO),
+            properties: properties.map(PropertyResponseMapper.toGeneralResponse),
             total,
             page,
             limit,

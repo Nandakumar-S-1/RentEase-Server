@@ -1,4 +1,4 @@
-import vision from '@google-cloud/vision';
+import * as vision from '@google-cloud/vision';
 import {
     IModerationService,
     ModerationResult,

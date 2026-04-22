@@ -12,6 +12,8 @@ export interface IPropertyRepository extends IBaseRepository<PropertyEntity> {
     countByOwnerId(ownerId: string, status?: string): Promise<number>;
     update(entity: PropertyEntity): Promise<PropertyEntity>;
     unlist(id: string): Promise<void>;
+    delete(id: string): Promise<void>;
+    incrementViews(id: string): Promise<void>;
     // search(filters:any):Promise<PropertyEntity[]>
     findPending(): Promise<PropertyEntity[]>;
     findAll(status?: string, skip?: number, take?: number): Promise<PropertyEntity[]>;

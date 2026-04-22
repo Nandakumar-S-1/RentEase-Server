@@ -18,6 +18,20 @@ export interface CreatePropertyDTO {
     latitude?: number | null;
     longitude?: number | null;
     nearbyLandmarks?: string | null;
+
+    bhk?: number | null;
+    bathrooms?: number | null;
+    floorNumber?: string | null;
+    totalFloors?: number | null;
+    propertyAge?: string | null;
+    facingDirection?: string | null;
+    furnishingStatus?: string | null;
+
+    maintenanceCharges?: number;
+    maintenanceIncluded?: boolean;
+
+    amenities?: string[];
+    preferredTenantType?: string[];
 }
 
 export interface UploadPropertyPhotosDTO {

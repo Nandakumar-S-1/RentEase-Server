@@ -1,10 +1,13 @@
 import { PropertyEntity } from '@core/entities/property.entity';
+import { PropertyDetailsEntity } from '@core/entities/property-details.entity';
 import { PropertyTypeData } from '@core/types/property.types';
-import { Property, PropertyVerificationStatus } from '@prisma/client';
+import { Property, PropertyDetails, PropertyVerificationStatus } from '@prisma/client';
 import { PropertyStatus, PropertyType } from '@shared/enums/property-type-status.enum';
+
+type PrismaPropertyWithDetails = Property & { details?: PropertyDetails | null };
 export class PropertyPersistenceMapper {
     // db to domain
-    static toEntity(raw: Property): PropertyEntity {
+    static toEntity(raw: PrismaPropertyWithDetails): PropertyEntity {
         const data: PropertyTypeData = {
             id: raw.id,
             ownerId: raw.ownerId,
@@ -43,6 +46,33 @@ export class PropertyPersistenceMapper {
             approvedAt: raw.approvedAt ?? undefined,
             createdAt: raw.createdAt,
             updatedAt: raw.updatedAt,
+
+            details: raw.details
+                ? {
+                      id: raw.details.id,
+                      propertyId: raw.details.propertyId,
+                      bhk: raw.details.bhk ?? undefined,
+                      bathrooms: raw.details.bathrooms ?? undefined,
+                      floorNumber: raw.details.floorNumber ?? undefined,
+                      totalFloors: raw.details.totalFloors ?? undefined,
+                      propertyAge: raw.details.propertyAge ?? undefined,
+                      facingDirection: raw.details.facingDirection ?? undefined,
+                      furnishingStatus: raw.details.furnishingStatus ?? undefined,
+                      landType: raw.details.landType ?? undefined,
+                      isCornerPlot: raw.details.isCornerPlot ?? undefined,
+                      shopType: raw.details.shoptype ?? undefined,
+                      hasParking: raw.details.hasParking ?? undefined,
+                      amenities: raw.details.amenities ?? [],
+                      preferredTenantType: raw.details.preferredTenantType
+                          ? (raw.details.preferredTenantType as string[])
+                          : undefined,
+                      petsAllowed: raw.details.petsAllowed,
+                      smokingAllowed: raw.details.smokingAllowed,
+                      maximumOccupants: raw.details.maximumOccupants ?? undefined,
+                      createdAt: raw.details.createdAt,
+                      updatedAt: raw.details.updatedAt,
+                  }
+                : undefined,
         };
         return PropertyEntity.create(data);
     }
@@ -64,8 +94,34 @@ export class PropertyPersistenceMapper {
         }
     }
 
-    //domain to db
-    static toPersistence(entity: PropertyEntity) {
+    //domain to db for creation
+    static toCreatePersistence(entity: PropertyEntity) {
+        return {
+            ...this._toSharedPersistence(entity),
+            ...(entity.details && {
+                details: {
+                    create: this._mapDetails(entity.details),
+                },
+            }),
+        };
+    }
+
+    //domain to db for updates
+    static toUpdatePersistence(entity: PropertyEntity) {
+        return {
+            ...this._toSharedPersistence(entity),
+            ...(entity.details && {
+                details: {
+                    upsert: {
+                        create: this._mapDetails(entity.details),
+                        update: this._mapDetails(entity.details),
+                    },
+                },
+            }),
+        };
+    }
+
+    private static _toSharedPersistence(entity: PropertyEntity) {
         return {
             id: entity.id,
             ownerId: entity.ownerId,
@@ -77,9 +133,13 @@ export class PropertyPersistenceMapper {
             locationPincode: entity.locationPincode,
             fullAddress: entity.fullAddress,
 
-            monthlyRent: entity.monthleyRent,
+            monthlyRent: entity.monthlyRent,
             depositAmount: entity.depositAmount,
 
+            areaSqrt: entity.areaSqft,
+            latitude: entity.latitude,
+            longitude: entity.longitude,
+            nearbyLandmarks: entity.nearbyLandmarks,
             maintenanceCharges: entity.maintenanceCharges,
             maintenanceIncluded: entity.maintenanceIncluded,
 
@@ -95,6 +155,22 @@ export class PropertyPersistenceMapper {
         };
     }
 
+    private static _mapDetails(details: PropertyDetailsEntity) {
+        return {
+            bhk: details.bhk,
+            bathrooms: details.bathrooms,
+            floorNumber: details.floorNumber,
+            totalFloors: details.totalFloors,
+            propertyAge: details.propertyAge,
+            facingDirection: details.facingDirection,
+            furnishingStatus: details.furnishingStatus,
+            amenities: details.amenities,
+            preferredTenantType: details.preferredTenantType
+                ? JSON.parse(JSON.stringify(details.preferredTenantType))
+                : undefined,
+        };
+    }
+
     private static _mapStatusToPrisma(status: PropertyStatus): PropertyVerificationStatus {
         switch (status) {
             case PropertyStatus.PENDING_APPROVAL:
@@ -107,6 +183,8 @@ export class PropertyPersistenceMapper {
                 return 'UNLISTED';
             case PropertyStatus.REJECTED:
                 return 'REJECTED';
+            case PropertyStatus.APPROVED:
+                return 'ACTIVE';
             default:
                 throw new Error('Unknown property status');
         }

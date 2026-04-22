@@ -45,6 +45,19 @@ export class UserManagementController {
         return res.status(Http_StatusCodes.OK).json(response);
     }
 
+    async getUserById(req: Request, res: Response): Promise<Response> {
+        const { id } = req.params;
+        const user = await this._usecase.getUserById(id as string);
+
+        const response: ApiResponse<IGetAllUsersDTO> = {
+            success: true,
+            message: 'fetched user details',
+            data: user,
+        };
+
+        return res.status(Http_StatusCodes.OK).json(response);
+    }
+
     async suspendUser(req: Request, res: Response): Promise<Response> {
         const { id } = req.params;
 

@@ -1,4 +1,5 @@
 import { PropertyStatus, PropertyType } from '@shared/enums/property-type-status.enum';
+import { PropertyDetailsTypeData } from './PropertyDetailsTypeData';
 
 export type PropertyTypeData = {
     id: string;
@@ -20,22 +21,24 @@ export type PropertyTypeData = {
     monthlyRent: number;
     depositAmount: number;
     maintenanceCharges?: number;
-    maintenanceIncluded?: boolean;
+    maintenanceIncluded: boolean;
 
-    photos?: string[];
-    primaryPhotoIndex?: number;
-    videoTourUrl?: string;
+    photos: string[];
+    primaryPhotoIndex: number;
+    videoTourUrl?: string | null;
 
-    status?: PropertyStatus;
-    isFeatured?: boolean;
-    availableFrom?: Date;
+    status?: PropertyStatus | null;
+    isFeatured?: boolean | null;
+    availableFrom?: Date | null;
 
-    viewsCount?: number;
-    inquiryCount?: number;
-    wishlistCount?: number;
+    viewsCount?: number | null;
+    inquiryCount?: number | null;
+    wishlistCount?: number | null;
 
-    approvedBy?: string;
-    approvedAt?: Date;
-    createdAt?: Date;
-    updatedAt?: Date;
+    approvedBy?: string | null;
+    approvedAt?: Date | null;
+    createdAt?: Date | null;
+    updatedAt?: Date | null;
+
+    details?: PropertyDetailsTypeData;
 };

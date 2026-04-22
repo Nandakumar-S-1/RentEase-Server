@@ -10,6 +10,10 @@ import { ITenantProfileRepository } from '@core/interfaces/repository/tenant-rep
 import { TenantProfileRepository } from 'infrastructure/repositories/tenant-profile.repository';
 import { IPropertyRepository } from '@core/interfaces/repository/property-repository.interface';
 import { PropertyRepository } from '@infrastructure/repositories/property.repository';
+import { IServiceProviderRepository } from '@core/interfaces/repository/service-provider.repository.interface';
+import { ServiceProviderRepository } from '@infrastructure/repositories/service-provider.repository';
+import { IWishlistRepository } from '@core/interfaces/repository/wishlist.repository.interface';
+import { WishlistRepository } from '@infrastructure/repositories/wishlist.repository';
 
 export class RepositoryModule {
     //this is like when a call for Iuserrepo token ,it will give an instance of UserRepository class
@@ -27,6 +31,14 @@ export class RepositoryModule {
         });
         container.register<IPropertyRepository>(TokenTypes.IPropertyRepository, {
             useClass: PropertyRepository,
+        });
+
+        container.register<IServiceProviderRepository>(TokenTypes.IServiceProviderRepository, {
+            useClass: ServiceProviderRepository,
+        });
+
+        container.register<IWishlistRepository>(TokenTypes.IWishlistRepository, {
+            useClass: WishlistRepository,
         });
     }
 }
