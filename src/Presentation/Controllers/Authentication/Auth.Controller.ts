@@ -51,7 +51,7 @@ export class AuthController {
 
         @inject(TokenTypes.IRefreshTokenUseCase)
         private readonly _refreshTokenUseCase: IRefreshTokenUseCase,
-    ) {}
+    ) { }
 
     register = async (req: Request, res: Response): Promise<Response> => {
         logger.info('registered data from the frontend is ', req.body);
@@ -148,7 +148,7 @@ export class AuthController {
 
     verifyResetOtp = async (req: Request, res: Response): Promise<Response> => {
         const { email, otp } = req.body;
-        logger.info('Verify reset otp');
+        logger.info('verify reset otp');
 
         const redisKey = `resetPassword_otp:${email}`;
         const storedOtp = await this._redisService.get(redisKey);

@@ -4,11 +4,11 @@ export interface ServiceProviderData {
     providerType: string;
     providerName: string;
     phone: string;
-    typicalChargesMin?: number | null;
-    typicalChargesMax?: number | null;
-    rating?: number | null;
-    totalJobsCompleted?: number | null;
-    isActive?: boolean | null;
+    typicalChargesMin: number | null;
+    typicalChargesMax: number | null;
+    rating: number;
+    totalJobsCompleted: number;
+    isActive: boolean;
 }
 
 export interface IServiceProviderRepository {

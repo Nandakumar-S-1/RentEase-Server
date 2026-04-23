@@ -75,24 +75,24 @@ export class JwtService implements IJwtService {
             const accessToken = this._createAccessToken(payload);
             const refreshToken = this._createRefreshToken(payload);
 
-            logger.info('token pair created');
+            logger.info('new access and refresh tokens created--------------');
+
             return {
                 accessToken,
                 refreshToken,
             };
         } catch (error) {
             logger.error({ error }, 'token creation has failed');
-            throw new Error('JWT pair creation failed');
+            throw new Error('jwt pair creation failed');
         }
     }
 
     verifyTheAccessToken(token: string): ITokenPayloadContent {
         try {
             const decoded = jwt.verify(token, this._accessTokenSecret) as ITokenPayloadContent;
-            logger.info(`${decoded.userId}'s access token verified`);
             return decoded;
-        } catch (error) {
-            logger.warn({ error }, ' access token verification error');
+        } catch {
+            logger.warn('access token expired/invalid--------------------------');
             throw new InvalidAccessToken();
         }
     }
@@ -100,11 +100,10 @@ export class JwtService implements IJwtService {
     verifyTheRefreshToken(token: string): ITokenPayloadContent {
         try {
             const decoded = jwt.verify(token, this._refreshTokenSecret) as ITokenPayloadContent;
-            logger.info(`${decoded.userId}' s refresh token has verified`);
 
             return decoded;
-        } catch (error) {
-            logger.warn({ error }, `Refresh token verification failed:`);
+        } catch {
+            logger.warn('refresh token expired/invalid------------------');
             throw new InvalidRefreshToken();
         }
     }

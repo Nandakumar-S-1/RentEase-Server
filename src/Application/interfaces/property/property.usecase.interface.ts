@@ -2,6 +2,7 @@ import { CreatePropertyResponseDTO } from '@application/dtos/property/res/create
 import { PropertyStatus } from '@shared/enums/property-type-status.enum';
 import { PropertyTypeData } from '@core/types/property.types';
 import { CreatePropertyDTO } from '@application/dtos/property/property.dto';
+import { CreateServiceProviderDTO, ServiceProviderResponseDTO } from '@application/dtos/property/service-provider.dto';
 
 export interface ICreatePropertyUseCase {
     execute(dto: CreatePropertyDTO): Promise<CreatePropertyResponseDTO>;
@@ -40,13 +41,13 @@ export interface IGetAllPropertiesUseCase {
 }
 
 export interface IVerifyPropertyUseCase {
-    getPendingProperties(): Promise<any[]>;
+    getPendingProperties(page: number, limit: number): Promise<PaginatedPropertyResponse>;
     approveProperty(propertyId: string, adminId: string): Promise<void>;
-    rejectProperty(propertyId: string): Promise<void>;
+    rejectProperty(propertyId: string, reason?: string): Promise<void>;
 }
 
 export interface IUpdatePropertyUseCase {
-    execute(id: string, dto: any): Promise<any>;
+    execute(id: string, dto: Partial<CreatePropertyDTO>): Promise<PropertyTypeData>;
 }
 
 export interface IUnlistPropertyUseCase {
@@ -57,15 +58,19 @@ export interface IDeletePropertyUseCase {
     execute(id: string): Promise<void>;
 }
 
+export interface IRelistPropertyUseCase {
+    execute(id: string): Promise<void>;
+}
+
 export interface IServiceProviderUseCase {
-    addProvider(data: any): Promise<any>;
-    getProvidersByProperty(propertyId: string): Promise<any[]>;
+    addProvider(data: CreateServiceProviderDTO): Promise<ServiceProviderResponseDTO>;
+    getProvidersByProperty(propertyId: string): Promise<ServiceProviderResponseDTO[]>;
     deleteProvider(id: string): Promise<void>;
     toggleProviderStatus(id: string, isActive: boolean): Promise<void>;
 }
 
 export interface IWishlistUseCase {
     toggleWishlist(userId: string, propertyId: string): Promise<{ isWishlisted: boolean }>;
-    getMyWishlist(userId: string): Promise<any[]>;
+    getMyWishlist(userId: string): Promise<PropertyTypeData[]>;
     isWishlisted(userId: string, propertyId: string): Promise<boolean>;
 }

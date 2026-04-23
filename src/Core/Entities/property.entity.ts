@@ -38,6 +38,7 @@ export class PropertyEntity {
 
         private _approvedBy: string | null,
         private _approvedAt: Date | null,
+        private _rejectionReason: string | null,
 
         private readonly _createdAt: Date,
         private _updatedAt: Date,
@@ -86,6 +87,7 @@ export class PropertyEntity {
 
             data.approvedBy ?? null,
             data.approvedAt ?? null,
+            data.rejectionReason ?? null,
 
             data.createdAt ?? new Date(),
             data.updatedAt ?? new Date(),
@@ -151,6 +153,9 @@ export class PropertyEntity {
     get approvedAt() {
         return this._approvedAt;
     }
+    get rejectionReason() {
+        return this._rejectionReason;
+    }
     get createdAt() {
         return this._createdAt;
     }
@@ -174,17 +179,22 @@ export class PropertyEntity {
     }
 
     approve(adminId: string): void {
-        this._status = PropertyStatus.APPROVED;
+        this._status = PropertyStatus.ACTIVE;
         this._approvedBy = adminId;
         this._approvedAt = new Date();
     }
 
-    reject(): void {
+    reject(reason?: string): void {
         this._status = PropertyStatus.REJECTED;
+        this._rejectionReason = reason || null;
     }
 
     unlist(): void {
         this._status = PropertyStatus.UNLISTED;
+    }
+
+    relist(): void {
+        this._status = PropertyStatus.ACTIVE;
     }
 
     incrementViewsCount(): void {

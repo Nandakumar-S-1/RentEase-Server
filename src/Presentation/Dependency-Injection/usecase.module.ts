@@ -40,6 +40,7 @@ import { UpdatePropertyUseCase } from '@application/usecases/property/update-pro
 import {
     UnlistPropertyUseCase,
     DeletePropertyUseCase,
+    RelistPropertyUseCase
 } from '@application/usecases/property/unlist-delete-property.usecase';
 import { ServiceProviderUseCase } from '@application/usecases/property/service-provider.usecase';
 import { WishlistUseCase } from '@application/usecases/property/wishlist.usecase';
@@ -48,6 +49,7 @@ import {
     IUpdatePropertyUseCase,
     IUnlistPropertyUseCase,
     IDeletePropertyUseCase,
+    IRelistPropertyUseCase,
     IServiceProviderUseCase,
     IWishlistUseCase,
 } from '@application/interfaces/property/property.usecase.interface';
@@ -121,6 +123,10 @@ export class UseCaseModule {
         });
         container.register<IVerifyPropertyUseCase>(TokenTypes.IVerifyPropertyUseCase, {
             useClass: VerifyPropertyUseCase,
+        });
+
+        container.register<IRelistPropertyUseCase>(TokenTypes.IRelistPropertyUseCase, {
+            useClass: RelistPropertyUseCase,
         });
     }
 }

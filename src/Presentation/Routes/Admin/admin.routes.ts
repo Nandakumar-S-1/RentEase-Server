@@ -49,6 +49,16 @@ export class AdminRoutes extends BaseRoute {
                 this._userManagementController.getUserById.bind(this._userManagementController),
             ),
         );
+        this.router.get(
+            '/users/:id/properties',
+            authMiddleware,
+            neededRole(UserRole.ADMIN),
+            asyncHandlerFunction(
+                this._userManagementController.getUserProperties.bind(
+                    this._userManagementController,
+                ),
+            ),
+        );
         this.router.patch(
             ADMIN_ROUTES.USERS.SUSPEND,
             authMiddleware,

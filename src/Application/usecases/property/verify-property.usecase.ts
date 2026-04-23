@@ -1,9 +1,13 @@
-import { IVerifyPropertyUseCase } from '@application/interfaces/property/property.usecase.interface';
+import {
+    IVerifyPropertyUseCase,
+    PaginatedPropertyResponse,
+} from '@application/interfaces/property/property.usecase.interface';
 import { PropertyResponseMapper } from '@application/mappers/property/property-response.mapper';
 import { IPropertyRepository } from '@core/interfaces/repository/property-repository.interface';
 import { TokenTypes } from '@shared/types/tokens';
 import { inject, injectable } from 'tsyringe';
 import { PropertyNotFoundError } from '@shared/errors/property-errors';
+import { PropertyVerificationStatus } from '@prisma/client';
 
 @injectable()
 export class VerifyPropertyUseCase implements IVerifyPropertyUseCase {
@@ -12,11 +16,21 @@ export class VerifyPropertyUseCase implements IVerifyPropertyUseCase {
         private readonly _propertyRepo: IPropertyRepository,
     ) {}
 
-    async getPendingProperties(): Promise<any[]> {
-        const pendingProperties = await this._propertyRepo.findPending();
-        return pendingProperties.map((property) =>
-            PropertyResponseMapper.toGeneralResponse(property),
-        );
+    async getPendingProperties(page: number, limit: number): Promise<PaginatedPropertyResponse> {
+        const skip = (page - 1) * limit;
+        const [pendingProperties, total] = await Promise.all([
+            this._propertyRepo.findPending(skip, limit),
+            this._propertyRepo.countAll(PropertyVerificationStatus.PENDING_APPROVAL),
+        ]);
+
+        return {
+            properties: pendingProperties.map((property) =>
+                PropertyResponseMapper.toGeneralResponse(property),
+            ),
+            total,
+            page,
+            limit,
+        };
     }
 
     async approveProperty(propertyId: string, adminId: string): Promise<void> {
@@ -29,13 +43,13 @@ export class VerifyPropertyUseCase implements IVerifyPropertyUseCase {
         await this._propertyRepo.update(property);
     }
 
-    async rejectProperty(propertyId: string): Promise<void> {
+    async rejectProperty(propertyId: string, reason?: string): Promise<void> {
         const property = await this._propertyRepo.findById(propertyId);
         if (!property) {
             throw new PropertyNotFoundError();
         }
 
-        property.reject();
+        property.reject(reason);
         await this._propertyRepo.update(property);
     }
 }

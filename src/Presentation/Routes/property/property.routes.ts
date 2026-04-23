@@ -58,10 +58,17 @@ export class PropertyRoutes extends BaseRoute {
         );
 
         this.router.patch(
-            '/:id/unlist',
+            PROPERTY_ROUTES.UNLIST,
             authMiddleware,
             neededRole(UserRole.OWNER),
             asyncHandlerFunction(this._controller.unlistProperty.bind(this._controller)),
+        );
+
+        this.router.patch(
+            PROPERTY_ROUTES.RELIST,
+            authMiddleware,
+            neededRole(UserRole.OWNER),
+            asyncHandlerFunction(this._controller.relistProperty.bind(this._controller)),
         );
 
         this.router.delete(

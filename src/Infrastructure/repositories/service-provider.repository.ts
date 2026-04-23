@@ -3,6 +3,7 @@ import {
     ServiceProviderData,
 } from '@core/interfaces/repository/service-provider.repository.interface';
 import { prisma } from '@infrastructure/database/prisma/prisma.client';
+import { ServiceProvider } from '@prisma/client';
 import { injectable } from 'tsyringe';
 
 @injectable()
@@ -43,7 +44,7 @@ export class ServiceProviderRepository implements IServiceProviderRepository {
         });
     }
 
-    private _toData(p: any): ServiceProviderData {
+    private _toData(p: ServiceProvider): ServiceProviderData {
         return {
             id: p.id,
             propertyId: p.property_id,
@@ -54,7 +55,7 @@ export class ServiceProviderRepository implements IServiceProviderRepository {
             typicalChargesMax: p.typical_charges_max ? Number(p.typical_charges_max) : null,
             rating: p.rating ? Number(p.rating) : 0,
             totalJobsCompleted: p.total_jobs_completed || 0,
-            isActive: p.is_active,
+            isActive: p.is_active ?? true,
         };
     }
 }

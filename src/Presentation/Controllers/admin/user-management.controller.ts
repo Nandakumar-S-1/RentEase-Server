@@ -6,6 +6,9 @@ import { Request, Response } from 'express';
 import { inject, injectable } from 'tsyringe';
 import type { IGetAllUsersDTO } from 'application/dtos/admin/response/get-all-users-response.dto';
 
+import { PropertyStatus } from '@shared/enums/property-type-status.enum';
+import { IGetMyPropertiesUseCase, PaginatedPropertyResponse } from 'application/interfaces/property/property.usecase.interface';
+
 type GetUsersResponseData = {
     users: IGetAllUsersDTO[];
     pagination: {
@@ -21,7 +24,31 @@ export class UserManagementController {
     constructor(
         @inject(TokenTypes.UserManagementUseCase)
         private readonly _usecase: IUserManagement,
+        @inject(TokenTypes.IGetMyPropertiesUseCase)
+        private readonly _getPropertyUseCase: IGetMyPropertiesUseCase,
     ) {}
+
+    async getUserProperties(req: Request, res: Response): Promise<Response> {
+        const id = req.params.id as string;
+        const page = parseInt(req.query.page as string) || 1;
+        const limit = parseInt(req.query.limit as string) || 10;
+        const status = req.query.status as PropertyStatus;
+
+        const result = await this._getPropertyUseCase.execute({
+            ownerId: id,
+            page,
+            limit,
+            status,
+        });
+
+        const response: ApiResponse<PaginatedPropertyResponse> = {
+            success: true,
+            message: 'Fetched user properties',
+            data: result,
+        };
+
+        return res.status(Http_StatusCodes.OK).json(response);
+    }
 
     async getAllUsers(req: Request, res: Response): Promise<Response> {
         const page = parseInt(req.query.page as string) || 1;

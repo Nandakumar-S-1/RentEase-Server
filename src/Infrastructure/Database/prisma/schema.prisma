@@ -165,6 +165,7 @@ model Property {
   videoTourUrl   String?
 
   status        PropertyVerificationStatus @default(PENDING_APPROVAL)
+  rejectionReason String?
   isFeatured    Boolean                    @default(false)
   availableFrom DateTime?
 

@@ -37,6 +37,7 @@ export type PropertyTypeData = {
 
     approvedBy?: string | null;
     approvedAt?: Date | null;
+    rejectionReason?: string | null;
     createdAt?: Date | null;
     updatedAt?: Date | null;
 

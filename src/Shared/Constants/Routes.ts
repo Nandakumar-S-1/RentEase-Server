@@ -64,4 +64,6 @@ export const PROPERTY_ROUTES = {
     GET_BY_OWNER: '/owner',
     GET_BY_ID: '/:id',
     LIST: '/',
+    UNLIST: '/:id/unlist',
+    RELIST: '/:id/relist',
 };

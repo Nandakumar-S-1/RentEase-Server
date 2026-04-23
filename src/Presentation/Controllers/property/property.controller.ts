@@ -11,6 +11,7 @@ import {
     IDeletePropertyUseCase,
     IGetMyPropertiesUseCase,
     IGetAllPropertiesUseCase,
+    IRelistPropertyUseCase,
 } from '@application/interfaces/property/property.usecase.interface';
 import { IS3Service } from '@application/interfaces/services/s3.service.interface';
 import { IModerationService } from '@application/interfaces/services/moderation.service.interface';
@@ -37,6 +38,8 @@ export class PropertyController {
         private readonly _getMyPropertiesUseCase: IGetMyPropertiesUseCase,
         @inject(TokenTypes.IGetAllPropertiesUseCase)
         private readonly _getAllPropertiesUseCase: IGetAllPropertiesUseCase,
+        @inject(TokenTypes.IRelistPropertyUseCase)
+        private readonly _relistPropertyUseCase: IRelistPropertyUseCase,
         @inject(TokenTypes.IS3Service)
         private readonly _s3Service: IS3Service,
         @inject(TokenTypes.IModerationService)
@@ -46,7 +49,7 @@ export class PropertyController {
     getAllProperties = async (req: Request, res: Response): Promise<Response> => {
         logger.info('fetching all properties for search');
         const { status, page = 1, limit = 10 } = req.query;
-        const queryStatus = req.user ? (status as PropertyStatus) : PropertyStatus.APPROVED;
+        const queryStatus = req.user ? (status as PropertyStatus) : PropertyStatus.ACTIVE;
 
         const result = await this._getAllPropertiesUseCase.execute({
             status: queryStatus,
@@ -74,30 +77,8 @@ export class PropertyController {
 
         // image ai Check
         if (dto.photos && Array.isArray(dto.photos)) {
-            logger.info(`Moderating ${dto.photos.length} property photos...`);
-            for (const url of dto.photos) {
-                try {
-                    const response = await axios.get(url, { responseType: 'arraybuffer' });
-                    const buffer = Buffer.from(response.data);
-                    const moderation = await this._moderationService.checkImage(buffer);
-
-                    if (moderation.status === 'UNSAFE') {
-                        logger.warn(`Property creation blocked: Unsafe image detected at ${url}`);
-                        return ResponseHandler.error(
-                            res,
-                            `One or more images failed safety moderation: ${moderation.reason}`,
-                            Http_StatusCodes.BAD_REQUEST,
-                        );
-                    }
-                } catch (error) {
-                    logger.error(`Failed to moderate image at ${url}:`, error);
-                    return ResponseHandler.error(
-                        res,
-                        'Failed to perform safety check on property images.',
-                        Http_StatusCodes.INTERNAL_SERVER_ERROR,
-                    );
-                }
-            }
+            const moderationError = await this._moderatePhotos(dto.photos, res);
+            if (moderationError) return moderationError;
         }
 
         const property = await this._createPropertyUseCase.execute(dto);
@@ -129,6 +110,12 @@ export class PropertyController {
     updateProperty = async (req: Request, res: Response): Promise<Response> => {
         logger.info(`updating property: ${req.params.id}`);
         const id = req.params.id as string;
+
+        if (req.body.photos && Array.isArray(req.body.photos)) {
+            const moderationError = await this._moderatePhotos(req.body.photos, res);
+            if (moderationError) return moderationError;
+        }
+
         const result = await this._updatePropertyUseCase.execute(id, req.body);
         return ResponseHandler.success(res, result, Property_Response_Messages.UPDATED);
     };
@@ -145,6 +132,13 @@ export class PropertyController {
         const id = req.params.id as string;
         await this._deletePropertyUseCase.execute(id);
         return ResponseHandler.success(res, null, Property_Response_Messages.DELETED);
+    };
+
+    relistProperty = async (req: Request, res: Response): Promise<Response> => {
+        logger.info(`relisting property: ${req.params.id}`);
+        const id = req.params.id as string;
+        await this._relistPropertyUseCase.execute(id);
+        return ResponseHandler.success(res, null, 'Property relisted successfully');
     };
 
     uploadPropertyPhotoUrls = async (req: Request, res: Response): Promise<Response> => {
@@ -192,5 +186,33 @@ export class PropertyController {
             { uploads },
             Property_Response_Messages.PHOTOS_UPLOADED,
         );
+    };
+
+    private _moderatePhotos = async (photos: string[], res: Response): Promise<Response | null> => {
+        logger.info(`Moderating ${photos.length} property photos...`);
+        for (const url of photos) {
+            try {
+                const response = await axios.get(url, { responseType: 'arraybuffer' });
+                const buffer = Buffer.from(response.data);
+                const moderation = await this._moderationService.checkImage(buffer);
+
+                if (moderation.status === 'UNSAFE') {
+                    logger.warn(`Property action blocked: Unsafe image detected at ${url}`);
+                    return ResponseHandler.error(
+                        res,
+                        `One or more images failed safety moderation: ${moderation.reason}`,
+                        Http_StatusCodes.BAD_REQUEST,
+                    );
+                }
+            } catch (error) {
+                logger.error(`Failed to moderate image at ${url}:`, error);
+                return ResponseHandler.error(
+                    res,
+                    'Failed to perform safety check on property images.',
+                    Http_StatusCodes.INTERNAL_SERVER_ERROR,
+                );
+            }
+        }
+        return null;
     };
 }

@@ -13,9 +13,10 @@ export interface IPropertyRepository extends IBaseRepository<PropertyEntity> {
     update(entity: PropertyEntity): Promise<PropertyEntity>;
     unlist(id: string): Promise<void>;
     delete(id: string): Promise<void>;
+    relist(id: string): Promise<void>;
     incrementViews(id: string): Promise<void>;
     // search(filters:any):Promise<PropertyEntity[]>
-    findPending(): Promise<PropertyEntity[]>;
+    findPending(skip?: number, take?: number): Promise<PropertyEntity[]>;
     findAll(status?: string, skip?: number, take?: number): Promise<PropertyEntity[]>;
     countAll(status?: string): Promise<number>;
 }

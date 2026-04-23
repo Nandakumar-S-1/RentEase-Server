@@ -1,10 +1,6 @@
-export interface IWishlistUseCase {
-    toggleWishlist(userId: string, propertyId: string): Promise<{ isWishlisted: boolean }>;
-    getMyWishlist(userId: string): Promise<any[]>;
-    isWishlisted(userId: string, propertyId: string): Promise<boolean>;
-}
-
+import { IWishlistUseCase } from '@application/interfaces/property/property.usecase.interface';
 import { IWishlistRepository } from '@core/interfaces/repository/wishlist.repository.interface';
+import { PropertyTypeData } from '@core/types/property.types';
 import { TokenTypes } from '@shared/types/tokens';
 import { inject, injectable } from 'tsyringe';
 
@@ -26,7 +22,7 @@ export class WishlistUseCase implements IWishlistUseCase {
         }
     }
 
-    async getMyWishlist(userId: string): Promise<any[]> {
+    async getMyWishlist(userId: string): Promise<PropertyTypeData[]> {
         return await this._wishlistRepo.findByUserId(userId);
     }
 

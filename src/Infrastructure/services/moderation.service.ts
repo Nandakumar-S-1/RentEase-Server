@@ -59,7 +59,7 @@ export class ModerationService implements IModerationService {
 
             logger.info('AI moderation check passed (SAFE)');
             return { status: 'SAFE' };
-        } catch (error: any) {
+        } catch (error) {
             logger.error({ error }, 'Google Cloud Vision Error during moderation check');
             // If the service is unavailable, we might want to return UNCERTAIN instead of failing completely
             return { status: 'UNCERTAIN' };

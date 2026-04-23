@@ -44,6 +44,7 @@ export class PropertyPersistenceMapper {
 
             approvedBy: raw.approvedBy ?? undefined,
             approvedAt: raw.approvedAt ?? undefined,
+            rejectionReason: raw.rejectionReason ?? undefined,
             createdAt: raw.createdAt,
             updatedAt: raw.updatedAt,
 
@@ -150,6 +151,7 @@ export class PropertyPersistenceMapper {
             status: PropertyPersistenceMapper._mapStatusToPrisma(entity.status),
             approvedBy: entity.approvedBy,
             approvedAt: entity.approvedAt,
+            rejectionReason: entity.rejectionReason,
             createdAt: entity.createdAt,
             updatedAt: entity.updatedAt,
         };

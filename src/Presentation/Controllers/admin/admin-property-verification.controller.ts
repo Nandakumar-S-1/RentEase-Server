@@ -13,7 +13,10 @@ export class AdminPropertyVerificationController {
     ) {}
 
     listPendingProperties = async (req: Request, res: Response): Promise<Response> => {
-        const result = await this._verifyProperty.getPendingProperties();
+        const page = parseInt(req.query.page as string) || 1;
+        const limit = parseInt(req.query.limit as string) || 10;
+
+        const result = await this._verifyProperty.getPendingProperties(page, limit);
         return res.status(Http_StatusCodes.OK).json({
             success: true,
             message: 'Pending properties fetched successfully',
@@ -44,7 +47,7 @@ export class AdminPropertyVerificationController {
             });
         }
 
-        await this._verifyProperty.rejectProperty(propertyId);
+        await this._verifyProperty.rejectProperty(propertyId, rejectionReason);
 
         return res.status(Http_StatusCodes.OK).json({
             success: true,

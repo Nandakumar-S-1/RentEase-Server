@@ -1,5 +1,9 @@
 import { IWishlistRepository } from '@core/interfaces/repository/wishlist.repository.interface';
+import { PropertyResponseMapper } from '@application/mappers/property/property-response.mapper';
+import { PropertyTypeData } from '@core/types/property.types';
 import { prisma } from '@infrastructure/database/prisma/prisma.client';
+import { Property, PropertyDetails } from '@prisma/client';
+import { PropertyPersistenceMapper } from '@infrastructure/mappers/property-persistence.mapper';
 import { injectable } from 'tsyringe';
 
 @injectable()
@@ -18,14 +22,19 @@ export class WishlistRepository implements IWishlistRepository {
         });
     }
 
-    async findByUserId(userId: string): Promise<any[]> {
-        return await prisma.wishlist.findMany({
+    async findByUserId(userId: string): Promise<PropertyTypeData[]> {
+        const results = await prisma.wishlist.findMany({
             where: { userId },
             include: {
                 property: {
                     include: { details: true },
                 },
             },
+        });
+
+        return results.map((r) => {
+            const propertyEntity = PropertyPersistenceMapper.toEntity(r.property as Property & { details: PropertyDetails | null });
+            return PropertyResponseMapper.toGeneralResponse(propertyEntity);
         });
     }
 

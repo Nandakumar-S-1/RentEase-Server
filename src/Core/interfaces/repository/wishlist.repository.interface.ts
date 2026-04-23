@@ -1,3 +1,5 @@
+import { PropertyTypeData } from '@core/types/property.types';
+
 export interface WishlistData {
     id: string;
     userId: string;
@@ -8,6 +10,6 @@ export interface WishlistData {
 export interface IWishlistRepository {
     add(userId: string, propertyId: string): Promise<void>;
     remove(userId: string, propertyId: string): Promise<void>;
-    findByUserId(userId: string): Promise<any[]>;
+    findByUserId(userId: string): Promise<PropertyTypeData[]>;
     isWishlisted(userId: string, propertyId: string): Promise<boolean>;
 }
