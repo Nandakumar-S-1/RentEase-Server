@@ -25,9 +25,14 @@ export class TenantProfileRepository implements ITenantProfileRepository {
     }
 
     async save(entity: TenantProfileEntity): Promise<TenantProfileEntity> {
-        const result = await prisma.tenantProfile.update({
+        const result = await prisma.tenantProfile.upsert({
             where: { userId: entity.userId },
-            data: {
+            update: {
+                bio: entity.bio,
+                occupation: entity.occupation,
+            },
+            create: {
+                userId: entity.userId,
                 bio: entity.bio,
                 occupation: entity.occupation,
             },

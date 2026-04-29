@@ -8,6 +8,9 @@ import { TokenTypes } from 'shared/types/tokens';
 import { inject, injectable } from 'tsyringe';
 import { logger } from 'shared/log/logger';
 import { UserRole } from '@shared/enums/user-role.enum';
+import { OwnerProfileEntity } from 'core/entities/owner-profile.entity';
+import { TenantProfileEntity } from 'core/entities/tenant-profile.entity';
+import { randomUUID } from 'crypto';
 
 @injectable()
 export class UpdateProfileUseCase implements IUpdateProfileUseCase {
@@ -46,25 +49,38 @@ export class UpdateProfileUseCase implements IUpdateProfileUseCase {
 
         const updatedUser = await this._userRepo.update(dto.userId, updatedUserData);
 
+        let bio: string | null = null;
+        let occupation: string | null = null;
+
         // update role specific profile fields
         if (dto.role === UserRole.OWNER) {
-            const ownerProfile = await this._ownerRepo.findByUserId(dto.userId);
-            if (ownerProfile) {
-                if (dto.bio !== undefined) ownerProfile.updateBio(dto.bio ?? null);
-                if (dto.occupation !== undefined)
-                    ownerProfile.updateOccupation(dto.occupation ?? null);
-                await this._ownerRepo.save(ownerProfile);
+            let ownerProfile = await this._ownerRepo.findByUserId(dto.userId);
+            if (!ownerProfile) {
+                logger.info(`Creating missing owner profile for user ${dto.userId}`);
+                ownerProfile = OwnerProfileEntity.create({ id: randomUUID(), userId: dto.userId });
             }
+            
+            if (dto.bio !== undefined) ownerProfile.updateBio(dto.bio ?? null);
+            if (dto.occupation !== undefined) ownerProfile.updateOccupation(dto.occupation ?? null);
+            
+            await this._ownerRepo.save(ownerProfile);
+            bio = ownerProfile.bio;
+            occupation = ownerProfile.occupation;
         }
 
         if (dto.role === UserRole.TENANT) {
-            const tenantProfile = await this._tenantRepo.findByUserId(dto.userId);
-            if (tenantProfile) {
-                if (dto.bio !== undefined) tenantProfile.updateBio(dto.bio ?? null);
-                if (dto.occupation !== undefined)
-                    tenantProfile.updateOccupation(dto.occupation ?? null);
-                await this._tenantRepo.save(tenantProfile);
+            let tenantProfile = await this._tenantRepo.findByUserId(dto.userId);
+            if (!tenantProfile) {
+                logger.info(`Creating missing tenant profile for user ${dto.userId}`);
+                tenantProfile = TenantProfileEntity.create({ id: randomUUID(), userId: dto.userId });
             }
+            
+            if (dto.bio !== undefined) tenantProfile.updateBio(dto.bio ?? null);
+            if (dto.occupation !== undefined) tenantProfile.updateOccupation(dto.occupation ?? null);
+            
+            await this._tenantRepo.save(tenantProfile);
+            bio = tenantProfile.bio;
+            occupation = tenantProfile.occupation;
         }
 
         return {
@@ -73,6 +89,8 @@ export class UpdateProfileUseCase implements IUpdateProfileUseCase {
             phone: updatedUser.phone,
             role: updatedUser.role,
             avatarUrl: updatedUser.avatarUrl,
+            bio,
+            occupation,
         };
     }
 }

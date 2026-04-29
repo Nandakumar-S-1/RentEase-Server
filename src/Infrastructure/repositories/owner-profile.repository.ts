@@ -65,9 +65,19 @@ export class OwnerProfileRepository implements IOwnerProfileRepository {
         return OwnerProfilePersistenceMapper.toEntity(result);
     }
     async save(entity: OwnerProfileEntity): Promise<OwnerProfileEntity> {
-        const result = await prisma.ownerProfile.update({
+        const result = await prisma.ownerProfile.upsert({
             where: { userId: entity.userId },
-            data: {
+            update: {
+                bio: entity.bio,
+                occupation: entity.occupation,
+                documentType: entity.documentType,
+                documentUrl: entity.documentUrl,
+                verificationStatus: entity.verificationStatus,
+                rejectionReason: entity.rejectionReason,
+                verifiedAt: entity.verifiedAt ?? undefined,
+            },
+            create: {
+                userId: entity.userId,
                 bio: entity.bio,
                 occupation: entity.occupation,
                 documentType: entity.documentType,
@@ -77,7 +87,6 @@ export class OwnerProfileRepository implements IOwnerProfileRepository {
                 verifiedAt: entity.verifiedAt ?? undefined,
             },
         });
-
         return OwnerProfilePersistenceMapper.toEntity(result);
     }
     async findAllPending(): Promise<OwnerProfileEntity[]> {
