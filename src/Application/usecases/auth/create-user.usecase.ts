@@ -12,8 +12,6 @@ import { TokenTypes } from 'shared/types/tokens';
 import { inject, injectable } from 'tsyringe';
 import { PhoneAlreadyExistError, UserAlreadyExistError } from 'shared/errors/user-errors';
 
-//this is where everything gets connected //@injectable() tells tsyringe "this class can be created by the main container
-//this class represents a specific single operation.which is creating new user // Single Responsibility Principle
 
 @injectable()
 export class CreateUserUseCase implements ICreateUserUseCase {

@@ -16,6 +16,7 @@ export class UserEntity {
         private _isSuspended: boolean = false,
         private _isEmailVerified: boolean = false,
         private _avatarUrl: string | null = null,
+        private _verificationStatus: string | null = null,
         private _createdAt: Date,
     ) {}
 
@@ -32,6 +33,7 @@ export class UserEntity {
             data.isSuspended ?? false,
             data.isEmailVerified ?? false,
             data.avatarUrl ?? null,
+            data.verificationStatus ?? null,
             data.createdAt ?? new Date(),
         );
     }
@@ -75,6 +77,9 @@ export class UserEntity {
 
     get avatarUrl(): string | null {
         return this._avatarUrl;
+    }
+    get verificationStatus(): string | null {
+        return this._verificationStatus;
     }
 
     setEmailVerified(): void {

@@ -9,6 +9,9 @@ import { injectable } from 'tsyringe';
 @injectable()
 export class ServiceProviderRepository implements IServiceProviderRepository {
     async create(data: Omit<ServiceProviderData, 'id'>): Promise<ServiceProviderData> {
+
+
+
         const result = await prisma.serviceProvider.create({
             data: {
                 property_id: data.propertyId,

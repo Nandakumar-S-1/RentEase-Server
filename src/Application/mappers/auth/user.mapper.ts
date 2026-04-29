@@ -32,6 +32,7 @@ export class UserMapper {
             isSuspended: user.isSuspended,
             isActive: user.isActive,
             isEmailVerified: user.isEmailVerified,
+            verificationStatus: user.verificationStatus,
         };
     }
 }

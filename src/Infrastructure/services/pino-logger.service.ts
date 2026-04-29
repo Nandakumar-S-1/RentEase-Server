@@ -27,7 +27,6 @@ export class PinoLogger implements ILogger {
 
     private formatMessage(message: string, args: unknown[]): string {
         if (args.length === 0) return message;
-        // Avoid passing unknown[] into pino's format overloads (tight typings).
         return `${message} ${args.map(String).join(' ')}`;
     }
 

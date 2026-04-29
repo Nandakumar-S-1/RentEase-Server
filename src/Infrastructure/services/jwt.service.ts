@@ -74,9 +74,6 @@ export class JwtService implements IJwtService {
         try {
             const accessToken = this._createAccessToken(payload);
             const refreshToken = this._createRefreshToken(payload);
-
-            logger.info('new access and refresh tokens created--------------');
-
             return {
                 accessToken,
                 refreshToken,

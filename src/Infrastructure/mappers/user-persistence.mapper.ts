@@ -5,7 +5,7 @@ import { UserEntity } from 'core/entities/user.entity';
 //Database=> Domain(it actually convert database records into domain entities) // the database might have different names compared to domain.
 //so we use this mapper to convert database records back to domain entities. database to entity used because db not equalto domains shape
 export class UserPersistenceMapper {
-    static toEntity(raw: User): UserEntity {
+    static toEntity(raw: any): UserEntity {
         return UserEntity.create({
             id: raw.id,
             email: raw.email,
@@ -17,6 +17,7 @@ export class UserPersistenceMapper {
             isSuspended: raw.isSuspended,
             isEmailVerified: raw.isEmailVerified,
             avatarUrl: raw.avatarUrl,
+            verificationStatus: raw.owner_profile?.verificationStatus,
             createdAt: raw.createdAt,
         });
     }

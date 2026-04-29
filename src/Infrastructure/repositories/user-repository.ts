@@ -34,6 +34,7 @@ export class UserRepository implements IUserRepository {
     async findByEmail(email: string): Promise<UserEntity | null> {
         const user = await prisma.user.findUnique({
             where: { email },
+            include: { owner_profile: true },
         });
         // iff found, map to entity, if not- return null
         return user ? UserPersistenceMapper.toEntity(user) : null;
@@ -42,6 +43,7 @@ export class UserRepository implements IUserRepository {
     async findByPhone(phone: string): Promise<UserEntity | null> {
         const user = await prisma.user.findUnique({
             where: { phone },
+            include: { owner_profile: true },
         });
         return user ? UserPersistenceMapper.toEntity(user) : null;
     }
@@ -49,12 +51,15 @@ export class UserRepository implements IUserRepository {
     async findById(id: string): Promise<UserEntity | null> {
         const user = await prisma.user.findUnique({
             where: { id },
+            include: { owner_profile: true },
         });
         return user ? UserPersistenceMapper.toEntity(user) : null;
     }
 
     async findAll(): Promise<UserEntity[]> {
-        const users = await prisma.user.findMany();
+        const users = await prisma.user.findMany({
+            include: { owner_profile: true },
+        });
         return users.map((user) => UserPersistenceMapper.toEntity(user));
     }
 

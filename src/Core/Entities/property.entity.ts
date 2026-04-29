@@ -168,6 +168,9 @@ export class PropertyEntity {
     get viewsCount() {
         return this._viewsCount;
     }
+    get wishlistCount() {
+        return this._wishlistCount;
+    }
     get latitude() {
         return this._latitude;
     }

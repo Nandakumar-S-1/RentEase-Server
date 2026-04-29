@@ -192,7 +192,7 @@ export class AuthController {
     refreshToken = async (req: Request, res: Response): Promise<Response> => {
         const refreshToken = req.cookies.refreshToken;
 
-        logger.info(`refresh token requested ${!!refreshToken}`);
+        logger.info(`refresh token requested ${refreshToken}`);
         if (!refreshToken) {
             return ResponseHandler.error(
                 res,

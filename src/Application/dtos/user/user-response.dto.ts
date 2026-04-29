@@ -8,4 +8,5 @@ export interface UserResponseDTO {
     isSuspended: boolean;
     isActive: boolean;
     isEmailVerified: boolean;
+    verificationStatus?: string | null;
 }

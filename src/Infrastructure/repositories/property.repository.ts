@@ -10,10 +10,13 @@ import { injectable } from 'tsyringe';
 export class PropertyRepository implements IPropertyRepository {
     async create(entity: PropertyEntity): Promise<PropertyEntity> {
         const data = PropertyPersistenceMapper.toCreatePersistence(entity);
+        
         const result = await prisma.property.create({
+
             data,
             include: { details: true },
         });
+
         return PropertyPersistenceMapper.toEntity(result as Property & { details: PropertyDetails | null });
     }
     async findById(id: string): Promise<PropertyEntity | null> {

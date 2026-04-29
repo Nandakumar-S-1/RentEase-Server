@@ -35,6 +35,8 @@ export class PropertyResponseMapper {
             photos: entity.photos,
             primaryPhotoIndex: entity.primaryPhotoIndex,
             createdAt: entity.createdAt,
+            viewsCount: entity.viewsCount,
+            wishlistCount: entity.wishlistCount,
             bhk: entity.details?.bhk,
             bathrooms: entity.details?.bathrooms,
 
