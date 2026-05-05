@@ -1,8 +1,9 @@
 import { PropertyEntity } from '@core/entities/property.entity';
+import { GetAllPropertiesDTO } from '@application/interfaces/property/property.usecase.interface';
 import { IPropertyRepository } from '@core/interfaces/repository/property-repository.interface';
 import { prisma } from '@infrastructure/database/prisma/prisma.client';
 import { PropertyPersistenceMapper } from '@infrastructure/mappers/property-persistence.mapper';
-import { Property, PropertyDetails, PropertyVerificationStatus } from '@prisma/client';
+import { Prisma, Property, PropertyDetails, PropertyVerificationStatus } from '@prisma/client';
 import { PropertyNotFoundError } from '@shared/errors/property-errors';
 import { injectable } from 'tsyringe';
 
@@ -110,11 +111,10 @@ export class PropertyRepository implements IPropertyRepository {
         });
     }
 
-    async findAll(status?: string, skip?: number, take?: number): Promise<PropertyEntity[]> {
+    async findAll(status?: string, skip?: number, take?: number, filters?: Partial<GetAllPropertiesDTO>): Promise<PropertyEntity[]> {
+        const where = this._buildWhereClause(status, filters);
         const properties = await prisma.property.findMany({
-            where: {
-                ...(status && { status: status as PropertyVerificationStatus }),
-            },
+            where,
             skip,
             take,
             orderBy: {
@@ -125,11 +125,58 @@ export class PropertyRepository implements IPropertyRepository {
         return properties.map((p) => PropertyPersistenceMapper.toEntity(p as Property & { details: PropertyDetails | null }));
     }
 
-    async countAll(status?: string): Promise<number> {
+    async countAll(status?: string, filters?: Partial<GetAllPropertiesDTO>): Promise<number> {
+        const where = this._buildWhereClause(status, filters);
         return await prisma.property.count({
-            where: {
-                ...(status && { status: status as PropertyVerificationStatus }),
-            },
+            where,
         });
+    }
+
+    private _buildWhereClause(status?: string, filters?: Partial<GetAllPropertiesDTO>) {
+        const where: Prisma.PropertyWhereInput = {
+            ...(status && { status: status as PropertyVerificationStatus }),
+        };
+
+        if (filters) {
+            const { query, city, propertyType, minRent, maxRent, minArea, maxArea, bhk } = filters;
+
+            if (query) {
+                where.OR = [
+                    { title: { contains: query, mode: 'insensitive' } },
+                    { description: { contains: query, mode: 'insensitive' } },
+                    { fullAddress: { contains: query, mode: 'insensitive' } },
+                ];
+            }
+
+            if (city) {
+                where.locationCity = { contains: city, mode: 'insensitive' };
+            }
+
+            if (propertyType) {
+                where.propertyType = propertyType;
+            }
+
+            if (minRent !== undefined || maxRent !== undefined) {
+                where.monthlyRent = {
+                    ...(minRent !== undefined && { gte: Number(minRent) }),
+                    ...(maxRent !== undefined && { lte: Number(maxRent) }),
+                };
+            }
+
+            if (minArea !== undefined || maxArea !== undefined) {
+                where.areaSqrt = {
+                    ...(minArea !== undefined && { gte: Number(minArea) }),
+                    ...(maxArea !== undefined && { lte: Number(maxArea) }),
+                };
+            }
+
+            if (bhk !== undefined) {
+                where.details = {
+                    bhk: Number(bhk),
+                };
+            }
+        }
+
+        return where;
     }
 }

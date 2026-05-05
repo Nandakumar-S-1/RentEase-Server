@@ -21,6 +21,7 @@ export const ADMIN_ROUTES = {
         ACTIVATE: '/users/activate/:id',
         DEACTIVATE: '/users/deactivate/:id',
         DETAILS: '/users/:id',
+        PROPERTIES: '/users/:id/properties',
     },
     OWNER_VERIFICATION: {
         PENDING: '/owners/pending',
@@ -29,6 +30,7 @@ export const ADMIN_ROUTES = {
         REJECT: '/owners/:ownerId/reject',
     },
     PROPERTY_VERIFICATION: {
+        BASE: '/properties',
         PENDING: '/properties/pending',
         VERIFY: '/properties/:propertyId/verify',
         REJECT: '/properties/:propertyId/reject',
@@ -66,4 +68,17 @@ export const PROPERTY_ROUTES = {
     LIST: '/',
     UNLIST: '/:id/unlist',
     RELIST: '/:id/relist',
-};
+} as const;
+
+export const SERVICE_PROVIDER_ROUTES = {
+    ADD: '/',
+    GET_BY_PROPERTY: '/property/:propertyId',
+    TOGGLE_STATUS: '/:id/status',
+    DELETE: '/:id',
+} as const;
+
+export const WISHLIST_ROUTES = {
+    TOGGLE: '/:propertyId',
+    GET_MY: '/',
+    CHECK: '/check/:propertyId',
+} as const;

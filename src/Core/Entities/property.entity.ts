@@ -228,6 +228,7 @@ export class PropertyEntity {
             this._details.update(data.details);
         }
 
+        this._status = PropertyStatus.PENDING_APPROVAL;
         this._updatedAt = new Date();
     }
 

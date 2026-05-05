@@ -217,8 +217,7 @@ export class AuthController {
     };
 
     getMe = async (req: Request, res: Response): Promise<Response> => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const userData = req.user ? UserMapper.toResponseDTO(req.user as any) : null;
+        const userData = req.user ? UserMapper.toResponseDTO(req.user) : null;
         return ResponseHandler.success(
             res,
             { user: userData },

@@ -1,29 +1,68 @@
 import pino from 'pino';
 import { ILogger } from '@application/interfaces/services/logger.service.interface';
 
-const isDev = process.env.NODE_ENV !== 'production';
+// const isProd = process.env.NODE_ENV !== 'production';
 
 export class PinoLogger implements ILogger {
     private logger: pino.Logger;
 
     constructor() {
+        const isProd = process.env.NODE_ENV === 'production';
+        const logLevel = process.env.LOG_LEVEL || 'info';
+        const logFilePath = process.env.LOG_FILE_PATH || './src/shared/log/app.log';
+        const logFileSize = process.env.LOG_FILE_SIZE || '10m';
+        const logFileCount = Number(process.env.LOG_FILE_COUNT) || 7;
+
         this.logger = pino({
-            level: process.env.LOG_LEVEL || 'info',
-            formatters: {
-                level(label) {
-                    return { level: label };
-                },
+            level: logLevel,
+            transport: {
+                targets: [
+                    ...(!isProd
+                        ? [
+                              {
+                                  target: 'pino-pretty',
+                                  options: {
+                                      colorize: true,
+                                      translateTime: 'yyyy-mm-dd HH:MM:ss',
+                                      ignore: 'pid,hostname',
+                                  },
+                                  level: logLevel,
+                              },
+                          ]
+                        : []),
+                    {
+                        target: 'pino-roll',
+                        options: {
+                            file: logFilePath,
+                            size: logFileSize,
+                            count: logFileCount,
+                            mkdir: true,
+                        },
+                        level: logLevel,
+                    },
+                ],
             },
-            transport: isDev
-                ? {
-                      target: 'pino-pretty',
-                      options: {
-                          colorize: true,
-                      },
-                  }
-                : undefined,
         });
     }
+
+    // constructor() {
+    //     this.logger = pino({
+    //         level: process.env.LOG_LEVEL || 'info',
+    //         formatters: {
+    //             level(label) {
+    //                 return { level: label };
+    //             },
+    //         },
+    //         transport: isDev
+    //             ? {
+    //                   target: 'pino-pretty',
+    //                   options: {
+    //                       colorize: true,
+    //                   },
+    //               }
+    //             : undefined,
+    //     });
+    // }
 
     private formatMessage(message: string, args: unknown[]): string {
         if (args.length === 0) return message;

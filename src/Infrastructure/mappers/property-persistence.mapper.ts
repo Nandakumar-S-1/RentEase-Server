@@ -61,6 +61,7 @@ export class PropertyPersistenceMapper {
                       furnishingStatus: raw.details.furnishingStatus ?? undefined,
                       landType: raw.details.landType ?? undefined,
                       isCornerPlot: raw.details.isCornerPlot ?? undefined,
+                      roadWidthFeet: raw.details.roadWidthFeet ?? undefined,
                       shopType: raw.details.shoptype ?? undefined,
                       hasParking: raw.details.hasParking ?? undefined,
                       amenities: raw.details.amenities ?? [],
@@ -159,14 +160,22 @@ export class PropertyPersistenceMapper {
 
     private static _mapDetails(details: PropertyDetailsEntity) {
         return {
-            bhk: details.bhk,
-            bathrooms: details.bathrooms,
-            floorNumber: details.floorNumber,
-            totalFloors: details.totalFloors,
-            propertyAge: details.propertyAge,
-            facingDirection: details.facingDirection,
-            furnishingStatus: details.furnishingStatus,
-            amenities: details.amenities,
+            bhk: details.bhk ?? undefined,
+            bathrooms: details.bathrooms ?? undefined,
+            floorNumber: details.floorNumber ?? undefined,
+            totalFloors: details.totalFloors ?? undefined,
+            propertyAge: details.propertyAge ?? undefined,
+            facingDirection: details.facingDirection ?? undefined,
+            furnishingStatus: details.furnishingStatus ?? undefined,
+            amenities: details.amenities ?? [],
+            landType: details.landType ?? undefined,
+            isCornerPlot: details.isCornerPlot ?? undefined,
+            roadWidthFeet: details.roadWidthFeet ?? undefined,
+            shoptype: details.shopType ?? undefined,
+            hasParking: details.hasParking ?? undefined,
+            petsAllowed: details.petsAllowed ?? false,
+            smokingAllowed: details.smokingAllowed ?? false,
+            maximumOccupants: details.maximumOccupants ?? undefined,
             preferredTenantType: details.preferredTenantType
                 ? JSON.parse(JSON.stringify(details.preferredTenantType))
                 : undefined,

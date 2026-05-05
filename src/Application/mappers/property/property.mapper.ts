@@ -42,6 +42,14 @@ export class PropertyMapper {
                 furnishingStatus: dto.furnishingStatus ?? undefined,
                 amenities: dto.amenities ?? [],
                 preferredTenantType: dto.preferredTenantType ?? [],
+                petsAllowed: dto.petsAllowed ?? false,
+                smokingAllowed: dto.smokingAllowed ?? false,
+                maximumOccupants: dto.maximumOccupants ?? undefined,
+                landType: dto.landType ?? undefined,
+                isCornerPlot: dto.isCornerPlot ?? undefined,
+                roadWidthFeet: dto.roadWidthFeet ?? undefined,
+                shopType: dto.shopType ?? undefined,
+                hasParking: dto.hasParking ?? undefined,
             },
         });
     }

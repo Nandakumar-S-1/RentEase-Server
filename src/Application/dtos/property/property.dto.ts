@@ -32,6 +32,15 @@ export interface CreatePropertyDTO {
 
     amenities?: string[];
     preferredTenantType?: string[];
+
+    petsAllowed?: boolean;
+    smokingAllowed?: boolean;
+    maximumOccupants?: number | null;
+    landType?: string | null;
+    isCornerPlot?: boolean | null;
+    roadWidthFeet?: number | null;
+    shopType?: string | null;
+    hasParking?: boolean | null;
 }
 
 export interface UploadPropertyPhotosDTO {

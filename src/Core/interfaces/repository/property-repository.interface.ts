@@ -1,4 +1,5 @@
 import { PropertyEntity } from '@core/entities/property.entity';
+import { GetAllPropertiesDTO } from '@application/interfaces/property/property.usecase.interface';
 import { IBaseRepository } from '../base/base-repository.interface';
 
 export interface IPropertyRepository extends IBaseRepository<PropertyEntity> {
@@ -17,6 +18,6 @@ export interface IPropertyRepository extends IBaseRepository<PropertyEntity> {
     incrementViews(id: string): Promise<void>;
     // search(filters:any):Promise<PropertyEntity[]>
     findPending(skip?: number, take?: number): Promise<PropertyEntity[]>;
-    findAll(status?: string, skip?: number, take?: number): Promise<PropertyEntity[]>;
-    countAll(status?: string): Promise<number>;
+    findAll(status?: string, skip?: number, take?: number, filters?: Partial<GetAllPropertiesDTO>): Promise<PropertyEntity[]>;
+    countAll(status?: string, filters?: Partial<GetAllPropertiesDTO>): Promise<number>;
 }

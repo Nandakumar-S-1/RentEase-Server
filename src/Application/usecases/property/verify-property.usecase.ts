@@ -7,24 +7,45 @@ import { IPropertyRepository } from '@core/interfaces/repository/property-reposi
 import { TokenTypes } from '@shared/types/tokens';
 import { inject, injectable } from 'tsyringe';
 import { PropertyNotFoundError } from '@shared/errors/property-errors';
-import { PropertyVerificationStatus } from '@prisma/client';
+import { PropertyStatus } from '@shared/enums/property-type-status.enum';
 
 @injectable()
 export class VerifyPropertyUseCase implements IVerifyPropertyUseCase {
     constructor(
         @inject(TokenTypes.IPropertyRepository)
         private readonly _propertyRepo: IPropertyRepository,
-    ) {}
+    ) { }
 
     async getPendingProperties(page: number, limit: number): Promise<PaginatedPropertyResponse> {
         const skip = (page - 1) * limit;
         const [pendingProperties, total] = await Promise.all([
             this._propertyRepo.findPending(skip, limit),
-            this._propertyRepo.countAll(PropertyVerificationStatus.PENDING_APPROVAL),
+            this._propertyRepo.countAll(PropertyStatus.PENDING_APPROVAL),
         ]);
 
         return {
             properties: pendingProperties.map((property) =>
+                PropertyResponseMapper.toGeneralResponse(property),
+            ),
+            total,
+            page,
+            limit,
+        };
+    }
+
+    async getAllProperties(
+        status: PropertyStatus,
+        page: number,
+        limit: number,
+    ): Promise<PaginatedPropertyResponse> {
+        const skip = (page - 1) * limit;
+        const [properties, total] = await Promise.all([
+            this._propertyRepo.findAll(status, skip, limit),
+            this._propertyRepo.countAll(status),
+        ]);
+
+        return {
+            properties: properties.map((property) =>
                 PropertyResponseMapper.toGeneralResponse(property),
             ),
             total,

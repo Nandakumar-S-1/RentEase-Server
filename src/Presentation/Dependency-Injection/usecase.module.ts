@@ -121,7 +121,7 @@ export class UseCaseModule {
         container.register<IGetAllPropertiesUseCase>(TokenTypes.IGetAllPropertiesUseCase, {
             useClass: GetAllPropertiesUseCase,
         });
-        container.register<IVerifyPropertyUseCase>(TokenTypes.IVerifyPropertyUseCase, {
+        container.register(TokenTypes.IVerifyPropertyUseCase, {
             useClass: VerifyPropertyUseCase,
         });
 

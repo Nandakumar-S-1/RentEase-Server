@@ -37,8 +37,27 @@ export class PropertyResponseMapper {
             createdAt: entity.createdAt,
             viewsCount: entity.viewsCount,
             wishlistCount: entity.wishlistCount,
+            rejectionReason: entity.rejectionReason,
+            approvedAt: entity.approvedAt,
+
+            // Flattened details
             bhk: entity.details?.bhk,
             bathrooms: entity.details?.bathrooms,
+            floorNumber: entity.details?.floorNumber,
+            totalFloors: entity.details?.totalFloors,
+            propertyAge: entity.details?.propertyAge,
+            facingDirection: entity.details?.facingDirection,
+            furnishingStatus: entity.details?.furnishingStatus,
+            amenities: entity.details?.amenities,
+            preferredTenantType: entity.details?.preferredTenantType,
+            petsAllowed: entity.details?.petsAllowed,
+            smokingAllowed: entity.details?.smokingAllowed,
+            maximumOccupants: entity.details?.maximumOccupants,
+            landType: entity.details?.landType,
+            isCornerPlot: entity.details?.isCornerPlot,
+            roadWidthFeet: entity.details?.roadWidthFeet,
+            shopType: entity.details?.shopType,
+            hasParking: entity.details?.hasParking,
 
             ...(entity.details && {
                 details: {
@@ -53,6 +72,14 @@ export class PropertyResponseMapper {
                     furnishingStatus: entity.details.furnishingStatus,
                     amenities: entity.details.amenities,
                     preferredTenantType: entity.details.preferredTenantType,
+                    petsAllowed: entity.details.petsAllowed,
+                    smokingAllowed: entity.details.smokingAllowed,
+                    maximumOccupants: entity.details.maximumOccupants,
+                    landType: entity.details.landType,
+                    isCornerPlot: entity.details.isCornerPlot,
+                    roadWidthFeet: entity.details.roadWidthFeet,
+                    shopType: entity.details.shopType,
+                    hasParking: entity.details.hasParking,
                 },
             }),
         };

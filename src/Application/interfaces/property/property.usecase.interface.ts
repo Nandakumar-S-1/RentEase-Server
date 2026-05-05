@@ -34,6 +34,14 @@ export interface GetAllPropertiesDTO {
     status?: PropertyStatus;
     page: number;
     limit: number;
+    query?: string;
+    city?: string;
+    propertyType?: string;
+    minRent?: number;
+    maxRent?: number;
+    minArea?: number;
+    maxArea?: number;
+    bhk?: number;
 }
 
 export interface IGetAllPropertiesUseCase {
@@ -42,6 +50,7 @@ export interface IGetAllPropertiesUseCase {
 
 export interface IVerifyPropertyUseCase {
     getPendingProperties(page: number, limit: number): Promise<PaginatedPropertyResponse>;
+    getAllProperties(status: PropertyStatus, page: number, limit: number): Promise<PaginatedPropertyResponse>;
     approveProperty(propertyId: string, adminId: string): Promise<void>;
     rejectProperty(propertyId: string, reason?: string): Promise<void>;
 }

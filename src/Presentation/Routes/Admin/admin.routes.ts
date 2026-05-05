@@ -50,7 +50,7 @@ export class AdminRoutes extends BaseRoute {
             ),
         );
         this.router.get(
-            '/users/:id/properties',
+            ADMIN_ROUTES.USERS.PROPERTIES,
             authMiddleware,
             neededRole(UserRole.ADMIN),
             asyncHandlerFunction(
@@ -114,6 +114,12 @@ export class AdminRoutes extends BaseRoute {
             authMiddleware,
             neededRole(UserRole.ADMIN),
             asyncHandlerFunction(this._adminPropertyVerificationController.listPendingProperties),
+        );
+        this.router.get(
+            ADMIN_ROUTES.PROPERTY_VERIFICATION.BASE,
+            authMiddleware,
+            neededRole(UserRole.ADMIN),
+            asyncHandlerFunction(this._adminPropertyVerificationController.listAllProperties),
         );
         this.router.patch(
             ADMIN_ROUTES.PROPERTY_VERIFICATION.VERIFY,

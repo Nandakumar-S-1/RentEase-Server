@@ -69,8 +69,7 @@ export class ProfileController {
             userId,
             role: req.user!.role,
             avatarUrl,
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } as any);
+        });
 
         return ResponseHandler.success(res, result, Profile_Response_Messages.AVATAR_UPLOADED);
     };

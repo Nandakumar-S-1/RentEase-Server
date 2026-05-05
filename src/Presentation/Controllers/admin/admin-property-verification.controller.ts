@@ -3,7 +3,8 @@ import { TokenTypes } from '@shared/types/tokens';
 import { inject, injectable } from 'tsyringe';
 import { Request, Response } from 'express';
 import { IVerifyPropertyUseCase } from '@application/interfaces/property/property.usecase.interface';
-import { Admin_Response_Messages } from '@shared/types/messages/Response.messages';
+import { Admin_Response_Messages, Property_Response_Messages } from '@shared/types/messages/Response.messages';
+import { PropertyStatus } from '@shared/enums/property-type-status.enum';
 
 @injectable()
 export class AdminPropertyVerificationController {
@@ -19,7 +20,20 @@ export class AdminPropertyVerificationController {
         const result = await this._verifyProperty.getPendingProperties(page, limit);
         return res.status(Http_StatusCodes.OK).json({
             success: true,
-            message: 'Pending properties fetched successfully',
+            message: Property_Response_Messages.FETCHED,
+            data: result,
+        });
+    };
+
+    listAllProperties = async (req: Request, res: Response): Promise<Response> => {
+        const page = parseInt(req.query.page as string) || 1;
+        const limit = parseInt(req.query.limit as string) || 10;
+        const status = (req.query.status as PropertyStatus) || PropertyStatus.PENDING_APPROVAL;
+
+        const result = await this._verifyProperty.getAllProperties(status, page, limit);
+        return res.status(Http_StatusCodes.OK).json({
+            success: true,
+            message: Property_Response_Messages.FETCHED,
             data: result,
         });
     };
@@ -32,7 +46,7 @@ export class AdminPropertyVerificationController {
 
         return res.status(Http_StatusCodes.OK).json({
             success: true,
-            message: 'Property approved successfully',
+            message: Property_Response_Messages.APPROVED,
         });
     };
 
@@ -46,12 +60,18 @@ export class AdminPropertyVerificationController {
                 message: Admin_Response_Messages.REJECTION_REASON_REQUIRED,
             });
         }
+        if (rejectionReason.trim().length < 10) {
+            return res.status(Http_StatusCodes.BAD_REQUEST).json({
+                success: false,
+                message: Admin_Response_Messages.REJECTION_REASON_TOO_SHORT,
+            });
+        }
 
         await this._verifyProperty.rejectProperty(propertyId, rejectionReason);
 
         return res.status(Http_StatusCodes.OK).json({
             success: true,
-            message: 'Property rejected successfully',
+            message: Property_Response_Messages.REJECTED,
         });
     };
 }

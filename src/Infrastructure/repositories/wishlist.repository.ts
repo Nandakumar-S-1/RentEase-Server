@@ -9,17 +9,29 @@ import { injectable } from 'tsyringe';
 @injectable()
 export class WishlistRepository implements IWishlistRepository {
     async add(userId: string, propertyId: string): Promise<void> {
-        await prisma.wishlist.create({
-            data: { userId, propertyId },
-        });
+        await prisma.$transaction([
+            prisma.wishlist.create({
+                data: { userId, propertyId },
+            }),
+            prisma.property.update({
+                where: { id: propertyId },
+                data: { wishlistCount: { increment: 1 } },
+            }),
+        ]);
     }
 
     async remove(userId: string, propertyId: string): Promise<void> {
-        await prisma.wishlist.delete({
-            where: {
-                userId_propertyId: { userId, propertyId },
-            },
-        });
+        await prisma.$transaction([
+            prisma.wishlist.delete({
+                where: {
+                    userId_propertyId: { userId, propertyId },
+                },
+            }),
+            prisma.property.update({
+                where: { id: propertyId },
+                data: { wishlistCount: { decrement: 1 } },
+            }),
+        ]);
     }
 
     async findByUserId(userId: string): Promise<PropertyTypeData[]> {

@@ -8,7 +8,7 @@ import { asyncHandlerFunction } from '@presentation/utils/async-handler';
 import { PROPERTY_ROUTES } from '@shared/constants/routes';
 
 import { validationRequestMiddleware } from '@presentation/middlewares/validation.middleware';
-import { createPropertySchema } from '@application/validators/property.validators';
+import { createPropertySchema, propertyFilterSchema } from '@application/validators/property.validators';
 
 @injectable()
 export class PropertyRoutes extends BaseRoute {
@@ -28,13 +28,13 @@ export class PropertyRoutes extends BaseRoute {
             PROPERTY_ROUTES.CREATE,
             authMiddleware,
             neededRole(UserRole.OWNER),
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            validationRequestMiddleware(createPropertySchema as any),
+            validationRequestMiddleware(createPropertySchema),
             asyncHandlerFunction(this._controller.createProperty.bind(this._controller)),
         );
 
         this.router.get(
             PROPERTY_ROUTES.LIST,
+            validationRequestMiddleware(propertyFilterSchema, 'query'),
             asyncHandlerFunction(this._controller.getAllProperties.bind(this._controller)),
         );
 
@@ -51,7 +51,7 @@ export class PropertyRoutes extends BaseRoute {
         );
 
         this.router.put(
-            '/:id',
+            PROPERTY_ROUTES.UPDATE,
             authMiddleware,
             neededRole(UserRole.OWNER),
             asyncHandlerFunction(this._controller.updateProperty.bind(this._controller)),
@@ -72,7 +72,7 @@ export class PropertyRoutes extends BaseRoute {
         );
 
         this.router.delete(
-            '/:id',
+            PROPERTY_ROUTES.DELETE,
             authMiddleware,
             neededRole(UserRole.OWNER),
             asyncHandlerFunction(this._controller.deleteProperty.bind(this._controller)),

@@ -17,12 +17,16 @@ export class PropertyDetailsEntity {
         // land attributes
         private _landType: string | null,
         private _isCornerPlot: boolean | null,
+        private _roadWidthFeet: number | null,
 
         // shop attributes
         private _shopType: string | null,
         private _hasParkingArea: boolean | null,
 
         private _preferredTenantType: string[] | null,
+        private _petsAllowed: boolean | null,
+        private _smokingAllowed: boolean | null,
+        private _maximumOccupants: number | null,
         private _amenities: string[],
 
         private readonly _createdAt: Date,
@@ -42,9 +46,13 @@ export class PropertyDetailsEntity {
             data.furnishingStatus ?? null,
             data.landType ?? null,
             data.isCornerPlot ?? null,
+            data.roadWidthFeet ?? null,
             data.shopType ?? null,
             data.hasParking ?? null,
             data.preferredTenantType ?? null,
+            data.petsAllowed ?? false,
+            data.smokingAllowed ?? false,
+            data.maximumOccupants ?? null,
             data.amenities ?? [],
             data.createdAt ?? new Date(),
             data.updatedAt ?? new Date(),
@@ -84,6 +92,9 @@ export class PropertyDetailsEntity {
     get isCornerPlot() {
         return this._isCornerPlot;
     }
+    get roadWidthFeet() {
+        return this._roadWidthFeet;
+    }
     get shopType() {
         return this._shopType;
     }
@@ -92,6 +103,15 @@ export class PropertyDetailsEntity {
     }
     get preferredTenantType() {
         return this._preferredTenantType;
+    }
+    get petsAllowed() {
+        return this._petsAllowed;
+    }
+    get smokingAllowed() {
+        return this._smokingAllowed;
+    }
+    get maximumOccupants() {
+        return this._maximumOccupants;
     }
     get amenities() {
         return this._amenities;
@@ -113,10 +133,14 @@ export class PropertyDetailsEntity {
         if (data.furnishingStatus !== undefined) this._furnishingStatus = data.furnishingStatus;
         if (data.landType !== undefined) this._landType = data.landType;
         if (data.isCornerPlot !== undefined) this._isCornerPlot = data.isCornerPlot;
+        if (data.roadWidthFeet !== undefined) this._roadWidthFeet = data.roadWidthFeet;
         if (data.shopType !== undefined) this._shopType = data.shopType;
         if (data.hasParking !== undefined) this._hasParkingArea = data.hasParking;
         if (data.preferredTenantType !== undefined)
             this._preferredTenantType = data.preferredTenantType;
+        if (data.petsAllowed !== undefined) this._petsAllowed = data.petsAllowed;
+        if (data.smokingAllowed !== undefined) this._smokingAllowed = data.smokingAllowed;
+        if (data.maximumOccupants !== undefined) this._maximumOccupants = data.maximumOccupants;
         if (data.amenities !== undefined) this._amenities = data.amenities;
 
         this._updatedAt = new Date();

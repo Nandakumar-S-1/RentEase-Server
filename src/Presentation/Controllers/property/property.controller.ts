@@ -48,13 +48,34 @@ export class PropertyController {
 
     getAllProperties = async (req: Request, res: Response): Promise<Response> => {
         logger.info('fetching all properties for search');
-        const { status, page = 1, limit = 10 } = req.query;
+        const { 
+            status, 
+            page = 1, 
+            limit = 10,
+            query,
+            city,
+            propertyType,
+            minRent,
+            maxRent,
+            minArea,
+            maxArea,
+            bhk
+        } = req.query;
+
         const queryStatus = req.user ? (status as PropertyStatus) : PropertyStatus.ACTIVE;
 
         const result = await this._getAllPropertiesUseCase.execute({
             status: queryStatus,
             page: Number(page),
             limit: Number(limit),
+            query: query as string,
+            city: city as string,
+            propertyType: propertyType as string,
+            minRent: minRent ? Number(minRent) : undefined,
+            maxRent: maxRent ? Number(maxRent) : undefined,
+            minArea: minArea ? Number(minArea) : undefined,
+            maxArea: maxArea ? Number(maxArea) : undefined,
+            bhk: bhk ? Number(bhk) : undefined,
         });
 
         return ResponseHandler.success(res, result, Property_Response_Messages.FETCHED);
@@ -138,7 +159,7 @@ export class PropertyController {
         logger.info(`relisting property: ${req.params.id}`);
         const id = req.params.id as string;
         await this._relistPropertyUseCase.execute(id);
-        return ResponseHandler.success(res, null, 'Property relisted successfully');
+        return ResponseHandler.success(res, null, Property_Response_Messages.RELISTED);
     };
 
     uploadPropertyPhotoUrls = async (req: Request, res: Response): Promise<Response> => {
@@ -200,7 +221,7 @@ export class PropertyController {
                     logger.warn(`Property action blocked: Unsafe image detected at ${url}`);
                     return ResponseHandler.error(
                         res,
-                        `One or more images failed safety moderation: ${moderation.reason}`,
+                        `${Property_Response_Messages.MODERATION_FAILED}: ${moderation.reason}`,
                         Http_StatusCodes.BAD_REQUEST,
                     );
                 }
@@ -208,7 +229,7 @@ export class PropertyController {
                 logger.error(`Failed to moderate image at ${url}:`, error);
                 return ResponseHandler.error(
                     res,
-                    'Failed to perform safety check on property images.',
+                    Property_Response_Messages.SAFETY_CHECK_FAILED,
                     Http_StatusCodes.INTERNAL_SERVER_ERROR,
                 );
             }

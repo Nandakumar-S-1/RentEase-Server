@@ -36,3 +36,16 @@ export const createPropertySchema = z.object({
     nearbyLandmarks: z.string().max(200).optional().nullable(),
     primaryPhotoIndex: z.number().int().min(0).default(0),
 });
+
+export const propertyFilterSchema = z.object({
+    query: z.string().trim().max(100).optional().nullable(),
+    city: z.string().trim().max(100).optional().nullable(),
+    propertyType: z.string().optional().nullable(),
+    minRent: z.preprocess((v) => (v ? Number(v) : undefined), z.number().positive().optional()),
+    maxRent: z.preprocess((v) => (v ? Number(v) : undefined), z.number().positive().optional()),
+    minArea: z.preprocess((v) => (v ? Number(v) : undefined), z.number().positive().optional()),
+    maxArea: z.preprocess((v) => (v ? Number(v) : undefined), z.number().positive().optional()),
+    bhk: z.preprocess((v) => (v ? Number(v) : undefined), z.number().int().min(1).max(20).optional()),
+    page: z.preprocess((v) => (v ? Number(v) : 1), z.number().int().min(1).optional()),
+    limit: z.preprocess((v) => (v ? Number(v) : 10), z.number().int().min(1).max(100).optional()),
+});

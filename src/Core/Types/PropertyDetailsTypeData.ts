@@ -19,7 +19,6 @@ export type PropertyDetailsTypeData = {
     // shop
     shopType?: string | null; // retail, office, warehouse
     hasParking?: boolean | null;
-    parkingSpaces?: number | null;
 
     preferredTenantType?: string[] | null;
     petsAllowed?: boolean | null;

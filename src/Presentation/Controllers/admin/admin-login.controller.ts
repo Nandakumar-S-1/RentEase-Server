@@ -9,6 +9,7 @@ import { ApiResponse } from 'application/dtos/api-response.dto';
 import { UserRole } from 'shared/enums/user-role.enum';
 import { LoginResponseDTO } from 'application/dtos/authentication/response/login-response.dto';
 import { setRefreshTokenCookie } from 'shared/utils/cookieHelper';
+import { Auth_Response_Messages, Admin_Response_Messages } from 'shared/types/messages/Response.messages';
 
 @injectable()
 export class AdminLoginController {
@@ -31,13 +32,13 @@ export class AdminLoginController {
         if (result.user.role !== UserRole.ADMIN) {
             return res.status(Http_StatusCodes.FORBIDDEN).json({
                 success: false,
-                message: 'Access denied. Only administrators can log in here.',
+                message: Auth_Response_Messages.ACCESS_DENIED_ADMIN,
             });
         }
 
         const response: ApiResponse<LoginResponseDTO> = {
             success: true,
-            message: 'Admin login successful',
+            message: Admin_Response_Messages.LOGIN_SUCCESS,
             data: {
                 user: {
                     id: result.user.id,
@@ -68,13 +69,13 @@ export class AdminLoginController {
         if (result.user.role !== UserRole.ADMIN) {
             return res.status(Http_StatusCodes.FORBIDDEN).json({
                 success: false,
-                message: 'Access denied. Only administrators can log in here.',
+                message: Auth_Response_Messages.ACCESS_DENIED_ADMIN,
             });
         }
 
         const response: ApiResponse<LoginResponseDTO> = {
             success: true,
-            message: 'Admin login successful',
+            message: Admin_Response_Messages.LOGIN_SUCCESS,
             data: {
                 user: {
                     id: result.user.id,

@@ -59,9 +59,10 @@ export class ModerationService implements IModerationService {
 
             logger.info('AI moderation check passed (SAFE)');
             return { status: 'SAFE' };
-        } catch (error: any) {
+        } catch (error: unknown) {
+            const err = error as Error;
             logger.error(
-                error.message || 'Google Cloud Vision Error',
+                err.message || 'Google Cloud Vision Error',
                 'Moderation check failed - bypassing for development',
             );
             // If the service is unavailable or billing is disabled, we return SAFE instead of failing completely in dev

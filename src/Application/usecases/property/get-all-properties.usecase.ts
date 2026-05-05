@@ -16,12 +16,12 @@ export class GetAllPropertiesUseCase implements IGetAllPropertiesUseCase {
     ) {}
 
     async execute(dto: GetAllPropertiesDTO): Promise<PaginatedPropertyResponse> {
-        const { status, page, limit } = dto;
+        const { status, page, limit, ...filters } = dto;
         const skip = (page - 1) * limit;
 
         const [properties, total] = await Promise.all([
-            this._propertyRepository.findAll(status, skip, limit),
-            this._propertyRepository.countAll(status),
+            this._propertyRepository.findAll(status, skip, limit, filters),
+            this._propertyRepository.countAll(status, filters),
         ]);
 
         return {
