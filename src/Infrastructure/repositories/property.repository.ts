@@ -11,14 +11,15 @@ import { injectable } from 'tsyringe';
 export class PropertyRepository implements IPropertyRepository {
     async create(entity: PropertyEntity): Promise<PropertyEntity> {
         const data = PropertyPersistenceMapper.toCreatePersistence(entity);
-        
-        const result = await prisma.property.create({
 
+        const result = await prisma.property.create({
             data,
             include: { details: true },
         });
 
-        return PropertyPersistenceMapper.toEntity(result as Property & { details: PropertyDetails | null });
+        return PropertyPersistenceMapper.toEntity(
+            result as Property & { details: PropertyDetails | null },
+        );
     }
     async findById(id: string): Promise<PropertyEntity | null> {
         const requiredProperty = await prisma.property.findUnique({
@@ -48,7 +49,9 @@ export class PropertyRepository implements IPropertyRepository {
             },
             include: { details: true },
         });
-        return ownersProperty.map((p) => PropertyPersistenceMapper.toEntity(p as Property & { details: PropertyDetails | null }));
+        return ownersProperty.map((p) =>
+            PropertyPersistenceMapper.toEntity(p as Property & { details: PropertyDetails | null }),
+        );
     }
 
     async countByOwnerId(ownerId: string, status?: string): Promise<number> {
@@ -71,7 +74,9 @@ export class PropertyRepository implements IPropertyRepository {
             },
             include: { details: true },
         });
-        return pendingProperties.map((p) => PropertyPersistenceMapper.toEntity(p as Property & { details: PropertyDetails | null }));
+        return pendingProperties.map((p) =>
+            PropertyPersistenceMapper.toEntity(p as Property & { details: PropertyDetails | null }),
+        );
     }
     async update(entity: PropertyEntity): Promise<PropertyEntity> {
         const data = PropertyPersistenceMapper.toUpdatePersistence(entity);
@@ -83,7 +88,9 @@ export class PropertyRepository implements IPropertyRepository {
             data,
             include: { details: true },
         });
-        return PropertyPersistenceMapper.toEntity(updatedResult as Property & { details: PropertyDetails | null });
+        return PropertyPersistenceMapper.toEntity(
+            updatedResult as Property & { details: PropertyDetails | null },
+        );
     }
     async unlist(id: string): Promise<void> {
         const property = await this.findById(id);
@@ -103,7 +110,7 @@ export class PropertyRepository implements IPropertyRepository {
         property.relist();
         await this.update(property);
     }
-    
+
     async incrementViews(id: string): Promise<void> {
         await prisma.property.update({
             where: { id },
@@ -111,7 +118,12 @@ export class PropertyRepository implements IPropertyRepository {
         });
     }
 
-    async findAll(status?: string, skip?: number, take?: number, filters?: Partial<GetAllPropertiesDTO>): Promise<PropertyEntity[]> {
+    async findAll(
+        status?: string,
+        skip?: number,
+        take?: number,
+        filters?: Partial<GetAllPropertiesDTO>,
+    ): Promise<PropertyEntity[]> {
         const where = this._buildWhereClause(status, filters);
         const properties = await prisma.property.findMany({
             where,
@@ -122,7 +134,9 @@ export class PropertyRepository implements IPropertyRepository {
             },
             include: { details: true },
         });
-        return properties.map((p) => PropertyPersistenceMapper.toEntity(p as Property & { details: PropertyDetails | null }));
+        return properties.map((p) =>
+            PropertyPersistenceMapper.toEntity(p as Property & { details: PropertyDetails | null }),
+        );
     }
 
     async countAll(status?: string, filters?: Partial<GetAllPropertiesDTO>): Promise<number> {

@@ -1,6 +1,6 @@
 import { UserRole as PrismaUSerRole } from '@prisma/client';
 import { UserRole } from 'shared/enums/user-role.enum';
-import { UserEntity } from "../../core/entities/user.entity";
+import { UserEntity } from '../../core/entities/user.entity';
 
 //Database=> Domain(it actually convert database records into domain entities) // the database might have different names compared to domain.
 //so we use this mapper to convert database records back to domain entities. database to entity used because db not equalto domains shape

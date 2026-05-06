@@ -8,7 +8,10 @@ import { asyncHandlerFunction } from '@presentation/utils/async-handler';
 import { PROPERTY_ROUTES } from '@shared/constants/routes';
 
 import { validationRequestMiddleware } from '@presentation/middlewares/validation.middleware';
-import { createPropertySchema, propertyFilterSchema } from '@application/validators/property.validators';
+import {
+    createPropertySchema,
+    propertyFilterSchema,
+} from '@application/validators/property.validators';
 
 @injectable()
 export class PropertyRoutes extends BaseRoute {

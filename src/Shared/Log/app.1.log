@@ -1791,3 +1791,151 @@
 {"level":30,"time":1777992109131,"pid":37332,"hostname":"nandu","value":"hello","_args":["Redis Test Value"]}
 {"level":30,"time":1777992109178,"pid":37332,"hostname":"nandu","msg":"successfully connected to db"}
 {"level":30,"time":1777992111198,"pid":37332,"hostname":"nandu","msg":"🚀 Server running on port http://localhost:3000"}
+{"level":40,"time":1777992623894,"pid":37332,"hostname":"nandu","msg":"access token expired/invalid--------------------------"}
+{"level":40,"time":1777992623903,"pid":37332,"hostname":"nandu","msg":"access token expired/invalid--------------------------"}
+{"level":40,"time":1777992623906,"pid":37332,"hostname":"nandu","msg":"access token expired/invalid--------------------------"}
+{"level":30,"time":1777992623999,"pid":37332,"hostname":"nandu","msg":"refresh token requested eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjMjU4YzQyNi01NTlhLTQ3MWItYWRlMC05ZDU5ZDI3ZmJiMzEiLCJlbWFpbCI6InVzZXJAZ21haWwuY29tIiwicm9sZSI6IlRFTkFOVCIsImlhdCI6MTc3Nzk4NzE1NywiZXhwIjoxNzc4ODUxMTU3fQ.q3Oqx5I6n9fK_34vD5y9xtK-GQurBgptVigxXaHw8Wg"}
+{"level":30,"time":1777992623999,"pid":37332,"hostname":"nandu","msg":"refresh token usecase started----"}
+{"level":30,"time":1777992624093,"pid":37332,"hostname":"nandu","msg":"refresh token requested eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjMjU4YzQyNi01NTlhLTQ3MWItYWRlMC05ZDU5ZDI3ZmJiMzEiLCJlbWFpbCI6InVzZXJAZ21haWwuY29tIiwicm9sZSI6IlRFTkFOVCIsImlhdCI6MTc3Nzk4NzE1NywiZXhwIjoxNzc4ODUxMTU3fQ.q3Oqx5I6n9fK_34vD5y9xtK-GQurBgptVigxXaHw8Wg"}
+{"level":30,"time":1777992624093,"pid":37332,"hostname":"nandu","msg":"refresh token usecase started----"}
+{"level":30,"time":1777992624100,"pid":37332,"hostname":"nandu","msg":"refresh token requested eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjMjU4YzQyNi01NTlhLTQ3MWItYWRlMC05ZDU5ZDI3ZmJiMzEiLCJlbWFpbCI6InVzZXJAZ21haWwuY29tIiwicm9sZSI6IlRFTkFOVCIsImlhdCI6MTc3Nzk4NzE1NywiZXhwIjoxNzc4ODUxMTU3fQ.q3Oqx5I6n9fK_34vD5y9xtK-GQurBgptVigxXaHw8Wg"}
+{"level":30,"time":1777992624100,"pid":37332,"hostname":"nandu","msg":"refresh token usecase started----"}
+{"level":30,"time":1777992624173,"pid":37332,"hostname":"nandu","msg":"access token for user id:c258c426-559a-471b-ade0-9d59d27fbb31"}
+{"level":30,"time":1777992624174,"pid":37332,"hostname":"nandu","msg":"refreshtoken for c258c426-559a-471b-ade0-9d59d27fbb31 created"}
+{"level":30,"time":1777992624174,"pid":37332,"hostname":"nandu","msg":"New Pair of tokens has been issued for the user"}
+{"level":30,"time":1777992624176,"pid":37332,"hostname":"nandu","msg":"access token for user id:c258c426-559a-471b-ade0-9d59d27fbb31"}
+{"level":30,"time":1777992624177,"pid":37332,"hostname":"nandu","msg":"refreshtoken for c258c426-559a-471b-ade0-9d59d27fbb31 created"}
+{"level":30,"time":1777992624177,"pid":37332,"hostname":"nandu","msg":"New Pair of tokens has been issued for the user"}
+{"level":30,"time":1777992624179,"pid":37332,"hostname":"nandu","msg":"access token for user id:c258c426-559a-471b-ade0-9d59d27fbb31"}
+{"level":30,"time":1777992624180,"pid":37332,"hostname":"nandu","msg":"refreshtoken for c258c426-559a-471b-ade0-9d59d27fbb31 created"}
+{"level":30,"time":1777992624180,"pid":37332,"hostname":"nandu","msg":"New Pair of tokens has been issued for the user"}
+{"level":30,"time":1777992624272,"pid":37332,"hostname":"nandu","msg":"fetching wishlist for user c258c426-559a-471b-ade0-9d59d27fbb31"}
+{"level":30,"time":1777992643893,"pid":37332,"hostname":"nandu","msg":"fetching wishlist for user c258c426-559a-471b-ade0-9d59d27fbb31"}
+{"level":30,"time":1777992711788,"pid":37332,"hostname":"nandu","msg":"refresh token requested eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjMjU4YzQyNi01NTlhLTQ3MWItYWRlMC05ZDU5ZDI3ZmJiMzEiLCJlbWFpbCI6InVzZXJAZ21haWwuY29tIiwicm9sZSI6IlRFTkFOVCIsImlhdCI6MTc3Nzk4NjE0NSwiZXhwIjoxNzc4ODUwMTQ1fQ.9rg80ethT8bqhHnBvbK0NSIo1hixtzCpTqPkZqqmo18"}
+{"level":30,"time":1777992711788,"pid":37332,"hostname":"nandu","msg":"refresh token usecase started----"}
+{"level":30,"time":1777992711791,"pid":37332,"hostname":"nandu","msg":"refresh token requested eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjMjU4YzQyNi01NTlhLTQ3MWItYWRlMC05ZDU5ZDI3ZmJiMzEiLCJlbWFpbCI6InVzZXJAZ21haWwuY29tIiwicm9sZSI6IlRFTkFOVCIsImlhdCI6MTc3Nzk5MjYyNCwiZXhwIjoxNzc4ODU2NjI0fQ.Y84T9Dc9qqQ-xwP4sJzStnl_l_LL46dRrzpPYBY07_0"}
+{"level":30,"time":1777992711791,"pid":37332,"hostname":"nandu","msg":"refresh token usecase started----"}
+{"level":30,"time":1777992711792,"pid":37332,"hostname":"nandu","msg":"refresh token requested eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjMjU4YzQyNi01NTlhLTQ3MWItYWRlMC05ZDU5ZDI3ZmJiMzEiLCJlbWFpbCI6InVzZXJAZ21haWwuY29tIiwicm9sZSI6IlRFTkFOVCIsImlhdCI6MTc3Nzk4NjE0NSwiZXhwIjoxNzc4ODUwMTQ1fQ.9rg80ethT8bqhHnBvbK0NSIo1hixtzCpTqPkZqqmo18"}
+{"level":30,"time":1777992711792,"pid":37332,"hostname":"nandu","msg":"refresh token usecase started----"}
+{"level":30,"time":1777992711794,"pid":37332,"hostname":"nandu","msg":"refresh token requested eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjMjU4YzQyNi01NTlhLTQ3MWItYWRlMC05ZDU5ZDI3ZmJiMzEiLCJlbWFpbCI6InVzZXJAZ21haWwuY29tIiwicm9sZSI6IlRFTkFOVCIsImlhdCI6MTc3Nzk5MjYyNCwiZXhwIjoxNzc4ODU2NjI0fQ.Y84T9Dc9qqQ-xwP4sJzStnl_l_LL46dRrzpPYBY07_0"}
+{"level":30,"time":1777992711794,"pid":37332,"hostname":"nandu","msg":"refresh token usecase started----"}
+{"level":30,"time":1777992711801,"pid":37332,"hostname":"nandu","msg":"refresh token requested eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI5NzI0ZTMzOC1kY2M1LTRiOTktOTI5MC01YjY0ZTNiNzQ0NTAiLCJlbWFpbCI6Im5hbmRha3VtYXJzNTM1MkBnbWFpbC5jb20iLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3Nzc5ODYxNDUsImV4cCI6MTc3ODg1MDE0NX0.l3_5KurgWeKky7NGeks7Eg7bJg9wvP6WBOMrLdZXVt8"}
+{"level":30,"time":1777992711801,"pid":37332,"hostname":"nandu","msg":"refresh token usecase started----"}
+{"level":30,"time":1777992711804,"pid":37332,"hostname":"nandu","msg":"refresh token requested eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI5NzI0ZTMzOC1kY2M1LTRiOTktOTI5MC01YjY0ZTNiNzQ0NTAiLCJlbWFpbCI6Im5hbmRha3VtYXJzNTM1MkBnbWFpbC5jb20iLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3Nzc5ODYxNDUsImV4cCI6MTc3ODg1MDE0NX0.l3_5KurgWeKky7NGeks7Eg7bJg9wvP6WBOMrLdZXVt8"}
+{"level":30,"time":1777992711804,"pid":37332,"hostname":"nandu","msg":"refresh token usecase started----"}
+{"level":30,"time":1777992711830,"pid":37332,"hostname":"nandu","msg":"access token for user id:c258c426-559a-471b-ade0-9d59d27fbb31"}
+{"level":30,"time":1777992711830,"pid":37332,"hostname":"nandu","msg":"refreshtoken for c258c426-559a-471b-ade0-9d59d27fbb31 created"}
+{"level":30,"time":1777992711830,"pid":37332,"hostname":"nandu","msg":"New Pair of tokens has been issued for the user"}
+{"level":30,"time":1777992711836,"pid":37332,"hostname":"nandu","msg":"access token for user id:c258c426-559a-471b-ade0-9d59d27fbb31"}
+{"level":30,"time":1777992711836,"pid":37332,"hostname":"nandu","msg":"refreshtoken for c258c426-559a-471b-ade0-9d59d27fbb31 created"}
+{"level":30,"time":1777992711836,"pid":37332,"hostname":"nandu","msg":"New Pair of tokens has been issued for the user"}
+{"level":30,"time":1777992711839,"pid":37332,"hostname":"nandu","msg":"access token for user id:c258c426-559a-471b-ade0-9d59d27fbb31"}
+{"level":30,"time":1777992711839,"pid":37332,"hostname":"nandu","msg":"refreshtoken for c258c426-559a-471b-ade0-9d59d27fbb31 created"}
+{"level":30,"time":1777992711839,"pid":37332,"hostname":"nandu","msg":"New Pair of tokens has been issued for the user"}
+{"level":40,"time":1777992711841,"pid":37332,"hostname":"nandu","msg":"access token expired/invalid--------------------------"}
+{"level":30,"time":1777992711847,"pid":37332,"hostname":"nandu","msg":"access token for user id:c258c426-559a-471b-ade0-9d59d27fbb31"}
+{"level":30,"time":1777992711847,"pid":37332,"hostname":"nandu","msg":"refreshtoken for c258c426-559a-471b-ade0-9d59d27fbb31 created"}
+{"level":30,"time":1777992711847,"pid":37332,"hostname":"nandu","msg":"New Pair of tokens has been issued for the user"}
+{"level":30,"time":1777992711848,"pid":37332,"hostname":"nandu","msg":"access token for user id:9724e338-dcc5-4b99-9290-5b64e3b74450"}
+{"level":30,"time":1777992711848,"pid":37332,"hostname":"nandu","msg":"refreshtoken for 9724e338-dcc5-4b99-9290-5b64e3b74450 created"}
+{"level":30,"time":1777992711848,"pid":37332,"hostname":"nandu","msg":"New Pair of tokens has been issued for the user"}
+{"level":30,"time":1777992711848,"pid":37332,"hostname":"nandu","msg":"access token for user id:9724e338-dcc5-4b99-9290-5b64e3b74450"}
+{"level":30,"time":1777992711848,"pid":37332,"hostname":"nandu","msg":"refreshtoken for 9724e338-dcc5-4b99-9290-5b64e3b74450 created"}
+{"level":30,"time":1777992711848,"pid":37332,"hostname":"nandu","msg":"New Pair of tokens has been issued for the user"}
+{"level":40,"time":1777992711851,"pid":37332,"hostname":"nandu","msg":"access token expired/invalid--------------------------"}
+{"level":30,"time":1777992711873,"pid":37332,"hostname":"nandu","msg":"refresh token requested eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjMjU4YzQyNi01NTlhLTQ3MWItYWRlMC05ZDU5ZDI3ZmJiMzEiLCJlbWFpbCI6InVzZXJAZ21haWwuY29tIiwicm9sZSI6IlRFTkFOVCIsImlhdCI6MTc3Nzk5MjcxMSwiZXhwIjoxNzc4ODU2NzExfQ.9pQGHoJL4gOausedgI5W0lX_aeoDZtCUQd8pOS32Gtg"}
+{"level":30,"time":1777992711874,"pid":37332,"hostname":"nandu","msg":"refresh token usecase started----"}
+{"level":30,"time":1777992711876,"pid":37332,"hostname":"nandu","msg":"access token for user id:c258c426-559a-471b-ade0-9d59d27fbb31"}
+{"level":30,"time":1777992711876,"pid":37332,"hostname":"nandu","msg":"refreshtoken for c258c426-559a-471b-ade0-9d59d27fbb31 created"}
+{"level":30,"time":1777992711876,"pid":37332,"hostname":"nandu","msg":"New Pair of tokens has been issued for the user"}
+{"level":30,"time":1777992711877,"pid":37332,"hostname":"nandu","msg":"refresh token requested eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjMjU4YzQyNi01NTlhLTQ3MWItYWRlMC05ZDU5ZDI3ZmJiMzEiLCJlbWFpbCI6InVzZXJAZ21haWwuY29tIiwicm9sZSI6IlRFTkFOVCIsImlhdCI6MTc3Nzk5MjcxMSwiZXhwIjoxNzc4ODU2NzExfQ.9pQGHoJL4gOausedgI5W0lX_aeoDZtCUQd8pOS32Gtg"}
+{"level":30,"time":1777992711877,"pid":37332,"hostname":"nandu","msg":"refresh token usecase started----"}
+{"level":30,"time":1777992711879,"pid":37332,"hostname":"nandu","msg":"access token for user id:c258c426-559a-471b-ade0-9d59d27fbb31"}
+{"level":30,"time":1777992711879,"pid":37332,"hostname":"nandu","msg":"refreshtoken for c258c426-559a-471b-ade0-9d59d27fbb31 created"}
+{"level":30,"time":1777992711879,"pid":37332,"hostname":"nandu","msg":"New Pair of tokens has been issued for the user"}
+{"level":30,"time":1777992712772,"pid":37332,"hostname":"nandu","msg":"refresh token requested eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjMjU4YzQyNi01NTlhLTQ3MWItYWRlMC05ZDU5ZDI3ZmJiMzEiLCJlbWFpbCI6InVzZXJAZ21haWwuY29tIiwicm9sZSI6IlRFTkFOVCIsImlhdCI6MTc3Nzk5MjcxMSwiZXhwIjoxNzc4ODU2NzExfQ.9pQGHoJL4gOausedgI5W0lX_aeoDZtCUQd8pOS32Gtg"}
+{"level":30,"time":1777992712772,"pid":37332,"hostname":"nandu","msg":"refresh token usecase started----"}
+{"level":30,"time":1777992712777,"pid":37332,"hostname":"nandu","msg":"refresh token requested eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI5NzI0ZTMzOC1kY2M1LTRiOTktOTI5MC01YjY0ZTNiNzQ0NTAiLCJlbWFpbCI6Im5hbmRha3VtYXJzNTM1MkBnbWFpbC5jb20iLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3Nzc5OTI3MTEsImV4cCI6MTc3ODg1NjcxMX0.XZcL9LUWtXHH8gycI6rxAGche2JumKzVN0nim4b7ZJ4"}
+{"level":30,"time":1777992712777,"pid":37332,"hostname":"nandu","msg":"refresh token usecase started----"}
+{"level":30,"time":1777992712780,"pid":37332,"hostname":"nandu","msg":"access token for user id:c258c426-559a-471b-ade0-9d59d27fbb31"}
+{"level":30,"time":1777992712780,"pid":37332,"hostname":"nandu","msg":"refreshtoken for c258c426-559a-471b-ade0-9d59d27fbb31 created"}
+{"level":30,"time":1777992712780,"pid":37332,"hostname":"nandu","msg":"New Pair of tokens has been issued for the user"}
+{"level":30,"time":1777992712782,"pid":37332,"hostname":"nandu","msg":"refresh token requested eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI5NzI0ZTMzOC1kY2M1LTRiOTktOTI5MC01YjY0ZTNiNzQ0NTAiLCJlbWFpbCI6Im5hbmRha3VtYXJzNTM1MkBnbWFpbC5jb20iLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3Nzc5OTI3MTEsImV4cCI6MTc3ODg1NjcxMX0.XZcL9LUWtXHH8gycI6rxAGche2JumKzVN0nim4b7ZJ4"}
+{"level":30,"time":1777992712782,"pid":37332,"hostname":"nandu","msg":"refresh token usecase started----"}
+{"level":30,"time":1777992712784,"pid":37332,"hostname":"nandu","msg":"access token for user id:9724e338-dcc5-4b99-9290-5b64e3b74450"}
+{"level":30,"time":1777992712784,"pid":37332,"hostname":"nandu","msg":"refreshtoken for 9724e338-dcc5-4b99-9290-5b64e3b74450 created"}
+{"level":30,"time":1777992712784,"pid":37332,"hostname":"nandu","msg":"New Pair of tokens has been issued for the user"}
+{"level":30,"time":1777992712784,"pid":37332,"hostname":"nandu","msg":"access token for user id:9724e338-dcc5-4b99-9290-5b64e3b74450"}
+{"level":30,"time":1777992712784,"pid":37332,"hostname":"nandu","msg":"refreshtoken for 9724e338-dcc5-4b99-9290-5b64e3b74450 created"}
+{"level":30,"time":1777992712784,"pid":37332,"hostname":"nandu","msg":"New Pair of tokens has been issued for the user"}
+{"level":30,"time":1777992712821,"pid":37332,"hostname":"nandu","msg":"refresh token requested eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjMjU4YzQyNi01NTlhLTQ3MWItYWRlMC05ZDU5ZDI3ZmJiMzEiLCJlbWFpbCI6InVzZXJAZ21haWwuY29tIiwicm9sZSI6IlRFTkFOVCIsImlhdCI6MTc3Nzk5MjcxMSwiZXhwIjoxNzc4ODU2NzExfQ.9pQGHoJL4gOausedgI5W0lX_aeoDZtCUQd8pOS32Gtg"}
+{"level":30,"time":1777992712821,"pid":37332,"hostname":"nandu","msg":"refresh token usecase started----"}
+{"level":30,"time":1777992712824,"pid":37332,"hostname":"nandu","msg":"access token for user id:c258c426-559a-471b-ade0-9d59d27fbb31"}
+{"level":30,"time":1777992712824,"pid":37332,"hostname":"nandu","msg":"refreshtoken for c258c426-559a-471b-ade0-9d59d27fbb31 created"}
+{"level":30,"time":1777992712824,"pid":37332,"hostname":"nandu","msg":"New Pair of tokens has been issued for the user"}
+{"level":30,"time":1777992713659,"pid":37332,"hostname":"nandu","msg":"fetching wishlist for user c258c426-559a-471b-ade0-9d59d27fbb31"}
+{"level":30,"time":1777992713676,"pid":37332,"hostname":"nandu","msg":"fetching wishlist for user c258c426-559a-471b-ade0-9d59d27fbb31"}
+{"level":30,"time":1777992714059,"pid":37332,"hostname":"nandu","msg":"refresh token requested eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI5NzI0ZTMzOC1kY2M1LTRiOTktOTI5MC01YjY0ZTNiNzQ0NTAiLCJlbWFpbCI6Im5hbmRha3VtYXJzNTM1MkBnbWFpbC5jb20iLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3Nzc5OTI3MTIsImV4cCI6MTc3ODg1NjcxMn0.XcvKmo6d3crBQOvkUKgO4VAHwJxLCun_WtzpBY1I4ec"}
+{"level":30,"time":1777992714059,"pid":37332,"hostname":"nandu","msg":"refresh token usecase started----"}
+{"level":30,"time":1777992714064,"pid":37332,"hostname":"nandu","msg":"refresh token requested eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI5NzI0ZTMzOC1kY2M1LTRiOTktOTI5MC01YjY0ZTNiNzQ0NTAiLCJlbWFpbCI6Im5hbmRha3VtYXJzNTM1MkBnbWFpbC5jb20iLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3Nzc5OTI3MTIsImV4cCI6MTc3ODg1NjcxMn0.XcvKmo6d3crBQOvkUKgO4VAHwJxLCun_WtzpBY1I4ec"}
+{"level":30,"time":1777992714064,"pid":37332,"hostname":"nandu","msg":"refresh token usecase started----"}
+{"level":30,"time":1777992714065,"pid":37332,"hostname":"nandu","msg":"access token for user id:9724e338-dcc5-4b99-9290-5b64e3b74450"}
+{"level":30,"time":1777992714065,"pid":37332,"hostname":"nandu","msg":"refreshtoken for 9724e338-dcc5-4b99-9290-5b64e3b74450 created"}
+{"level":30,"time":1777992714065,"pid":37332,"hostname":"nandu","msg":"New Pair of tokens has been issued for the user"}
+{"level":30,"time":1777992714066,"pid":37332,"hostname":"nandu","msg":"access token for user id:9724e338-dcc5-4b99-9290-5b64e3b74450"}
+{"level":30,"time":1777992714066,"pid":37332,"hostname":"nandu","msg":"refreshtoken for 9724e338-dcc5-4b99-9290-5b64e3b74450 created"}
+{"level":30,"time":1777992714066,"pid":37332,"hostname":"nandu","msg":"New Pair of tokens has been issued for the user"}
+{"level":30,"time":1777992714309,"pid":37332,"hostname":"nandu","msg":"refresh token requested eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjMjU4YzQyNi01NTlhLTQ3MWItYWRlMC05ZDU5ZDI3ZmJiMzEiLCJlbWFpbCI6InVzZXJAZ21haWwuY29tIiwicm9sZSI6IlRFTkFOVCIsImlhdCI6MTc3Nzk5MjcxMiwiZXhwIjoxNzc4ODU2NzEyfQ.LZVU0JQzJpeYG5LrfeN4BsSbn7e_KarlQ9aeV_yCW2M"}
+{"level":30,"time":1777992714309,"pid":37332,"hostname":"nandu","msg":"refresh token usecase started----"}
+{"level":30,"time":1777992714311,"pid":37332,"hostname":"nandu","msg":"refresh token requested eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjMjU4YzQyNi01NTlhLTQ3MWItYWRlMC05ZDU5ZDI3ZmJiMzEiLCJlbWFpbCI6InVzZXJAZ21haWwuY29tIiwicm9sZSI6IlRFTkFOVCIsImlhdCI6MTc3Nzk5MjcxMiwiZXhwIjoxNzc4ODU2NzEyfQ.LZVU0JQzJpeYG5LrfeN4BsSbn7e_KarlQ9aeV_yCW2M"}
+{"level":30,"time":1777992714311,"pid":37332,"hostname":"nandu","msg":"refresh token usecase started----"}
+{"level":30,"time":1777992714313,"pid":37332,"hostname":"nandu","msg":"access token for user id:c258c426-559a-471b-ade0-9d59d27fbb31"}
+{"level":30,"time":1777992714313,"pid":37332,"hostname":"nandu","msg":"refreshtoken for c258c426-559a-471b-ade0-9d59d27fbb31 created"}
+{"level":30,"time":1777992714313,"pid":37332,"hostname":"nandu","msg":"New Pair of tokens has been issued for the user"}
+{"level":30,"time":1777992714313,"pid":37332,"hostname":"nandu","msg":"access token for user id:c258c426-559a-471b-ade0-9d59d27fbb31"}
+{"level":30,"time":1777992714313,"pid":37332,"hostname":"nandu","msg":"refreshtoken for c258c426-559a-471b-ade0-9d59d27fbb31 created"}
+{"level":30,"time":1777992714313,"pid":37332,"hostname":"nandu","msg":"New Pair of tokens has been issued for the user"}
+{"level":30,"time":1777992714769,"pid":37332,"hostname":"nandu","msg":"refresh token requested eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI5NzI0ZTMzOC1kY2M1LTRiOTktOTI5MC01YjY0ZTNiNzQ0NTAiLCJlbWFpbCI6Im5hbmRha3VtYXJzNTM1MkBnbWFpbC5jb20iLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3Nzc5OTI3MTQsImV4cCI6MTc3ODg1NjcxNH0.Q7TBr5mcH8CFgfPnBguym072jZF01bm0ktzcGFPy5C8"}
+{"level":30,"time":1777992714769,"pid":37332,"hostname":"nandu","msg":"refresh token usecase started----"}
+{"level":30,"time":1777992714771,"pid":37332,"hostname":"nandu","msg":"access token for user id:9724e338-dcc5-4b99-9290-5b64e3b74450"}
+{"level":30,"time":1777992714771,"pid":37332,"hostname":"nandu","msg":"refreshtoken for 9724e338-dcc5-4b99-9290-5b64e3b74450 created"}
+{"level":30,"time":1777992714771,"pid":37332,"hostname":"nandu","msg":"New Pair of tokens has been issued for the user"}
+{"level":30,"time":1777992714786,"pid":37332,"hostname":"nandu","msg":"refresh token requested eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI5NzI0ZTMzOC1kY2M1LTRiOTktOTI5MC01YjY0ZTNiNzQ0NTAiLCJlbWFpbCI6Im5hbmRha3VtYXJzNTM1MkBnbWFpbC5jb20iLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3Nzc5OTI3MTQsImV4cCI6MTc3ODg1NjcxNH0.Q7TBr5mcH8CFgfPnBguym072jZF01bm0ktzcGFPy5C8"}
+{"level":30,"time":1777992714786,"pid":37332,"hostname":"nandu","msg":"refresh token usecase started----"}
+{"level":30,"time":1777992714788,"pid":37332,"hostname":"nandu","msg":"access token for user id:9724e338-dcc5-4b99-9290-5b64e3b74450"}
+{"level":30,"time":1777992714788,"pid":37332,"hostname":"nandu","msg":"refreshtoken for 9724e338-dcc5-4b99-9290-5b64e3b74450 created"}
+{"level":30,"time":1777992714788,"pid":37332,"hostname":"nandu","msg":"New Pair of tokens has been issued for the user"}
+{"level":30,"time":1777992715196,"pid":37332,"hostname":"nandu","msg":"refresh token requested eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjMjU4YzQyNi01NTlhLTQ3MWItYWRlMC05ZDU5ZDI3ZmJiMzEiLCJlbWFpbCI6InVzZXJAZ21haWwuY29tIiwicm9sZSI6IlRFTkFOVCIsImlhdCI6MTc3Nzk5MjcxMiwiZXhwIjoxNzc4ODU2NzEyfQ.LZVU0JQzJpeYG5LrfeN4BsSbn7e_KarlQ9aeV_yCW2M"}
+{"level":30,"time":1777992715196,"pid":37332,"hostname":"nandu","msg":"refresh token usecase started----"}
+{"level":30,"time":1777992715203,"pid":37332,"hostname":"nandu","msg":"access token for user id:c258c426-559a-471b-ade0-9d59d27fbb31"}
+{"level":30,"time":1777992715203,"pid":37332,"hostname":"nandu","msg":"refreshtoken for c258c426-559a-471b-ade0-9d59d27fbb31 created"}
+{"level":30,"time":1777992715203,"pid":37332,"hostname":"nandu","msg":"New Pair of tokens has been issued for the user"}
+{"level":30,"time":1777992715203,"pid":37332,"hostname":"nandu","msg":"fetching wishlist for user c258c426-559a-471b-ade0-9d59d27fbb31"}
+{"level":30,"time":1777992715368,"pid":37332,"hostname":"nandu","msg":"refresh token requested eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI5NzI0ZTMzOC1kY2M1LTRiOTktOTI5MC01YjY0ZTNiNzQ0NTAiLCJlbWFpbCI6Im5hbmRha3VtYXJzNTM1MkBnbWFpbC5jb20iLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3Nzc5OTI3MTQsImV4cCI6MTc3ODg1NjcxNH0.Q7TBr5mcH8CFgfPnBguym072jZF01bm0ktzcGFPy5C8"}
+{"level":30,"time":1777992715368,"pid":37332,"hostname":"nandu","msg":"refresh token usecase started----"}
+{"level":30,"time":1777992715372,"pid":37332,"hostname":"nandu","msg":"refresh token requested eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI5NzI0ZTMzOC1kY2M1LTRiOTktOTI5MC01YjY0ZTNiNzQ0NTAiLCJlbWFpbCI6Im5hbmRha3VtYXJzNTM1MkBnbWFpbC5jb20iLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3Nzc5OTI3MTQsImV4cCI6MTc3ODg1NjcxNH0.Q7TBr5mcH8CFgfPnBguym072jZF01bm0ktzcGFPy5C8"}
+{"level":30,"time":1777992715372,"pid":37332,"hostname":"nandu","msg":"refresh token usecase started----"}
+{"level":30,"time":1777992715374,"pid":37332,"hostname":"nandu","msg":"access token for user id:9724e338-dcc5-4b99-9290-5b64e3b74450"}
+{"level":30,"time":1777992715374,"pid":37332,"hostname":"nandu","msg":"refreshtoken for 9724e338-dcc5-4b99-9290-5b64e3b74450 created"}
+{"level":30,"time":1777992715374,"pid":37332,"hostname":"nandu","msg":"New Pair of tokens has been issued for the user"}
+{"level":30,"time":1777992715374,"pid":37332,"hostname":"nandu","msg":"access token for user id:9724e338-dcc5-4b99-9290-5b64e3b74450"}
+{"level":30,"time":1777992715374,"pid":37332,"hostname":"nandu","msg":"refreshtoken for 9724e338-dcc5-4b99-9290-5b64e3b74450 created"}
+{"level":30,"time":1777992715374,"pid":37332,"hostname":"nandu","msg":"New Pair of tokens has been issued for the user"}
+{"level":30,"time":1777992716348,"pid":37332,"hostname":"nandu","msg":"refresh token requested eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjMjU4YzQyNi01NTlhLTQ3MWItYWRlMC05ZDU5ZDI3ZmJiMzEiLCJlbWFpbCI6InVzZXJAZ21haWwuY29tIiwicm9sZSI6IlRFTkFOVCIsImlhdCI6MTc3Nzk5MjcxNSwiZXhwIjoxNzc4ODU2NzE1fQ.gUSN6-PU0gzNtQg1Nm2mF3XHUM8ytGWoaJKOBgHT1gk"}
+{"level":30,"time":1777992716348,"pid":37332,"hostname":"nandu","msg":"refresh token usecase started----"}
+{"level":30,"time":1777992716350,"pid":37332,"hostname":"nandu","msg":"refresh token requested eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjMjU4YzQyNi01NTlhLTQ3MWItYWRlMC05ZDU5ZDI3ZmJiMzEiLCJlbWFpbCI6InVzZXJAZ21haWwuY29tIiwicm9sZSI6IlRFTkFOVCIsImlhdCI6MTc3Nzk5MjcxNSwiZXhwIjoxNzc4ODU2NzE1fQ.gUSN6-PU0gzNtQg1Nm2mF3XHUM8ytGWoaJKOBgHT1gk"}
+{"level":30,"time":1777992716350,"pid":37332,"hostname":"nandu","msg":"refresh token usecase started----"}
+{"level":30,"time":1777992716353,"pid":37332,"hostname":"nandu","msg":"access token for user id:c258c426-559a-471b-ade0-9d59d27fbb31"}
+{"level":30,"time":1777992716353,"pid":37332,"hostname":"nandu","msg":"refreshtoken for c258c426-559a-471b-ade0-9d59d27fbb31 created"}
+{"level":30,"time":1777992716353,"pid":37332,"hostname":"nandu","msg":"New Pair of tokens has been issued for the user"}
+{"level":30,"time":1777992716354,"pid":37332,"hostname":"nandu","msg":"access token for user id:c258c426-559a-471b-ade0-9d59d27fbb31"}
+{"level":30,"time":1777992716354,"pid":37332,"hostname":"nandu","msg":"refreshtoken for c258c426-559a-471b-ade0-9d59d27fbb31 created"}
+{"level":30,"time":1777992716354,"pid":37332,"hostname":"nandu","msg":"New Pair of tokens has been issued for the user"}
+{"level":30,"time":1777992716792,"pid":37332,"hostname":"nandu","msg":"fetching wishlist for user c258c426-559a-471b-ade0-9d59d27fbb31"}
+{"level":30,"time":1777992716798,"pid":37332,"hostname":"nandu","msg":"fetching wishlist for user c258c426-559a-471b-ade0-9d59d27fbb31"}
+{"level":30,"time":1777992730114,"pid":7728,"hostname":"nandu","msg":"Redis connecting..."}
+{"level":30,"time":1777992730150,"pid":7728,"hostname":"nandu","msg":"Redis ready"}
+{"level":30,"time":1777992730150,"pid":7728,"hostname":"nandu","msg":"Redis connected successfully"}
+{"level":30,"time":1777992730221,"pid":7728,"hostname":"nandu","value":"hello","_args":["Redis Test Value"]}
+{"level":30,"time":1777992730267,"pid":7728,"hostname":"nandu","msg":"successfully connected to db"}
+{"level":30,"time":1777992732221,"pid":7728,"hostname":"nandu","msg":"🚀 Server running on port http://localhost:3000"}

@@ -1,5 +1,8 @@
 import { IServiceProviderUseCase } from '@application/interfaces/property/property.usecase.interface';
-import { CreateServiceProviderDTO, ServiceProviderResponseDTO } from '@application/dtos/property/service-provider.dto';
+import {
+    CreateServiceProviderDTO,
+    ServiceProviderResponseDTO,
+} from '@application/dtos/property/service-provider.dto';
 import { IServiceProviderRepository } from '@core/interfaces/repository/service-provider.repository.interface';
 import { TokenTypes } from '@shared/types/tokens';
 import { inject, injectable } from 'tsyringe';

@@ -2,7 +2,10 @@ import { CreatePropertyResponseDTO } from '@application/dtos/property/res/create
 import { PropertyStatus } from '@shared/enums/property-type-status.enum';
 import { PropertyTypeData } from '@core/types/property.types';
 import { CreatePropertyDTO } from '@application/dtos/property/property.dto';
-import { CreateServiceProviderDTO, ServiceProviderResponseDTO } from '@application/dtos/property/service-provider.dto';
+import {
+    CreateServiceProviderDTO,
+    ServiceProviderResponseDTO,
+} from '@application/dtos/property/service-provider.dto';
 
 export interface ICreatePropertyUseCase {
     execute(dto: CreatePropertyDTO): Promise<CreatePropertyResponseDTO>;
@@ -50,7 +53,11 @@ export interface IGetAllPropertiesUseCase {
 
 export interface IVerifyPropertyUseCase {
     getPendingProperties(page: number, limit: number): Promise<PaginatedPropertyResponse>;
-    getAllProperties(status: PropertyStatus, page: number, limit: number): Promise<PaginatedPropertyResponse>;
+    getAllProperties(
+        status: PropertyStatus,
+        page: number,
+        limit: number,
+    ): Promise<PaginatedPropertyResponse>;
     approveProperty(propertyId: string, adminId: string): Promise<void>;
     rejectProperty(propertyId: string, reason?: string): Promise<void>;
 }

@@ -12,7 +12,6 @@ import { TokenTypes } from 'shared/types/tokens';
 import { inject, injectable } from 'tsyringe';
 import { PhoneAlreadyExistError, UserAlreadyExistError } from 'shared/errors/user-errors';
 
-
 @injectable()
 export class CreateUserUseCase implements ICreateUserUseCase {
     constructor(

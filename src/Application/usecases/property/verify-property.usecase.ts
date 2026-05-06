@@ -14,7 +14,7 @@ export class VerifyPropertyUseCase implements IVerifyPropertyUseCase {
     constructor(
         @inject(TokenTypes.IPropertyRepository)
         private readonly _propertyRepo: IPropertyRepository,
-    ) { }
+    ) {}
 
     async getPendingProperties(page: number, limit: number): Promise<PaginatedPropertyResponse> {
         const skip = (page - 1) * limit;

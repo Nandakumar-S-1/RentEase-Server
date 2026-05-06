@@ -15,14 +15,12 @@ export const clearRefreshTokenCookie = (res: Response): void => {
     res.clearCookie(REFRESH_COOKIE_NAME, { ...base, sameSite: 'lax' });
 };
 
-
 //same site is the one which controls the browser is allowed to send user cooke wiht requst
 //cokie is stored when user login, when user visit malicious website and isrt send a req to users backedn, browser will automatically icnldude the users cookie
 //csrf. so to prevent this same site only sends the cookie in safe situatuois.
 // 'none' cookie willsent everywhere to other sites also.
 //lax = sent for same site req. and also when user clicks a link in my site. but not to orher sites.
 //strict = only snets it if req is from same site
-
 
 export const setRefreshTokenCookie = (res: Response, refreshToken?: string): void => {
     if (!refreshToken) return;

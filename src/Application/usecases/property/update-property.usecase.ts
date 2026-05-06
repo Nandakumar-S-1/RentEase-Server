@@ -27,24 +27,23 @@ export class UpdatePropertyUseCase implements IUpdatePropertyUseCase {
         const updateData: Partial<PropertyTypeData> = {
             ...dto,
             propertyType: dto.propertyType as PropertyType | undefined,
-            ...( (dto.bhk !== undefined || 
-                  dto.bathrooms !== undefined || 
-                  dto.floorNumber !== undefined ||
-                  dto.totalFloors !== undefined ||
-                  dto.propertyAge !== undefined ||
-                  dto.facingDirection !== undefined ||
-                  dto.furnishingStatus !== undefined ||
-                  dto.amenities !== undefined ||
-                  dto.preferredTenantType !== undefined ||
-                  dto.petsAllowed !== undefined ||
-                  dto.smokingAllowed !== undefined ||
-                  dto.maximumOccupants !== undefined ||
-                  dto.landType !== undefined ||
-                  dto.isCornerPlot !== undefined ||
-                  dto.roadWidthFeet !== undefined ||
-                  dto.shopType !== undefined ||
-                  dto.hasParking !== undefined
-                 ) && {
+            ...((dto.bhk !== undefined ||
+                dto.bathrooms !== undefined ||
+                dto.floorNumber !== undefined ||
+                dto.totalFloors !== undefined ||
+                dto.propertyAge !== undefined ||
+                dto.facingDirection !== undefined ||
+                dto.furnishingStatus !== undefined ||
+                dto.amenities !== undefined ||
+                dto.preferredTenantType !== undefined ||
+                dto.petsAllowed !== undefined ||
+                dto.smokingAllowed !== undefined ||
+                dto.maximumOccupants !== undefined ||
+                dto.landType !== undefined ||
+                dto.isCornerPlot !== undefined ||
+                dto.roadWidthFeet !== undefined ||
+                dto.shopType !== undefined ||
+                dto.hasParking !== undefined) && {
                 details: {
                     bhk: dto.bhk,
                     bathrooms: dto.bathrooms,
@@ -63,8 +62,8 @@ export class UpdatePropertyUseCase implements IUpdatePropertyUseCase {
                     roadWidthFeet: dto.roadWidthFeet,
                     shopType: dto.shopType,
                     hasParking: dto.hasParking,
-                } as PropertyDetailsTypeData
-            })
+                } as PropertyDetailsTypeData,
+            }),
         };
 
         property.update(updateData);

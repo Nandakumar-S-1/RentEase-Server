@@ -31,7 +31,7 @@ export class PropertyDetailsEntity {
 
         private readonly _createdAt: Date,
         private _updatedAt: Date,
-    ) { }
+    ) {}
 
     static create(data: PropertyDetailsTypeData): PropertyDetailsEntity {
         return new PropertyDetailsEntity(

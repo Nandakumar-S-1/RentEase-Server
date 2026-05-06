@@ -45,7 +45,9 @@ export class WishlistRepository implements IWishlistRepository {
         });
 
         return results.map((r) => {
-            const propertyEntity = PropertyPersistenceMapper.toEntity(r.property as Property & { details: PropertyDetails | null });
+            const propertyEntity = PropertyPersistenceMapper.toEntity(
+                r.property as Property & { details: PropertyDetails | null },
+            );
             return PropertyResponseMapper.toGeneralResponse(propertyEntity);
         });
     }

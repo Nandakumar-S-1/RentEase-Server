@@ -3,7 +3,10 @@ import { TokenTypes } from '@shared/types/tokens';
 import { inject, injectable } from 'tsyringe';
 import { Request, Response } from 'express';
 import { IVerifyPropertyUseCase } from '@application/interfaces/property/property.usecase.interface';
-import { Admin_Response_Messages, Property_Response_Messages } from '@shared/types/messages/Response.messages';
+import {
+    Admin_Response_Messages,
+    Property_Response_Messages,
+} from '@shared/types/messages/Response.messages';
 import { PropertyStatus } from '@shared/enums/property-type-status.enum';
 
 @injectable()

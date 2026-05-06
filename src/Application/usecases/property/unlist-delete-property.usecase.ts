@@ -15,7 +15,7 @@ export class UnlistPropertyUseCase implements IUnlistPropertyUseCase {
     constructor(
         @inject(TokenTypes.IPropertyRepository)
         private readonly _propertyRepo: IPropertyRepository,
-    ) { }
+    ) {}
 
     async execute(id: string): Promise<void> {
         const property = await this._propertyRepo.findById(id);
@@ -34,7 +34,7 @@ export class DeletePropertyUseCase implements IDeletePropertyUseCase {
     constructor(
         @inject(TokenTypes.IPropertyRepository)
         private readonly _propertyRepo: IPropertyRepository,
-    ) { }
+    ) {}
 
     async execute(id: string): Promise<void> {
         await this._propertyRepo.delete(id);
@@ -46,7 +46,7 @@ export class RelistPropertyUseCase implements IRelistPropertyUseCase {
     constructor(
         @inject(TokenTypes.IPropertyRepository)
         private readonly _propertyRepo: IPropertyRepository,
-    ) { }
+    ) {}
 
     async execute(id: string): Promise<void> {
         const property = await this._propertyRepo.findById(id);

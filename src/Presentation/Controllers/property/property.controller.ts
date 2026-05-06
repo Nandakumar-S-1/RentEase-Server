@@ -48,9 +48,9 @@ export class PropertyController {
 
     getAllProperties = async (req: Request, res: Response): Promise<Response> => {
         logger.info('fetching all properties for search');
-        const { 
-            status, 
-            page = 1, 
+        const {
+            status,
+            page = 1,
             limit = 10,
             query,
             city,
@@ -59,7 +59,7 @@ export class PropertyController {
             maxRent,
             minArea,
             maxArea,
-            bhk
+            bhk,
         } = req.query;
 
         const queryStatus = req.user ? (status as PropertyStatus) : PropertyStatus.ACTIVE;

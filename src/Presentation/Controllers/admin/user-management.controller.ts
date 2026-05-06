@@ -7,7 +7,10 @@ import { inject, injectable } from 'tsyringe';
 import type { IGetAllUsersDTO } from 'application/dtos/admin/response/get-all-users-response.dto';
 
 import { PropertyStatus } from '@shared/enums/property-type-status.enum';
-import { IGetMyPropertiesUseCase, PaginatedPropertyResponse } from 'application/interfaces/property/property.usecase.interface';
+import {
+    IGetMyPropertiesUseCase,
+    PaginatedPropertyResponse,
+} from 'application/interfaces/property/property.usecase.interface';
 
 type GetUsersResponseData = {
     users: IGetAllUsersDTO[];

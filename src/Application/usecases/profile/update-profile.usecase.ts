@@ -21,7 +21,7 @@ export class UpdateProfileUseCase implements IUpdateProfileUseCase {
         private readonly _ownerRepo: IOwnerProfileRepository,
         @inject(TokenTypes.ITenantProfileRepository)
         private readonly _tenantRepo: ITenantProfileRepository,
-    ) { }
+    ) {}
 
     async execute(dto: UpdateProfileDTO) {
         const user = await this._userRepo.findById(dto.userId);
@@ -70,11 +70,15 @@ export class UpdateProfileUseCase implements IUpdateProfileUseCase {
             let tenantProfile = await this._tenantRepo.findByUserId(dto.userId);
             if (!tenantProfile) {
                 logger.info(`Creating missing tenant profile for user ${dto.userId}`);
-                tenantProfile = TenantProfileEntity.create({ id: randomUUID(), userId: dto.userId });
+                tenantProfile = TenantProfileEntity.create({
+                    id: randomUUID(),
+                    userId: dto.userId,
+                });
             }
 
             if (dto.bio !== undefined) tenantProfile.updateBio(dto.bio ?? null);
-            if (dto.occupation !== undefined) tenantProfile.updateOccupation(dto.occupation ?? null);
+            if (dto.occupation !== undefined)
+                tenantProfile.updateOccupation(dto.occupation ?? null);
 
             await this._tenantRepo.save(tenantProfile);
             bio = tenantProfile.bio;

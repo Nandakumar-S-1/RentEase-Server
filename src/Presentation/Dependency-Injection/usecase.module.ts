@@ -40,7 +40,7 @@ import { UpdatePropertyUseCase } from '@application/usecases/property/update-pro
 import {
     UnlistPropertyUseCase,
     DeletePropertyUseCase,
-    RelistPropertyUseCase
+    RelistPropertyUseCase,
 } from '@application/usecases/property/unlist-delete-property.usecase';
 import { ServiceProviderUseCase } from '@application/usecases/property/service-provider.usecase';
 import { WishlistUseCase } from '@application/usecases/property/wishlist.usecase';

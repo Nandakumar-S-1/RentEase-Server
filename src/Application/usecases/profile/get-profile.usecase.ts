@@ -19,7 +19,7 @@ export class GetProfileUseCase implements IGetProfileUseCase {
         private readonly _tenantRepo: ITenantProfileRepository,
         @inject(TokenTypes.IPropertyRepository)
         private readonly _propertyRepo: IPropertyRepository,
-    ) { }
+    ) {}
 
     async execute(userId: string, role: string) {
         const user = await this._userRepo.findById(userId);

@@ -45,7 +45,10 @@ export const propertyFilterSchema = z.object({
     maxRent: z.preprocess((v) => (v ? Number(v) : undefined), z.number().positive().optional()),
     minArea: z.preprocess((v) => (v ? Number(v) : undefined), z.number().positive().optional()),
     maxArea: z.preprocess((v) => (v ? Number(v) : undefined), z.number().positive().optional()),
-    bhk: z.preprocess((v) => (v ? Number(v) : undefined), z.number().int().min(1).max(20).optional()),
+    bhk: z.preprocess(
+        (v) => (v ? Number(v) : undefined),
+        z.number().int().min(1).max(20).optional(),
+    ),
     page: z.preprocess((v) => (v ? Number(v) : 1), z.number().int().min(1).optional()),
     limit: z.preprocess((v) => (v ? Number(v) : 10), z.number().int().min(1).max(100).optional()),
 });
