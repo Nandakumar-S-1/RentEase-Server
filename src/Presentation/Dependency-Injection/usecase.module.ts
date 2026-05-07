@@ -30,7 +30,6 @@ import {
     ICreatePropertyUseCase,
     IGetMyPropertiesUseCase,
     IGetAllPropertiesUseCase,
-    IVerifyPropertyUseCase,
 } from '@application/interfaces/property/property.usecase.interface';
 import { GetMyPropertiesUseCase } from '@application/usecases/property/get-my-properties.usecase';
 import { GetAllPropertiesUseCase } from '@application/usecases/property/get-all-properties.usecase';

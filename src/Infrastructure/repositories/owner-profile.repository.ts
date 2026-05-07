@@ -61,7 +61,7 @@ export class OwnerProfileRepository implements IOwnerProfileRepository {
                 verifiedAt: status == Owner_Verification_Status.VERIFIED ? new Date() : undefined,
             },
         });
-        logger.info(`Owner ${userId} verification status updated to ${status}`);
+        logger.info(`owner ${userId} verification status updated to ${status}`);
         return OwnerProfilePersistenceMapper.toEntity(result);
     }
     async save(entity: OwnerProfileEntity): Promise<OwnerProfileEntity> {

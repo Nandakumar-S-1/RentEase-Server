@@ -1,6 +1,19 @@
 import { z } from 'zod';
 import { PropertyType } from '@shared/enums/property-type-status.enum';
 
+const SERVICE_PROVIDER_TYPES = [
+    'Electrician',
+    'Plumber',
+    'Cleaner',
+    'Painter',
+    'Carpenter',
+    'Pest Control',
+    'AC Service',
+    'Gardener',
+    'Security',
+    'Other',
+] as const;
+
 const title = z
     .string()
     .trim()
@@ -52,3 +65,31 @@ export const propertyFilterSchema = z.object({
     page: z.preprocess((v) => (v ? Number(v) : 1), z.number().int().min(1).optional()),
     limit: z.preprocess((v) => (v ? Number(v) : 10), z.number().int().min(1).max(100).optional()),
 });
+
+export const createServiceProviderSchema = z
+    .object({
+        propertyId: z.string(),
+        providerType: z.enum(SERVICE_PROVIDER_TYPES),
+        providerName: z.string().trim().min(3, 'Name must be at least 3 characters').max(100, 'Name is too long'),
+        phone: z.string().trim().regex(/^\+?[\d\s-]{10,}$/, 'Invalid phone number (minimum 10 digits)'),
+        typicalChargesMin: z.preprocess(
+            (v) => (typeof v === 'string' && v.trim() === '' ? undefined : v),
+            z.coerce.number().nonnegative('Charges cannot be negative').optional(),
+        ),
+        typicalChargesMax: z.preprocess(
+            (v) => (typeof v === 'string' && v.trim() === '' ? undefined : v),
+            z.coerce.number().nonnegative('Charges cannot be negative').optional(),
+        ),
+    })
+    .refine(
+        (data) => {
+            if (data.typicalChargesMin !== undefined && data.typicalChargesMax !== undefined) {
+                return data.typicalChargesMax > data.typicalChargesMin;
+            }
+            return true;
+        },
+        {
+            message: 'Max charge must be greater than min charge',
+            path: ['typicalChargesMax'],
+        },
+    );

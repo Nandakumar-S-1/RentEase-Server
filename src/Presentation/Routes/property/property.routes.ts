@@ -10,7 +10,6 @@ import { PROPERTY_ROUTES } from '@shared/constants/routes';
 import { validationRequestMiddleware } from '@presentation/middlewares/validation.middleware';
 import {
     createPropertySchema,
-    propertyFilterSchema,
 } from '@application/validators/property.validators';
 
 @injectable()
@@ -37,7 +36,6 @@ export class PropertyRoutes extends BaseRoute {
 
         this.router.get(
             PROPERTY_ROUTES.LIST,
-            validationRequestMiddleware(propertyFilterSchema, 'query'),
             asyncHandlerFunction(this._controller.getAllProperties.bind(this._controller)),
         );
 

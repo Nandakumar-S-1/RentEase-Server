@@ -6,6 +6,8 @@ import { neededRole } from '@presentation/middlewares/role.middleware';
 import { UserRole } from '@shared/enums/user-role.enum';
 import { asyncHandlerFunction } from '@presentation/utils/async-handler';
 import { SERVICE_PROVIDER_ROUTES } from '@shared/constants/routes';
+import { validationRequestMiddleware } from '@presentation/middlewares/validation.middleware';
+import { createServiceProviderSchema } from '@application/validators/property.validators';
 
 @injectable()
 export class ServiceProviderRoutes extends BaseRoute {
@@ -19,6 +21,7 @@ export class ServiceProviderRoutes extends BaseRoute {
             SERVICE_PROVIDER_ROUTES.ADD,
             authMiddleware,
             neededRole(UserRole.OWNER),
+            validationRequestMiddleware(createServiceProviderSchema),
             asyncHandlerFunction(this._controller.addProvider.bind(this._controller)),
         );
 
