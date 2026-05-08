@@ -11,8 +11,10 @@ import { TokenTypes } from 'shared/types/tokens';
 import { IJwtService } from '@application/interfaces/services/jwt.service.interface';
 import { UserRole } from 'shared/enums/user-role.enum';
 import { IOwnerProfileRepository } from '@core/interfaces/repository/owner-repository.interface';
+import { ITenantProfileRepository } from '@core/interfaces/repository/tenant-repository.interface';
 import { OwnerProfileEntity } from 'core/entities/owner-profile.entity';
-import { v4 as uuidv4 } from 'uuid';
+import { TenantProfileEntity } from 'core/entities/tenant-profile.entity';
+import { randomUUID } from 'crypto';
 
 @injectable()
 export class VerifyOtpUseCase implements IVerifyOtpUseCase {
@@ -31,6 +33,9 @@ export class VerifyOtpUseCase implements IVerifyOtpUseCase {
 
         @inject(TokenTypes.IOwnerProfileRepository)
         private readonly _ownerRepository: IOwnerProfileRepository,
+
+        @inject(TokenTypes.ITenantProfileRepository)
+        private readonly _tenantRepository: ITenantProfileRepository,
     ) {}
 
     private _validateInputOfOTP(dto: IVerifyOtpRequestDTO): void {
@@ -152,7 +157,11 @@ export class VerifyOtpUseCase implements IVerifyOtpUseCase {
         const newUser = await this._userRepository.create(user);
         if (newUser.role === UserRole.OWNER) {
             await this._ownerRepository.create(
-                OwnerProfileEntity.create({ id: uuidv4(), userId: newUser.id }),
+                OwnerProfileEntity.create({ id: randomUUID(), userId: newUser.id }),
+            );
+        } else if (newUser.role === UserRole.TENANT) {
+            await this._tenantRepository.create(
+                TenantProfileEntity.create({ id: randomUUID(), userId: newUser.id }),
             );
         }
         logger.info(`users email has been verified and saved to database`);

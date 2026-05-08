@@ -48,6 +48,28 @@ export class UserManagementUseCase implements IUserManagement {
         return { users: response, total };
     }
 
+    async getUserById(userId: string): Promise<IGetAllUsersDTO> {
+        logger.info(`fetching user detai: ${userId}`);
+        const user = await this._userRepository.findById(userId);
+
+        if (!user) {
+            throw new Error('User not found');
+        }
+
+        return {
+            id: user.id,
+            email: user.email,
+            fullname: user.fullname,
+            phone: user.phone,
+            role: user.role,
+            isEmailVerified: user.isEmailVerified,
+            isActive: user.isActive,
+            isSuspended: user.isSuspended,
+            avatarUrl: user.avatarUrl,
+            createdAt: user.createdAt || new Date(),
+        };
+    }
+
     async suspendUser(userId: string): Promise<void> {
         logger.info(`Suspending user: ${userId}`);
         const user = await this._userRepository.findById(userId);

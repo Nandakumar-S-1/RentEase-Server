@@ -9,6 +9,7 @@ import { InvalidOtpError } from 'shared/errors/otp-errors';
 import { logger } from 'shared/log/logger';
 import { TokenTypes } from 'shared/types/tokens';
 import { inject, injectable } from 'tsyringe';
+import { Auth_Response_Messages } from 'shared/types/messages/Response.messages';
 
 @injectable()
 export class ResendOtpUseCase implements IResendOtpUseCase {
@@ -78,7 +79,7 @@ export class ResendOtpUseCase implements IResendOtpUseCase {
             throw new Error('failedd to sent the OTP email');
         }
         return {
-            message: `otp has been resent to your email, it will expire in 5 min`,
+            message: Auth_Response_Messages.OTP_RESENT_WITH_EXPIRY,
         };
     }
 }

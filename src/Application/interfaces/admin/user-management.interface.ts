@@ -3,6 +3,7 @@ import { IGetAllUsersDTO } from 'application/dtos/admin/response/get-all-users-r
 
 export interface IUserManagement {
     getUsers(dto: IGetUsersRequestDTO): Promise<{ users: IGetAllUsersDTO[]; total: number }>;
+    getUserById(userId: string): Promise<IGetAllUsersDTO>;
     suspendUser(userId: string): Promise<void>;
     activateUser(userId: string): Promise<void>;
     deactivateUser(userId: string): Promise<void>;

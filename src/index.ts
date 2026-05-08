@@ -1,7 +1,7 @@
 import 'reflect-metadata'; //enable decorator metadata
 import 'dotenv/config';
 
-import 'presentation/dependency-injection/container'; //execute the DI container setup
+import '@presentation/dependency-injection/Container'; //execute the DI container setup
 import { App } from 'infrastructure/config/app';
 
 import { logger } from 'shared/log/logger';

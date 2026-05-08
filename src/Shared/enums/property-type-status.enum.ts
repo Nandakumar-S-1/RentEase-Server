@@ -4,6 +4,7 @@ export enum PropertyStatus {
     RENTED = 'RENTED',
     UNLISTED = 'UNLISTED',
     REJECTED = 'REJECTED',
+    APPROVED = 'APPROVED',
 }
 
 export enum PropertyType {

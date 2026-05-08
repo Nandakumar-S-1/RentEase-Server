@@ -2,7 +2,7 @@ import {
     GetMyPropertiesDTO,
     IGetMyPropertiesUseCase,
     PaginatedPropertyResponse,
-} from '@application/interfaces/profile/property.usecase.interface';
+} from '@application/interfaces/property/property.usecase.interface';
 import { PropertyResponseMapper } from '@application/mappers/property/property-response.mapper';
 import { IPropertyRepository } from '@core/interfaces/repository/property-repository.interface';
 import { logger } from '@shared/log/logger';

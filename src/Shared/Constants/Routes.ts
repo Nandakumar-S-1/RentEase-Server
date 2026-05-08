@@ -20,12 +20,20 @@ export const ADMIN_ROUTES = {
         SUSPEND: '/users/suspend/:id',
         ACTIVATE: '/users/activate/:id',
         DEACTIVATE: '/users/deactivate/:id',
+        DETAILS: '/users/:id',
+        PROPERTIES: '/users/:id/properties',
     },
     OWNER_VERIFICATION: {
         PENDING: '/owners/pending',
         DETAILS: '/owners/:ownerId',
         VERIFY: '/owners/:ownerId/verify',
         REJECT: '/owners/:ownerId/reject',
+    },
+    PROPERTY_VERIFICATION: {
+        BASE: '/properties',
+        PENDING: '/properties/pending',
+        VERIFY: '/properties/:propertyId/verify',
+        REJECT: '/properties/:propertyId/reject',
     },
 } as const;
 
@@ -46,6 +54,8 @@ export const API_PREFIXES = {
     OWNER: '/owner',
     PROFILE: '/profile',
     PROPERTY: '/properties',
+    SERVICE_PROVIDER: '/service-providers',
+    WISHLIST: '/wishlist',
 } as const;
 
 export const PROPERTY_ROUTES = {
@@ -54,5 +64,21 @@ export const PROPERTY_ROUTES = {
     DELETE: '/:id',
     UPLOAD_PHOTOS_URLS: '/photos/upload-urls',
     GET_BY_OWNER: '/owner',
-    LIST: '/properties',
-};
+    GET_BY_ID: '/:id',
+    LIST: '/',
+    UNLIST: '/:id/unlist',
+    RELIST: '/:id/relist',
+} as const;
+
+export const SERVICE_PROVIDER_ROUTES = {
+    ADD: '/',
+    GET_BY_PROPERTY: '/property/:propertyId',
+    TOGGLE_STATUS: '/:id/status',
+    DELETE: '/:id',
+} as const;
+
+export const WISHLIST_ROUTES = {
+    TOGGLE: '/:propertyId',
+    GET_MY: '/',
+    CHECK: '/check/:propertyId',
+} as const;

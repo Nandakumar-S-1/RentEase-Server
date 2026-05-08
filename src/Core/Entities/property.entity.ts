@@ -1,4 +1,5 @@
 import { PropertyTypeData } from '@core/types/property.types';
+import { PropertyDetailsEntity } from '@core/entities/property-details.entity';
 import { PropertyStatus, PropertyType } from '@shared/enums/property-type-status.enum';
 
 export class PropertyEntity {
@@ -8,7 +9,7 @@ export class PropertyEntity {
         private _title: string,
         private _description: string,
         private readonly _propertyType: PropertyType,
-        private _areaSqrt: number | null,
+        private _areaSqft: number | null,
         private _locationDistrict: string,
         private _locationCity: string,
         private _locationPincode: string,
@@ -37,12 +38,20 @@ export class PropertyEntity {
 
         private _approvedBy: string | null,
         private _approvedAt: Date | null,
+        private _rejectionReason: string | null,
 
         private readonly _createdAt: Date,
         private _updatedAt: Date,
+
+        private _details?: PropertyDetailsEntity,
     ) {}
 
     static create(data: PropertyTypeData): PropertyEntity {
+        let detailsEntity: PropertyDetailsEntity | undefined;
+        if (data.details) {
+            detailsEntity = PropertyDetailsEntity.create(data.details);
+        }
+
         return new PropertyEntity(
             data.id,
             data.ownerId,
@@ -78,32 +87,30 @@ export class PropertyEntity {
 
             data.approvedBy ?? null,
             data.approvedAt ?? null,
+            data.rejectionReason ?? null,
 
             data.createdAt ?? new Date(),
             data.updatedAt ?? new Date(),
+
+            detailsEntity,
         );
     }
 
     get id() {
         return this._id;
     }
-
     get ownerId() {
         return this._ownerId;
     }
-
     get status() {
         return this._status;
     }
-
     get photos() {
         return this._photos;
     }
-
     get title() {
         return this._title;
     }
-
     get description() {
         return this._description;
     }
@@ -122,7 +129,7 @@ export class PropertyEntity {
     get fullAddress() {
         return this._fullAddress;
     }
-    get monthleyRent() {
+    get monthlyRent() {
         return this._monthlyRent;
     }
     get depositAmount() {
@@ -137,7 +144,6 @@ export class PropertyEntity {
     get primaryPhotoIndex() {
         return this._primaryPhotoIndex;
     }
-
     get videoToursUrl() {
         return this._videoTourUrl;
     }
@@ -147,40 +153,90 @@ export class PropertyEntity {
     get approvedAt() {
         return this._approvedAt;
     }
+    get rejectionReason() {
+        return this._rejectionReason;
+    }
     get createdAt() {
         return this._createdAt;
     }
     get updatedAt() {
         return this._updatedAt;
     }
+    get areaSqft() {
+        return this._areaSqft;
+    }
+    get viewsCount() {
+        return this._viewsCount;
+    }
+    get wishlistCount() {
+        return this._wishlistCount;
+    }
+    get latitude() {
+        return this._latitude;
+    }
+    get longitude() {
+        return this._longitude;
+    }
+    get nearbyLandmarks() {
+        return this._nearbyLandMarks;
+    }
 
     approve(adminId: string): void {
-        if (this._status !== PropertyStatus.PENDING_APPROVAL) {
-            throw new Error('Property not in approvable state');
-        }
         this._status = PropertyStatus.ACTIVE;
         this._approvedBy = adminId;
         this._approvedAt = new Date();
     }
 
-    reject(): void {
-        if (this._status !== PropertyStatus.PENDING_APPROVAL) {
-            throw new Error('Property not in rejectable state');
-        }
+    reject(reason?: string): void {
         this._status = PropertyStatus.REJECTED;
+        this._rejectionReason = reason || null;
     }
+
     unlist(): void {
         this._status = PropertyStatus.UNLISTED;
     }
+
+    relist(): void {
+        this._status = PropertyStatus.ACTIVE;
+    }
+
     incrementViewsCount(): void {
         this._viewsCount++;
     }
-    updateDetails(title: string, description: string): void {
-        if (!title || !description) {
-            throw new Error('Invalid property details');
+
+    update(data: Partial<PropertyTypeData>): void {
+        if (data.title) this._title = data.title;
+        if (data.description) this._description = data.description;
+        if (data.areaSqft !== undefined) this._areaSqft = data.areaSqft;
+        if (data.locationDistrict) this._locationDistrict = data.locationDistrict;
+        if (data.locationCity) this._locationCity = data.locationCity;
+        if (data.locationPincode) this._locationPincode = data.locationPincode;
+        if (data.fullAddress) this._fullAddress = data.fullAddress;
+        if (data.monthlyRent !== undefined) this._monthlyRent = data.monthlyRent;
+        if (data.depositAmount !== undefined) this._depositAmount = data.depositAmount;
+        if (data.maintenanceCharges !== undefined)
+            this._maintenanceCharges = data.maintenanceCharges;
+        if (data.maintenanceIncluded !== undefined)
+            this._maintenanceIncluded = data.maintenanceIncluded;
+        if (data.photos) this._photos = data.photos;
+        if (data.primaryPhotoIndex !== undefined) this._primaryPhotoIndex = data.primaryPhotoIndex;
+        if (data.nearbyLandmarks !== undefined) this._nearbyLandMarks = data.nearbyLandmarks;
+        if (data.latitude !== undefined) this._latitude = data.latitude;
+        if (data.longitude !== undefined) this._longitude = data.longitude;
+
+        if (data.details && this._details) {
+            this._details.update(data.details);
         }
-        this._title = title;
-        this._description = description;
+
+        this._status = PropertyStatus.PENDING_APPROVAL;
         this._updatedAt = new Date();
+    }
+
+    get details() {
+        return this._details;
+    }
+
+    setDetails(details: PropertyDetailsEntity) {
+        this._details = details;
     }
 }

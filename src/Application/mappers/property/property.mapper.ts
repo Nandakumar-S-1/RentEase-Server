@@ -21,6 +21,36 @@ export class PropertyMapper {
 
             photos: dto.photos ?? [],
             primaryPhotoIndex: dto.primaryPhotoIndex ?? 0,
+
+            areaSqft: dto.areaSqft,
+            latitude: dto.latitude,
+            longitude: dto.longitude,
+            nearbyLandmarks: dto.nearbyLandmarks,
+
+            maintenanceCharges: dto.maintenanceCharges ?? 0,
+            maintenanceIncluded: dto.maintenanceIncluded ?? true,
+
+            details: {
+                id: crypto.randomUUID(),
+                propertyId: '',
+                bhk: dto.bhk ?? undefined,
+                bathrooms: dto.bathrooms ?? undefined,
+                floorNumber: dto.floorNumber ?? undefined,
+                totalFloors: dto.totalFloors ?? undefined,
+                propertyAge: dto.propertyAge ?? undefined,
+                facingDirection: dto.facingDirection ?? undefined,
+                furnishingStatus: dto.furnishingStatus ?? undefined,
+                amenities: dto.amenities ?? [],
+                preferredTenantType: dto.preferredTenantType ?? [],
+                petsAllowed: dto.petsAllowed ?? false,
+                smokingAllowed: dto.smokingAllowed ?? false,
+                maximumOccupants: dto.maximumOccupants ?? undefined,
+                landType: dto.landType ?? undefined,
+                isCornerPlot: dto.isCornerPlot ?? undefined,
+                roadWidthFeet: dto.roadWidthFeet ?? undefined,
+                shopType: dto.shopType ?? undefined,
+                hasParking: dto.hasParking ?? undefined,
+            },
         });
     }
 }

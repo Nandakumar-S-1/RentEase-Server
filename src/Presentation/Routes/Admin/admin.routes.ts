@@ -1,12 +1,13 @@
 import { injectable } from 'tsyringe';
 import { BaseRoute } from '../base/base.route';
-import { asyncHandlerFunction } from 'presentation/Utils/async-handler';
+import { asyncHandlerFunction } from '@presentation/utils/async-handler';
 import { UserManagementController } from 'presentation/controllers/admin/user-management.controller';
 import { AdminLoginController } from 'presentation/controllers/admin/admin-login.controller';
 import { ADMIN_ROUTES } from '@shared/constants/routes';
 import { AdminOwnerVerificationController } from 'presentation/controllers/admin/admin-owner-verification.controller';
-import { authMiddleware } from '@presentation/middlewares/temp';
-import { neededRole } from 'presentation/middlewares/role.middleware';
+import { AdminPropertyVerificationController } from 'presentation/controllers/admin/admin-property-verification.controller';
+import { authMiddleware } from '@presentation/middlewares/auth.middleware';
+import { neededRole } from '@presentation/middlewares/role.middleware';
 import { UserRole } from 'shared/enums/user-role.enum';
 
 @injectable()
@@ -15,6 +16,7 @@ export class AdminRoutes extends BaseRoute {
         private readonly _userManagementController: UserManagementController,
         private readonly _adminLoginController: AdminLoginController,
         private readonly _adminOwnerVerificationController: AdminOwnerVerificationController,
+        private readonly _adminPropertyVerificationController: AdminPropertyVerificationController,
     ) {
         super();
         this.initializeRoutes();
@@ -37,6 +39,24 @@ export class AdminRoutes extends BaseRoute {
             neededRole(UserRole.ADMIN),
             asyncHandlerFunction(
                 this._userManagementController.getAllUsers.bind(this._userManagementController),
+            ),
+        );
+        this.router.get(
+            ADMIN_ROUTES.USERS.DETAILS,
+            authMiddleware,
+            neededRole(UserRole.ADMIN),
+            asyncHandlerFunction(
+                this._userManagementController.getUserById.bind(this._userManagementController),
+            ),
+        );
+        this.router.get(
+            ADMIN_ROUTES.USERS.PROPERTIES,
+            authMiddleware,
+            neededRole(UserRole.ADMIN),
+            asyncHandlerFunction(
+                this._userManagementController.getUserProperties.bind(
+                    this._userManagementController,
+                ),
             ),
         );
         this.router.patch(
@@ -87,6 +107,31 @@ export class AdminRoutes extends BaseRoute {
             authMiddleware,
             neededRole(UserRole.ADMIN),
             asyncHandlerFunction(this._adminOwnerVerificationController.rejectOwner),
+        );
+
+        this.router.get(
+            ADMIN_ROUTES.PROPERTY_VERIFICATION.PENDING,
+            authMiddleware,
+            neededRole(UserRole.ADMIN),
+            asyncHandlerFunction(this._adminPropertyVerificationController.listPendingProperties),
+        );
+        this.router.get(
+            ADMIN_ROUTES.PROPERTY_VERIFICATION.BASE,
+            authMiddleware,
+            neededRole(UserRole.ADMIN),
+            asyncHandlerFunction(this._adminPropertyVerificationController.listAllProperties),
+        );
+        this.router.patch(
+            ADMIN_ROUTES.PROPERTY_VERIFICATION.VERIFY,
+            authMiddleware,
+            neededRole(UserRole.ADMIN),
+            asyncHandlerFunction(this._adminPropertyVerificationController.approveProperty),
+        );
+        this.router.patch(
+            ADMIN_ROUTES.PROPERTY_VERIFICATION.REJECT,
+            authMiddleware,
+            neededRole(UserRole.ADMIN),
+            asyncHandlerFunction(this._adminPropertyVerificationController.rejectProperty),
         );
     }
 }

@@ -4,3 +4,5 @@ node_modules
 .vscode/
 /src/generated/prisma
 /src/infrastructure/config/firebase-key.json
+/src/infrastructure/config/firebase-key-gvapi.json
+/src/shared/log/app.1.log

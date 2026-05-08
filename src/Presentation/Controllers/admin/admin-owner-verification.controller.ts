@@ -31,6 +31,12 @@ export class AdminOwnerVerificationController {
                 message: Admin_Response_Messages.REJECTION_REASON_REQUIRED,
             });
         }
+        if (rejectionReason.trim().length < 10) {
+            return res.status(Http_StatusCodes.BAD_REQUEST).json({
+                success: false,
+                message: Admin_Response_Messages.REJECTION_REASON_TOO_SHORT,
+            });
+        }
         await this._verifyOwner.rejectOwner(ownerId, rejectionReason);
         return res.status(Http_StatusCodes.OK).json({
             success: true,
