@@ -58,6 +58,10 @@ model User {
   properties Property[]
   wishlist   Wishlist[]
 
+  ownedAgreements      Agreement[] @relation("AgreementOwner")
+  tenantAgreements     Agreement[] @relation("AgreementTenant")
+  terminatedAgreements Agreement[] @relation("AgreementTerminatedBy")
+
   @@index([email])
   @@index([phone])
   @@index([role])
@@ -182,6 +186,7 @@ model Property {
   details          PropertyDetails?
   serviceProviders ServiceProvider[]
   wishlist         Wishlist[]
+  agreements       Agreement[]
 
   @@index([ownerId])
   @@index([status])
@@ -245,4 +250,88 @@ model ServiceProvider {
 
   @@index([property_id])
   @@index([provider_type])
+}
+
+// ─── Agreement enums ──────────────────────────────────────────────────────────
+
+enum AgreementStatus {
+  DRAFT
+  PENDING_TENANT_SIGNATURE
+  ACTIVE
+  EXPIRED
+  TERMINATED
+}
+
+enum DepositRefundStatus {
+  PENDING
+  PARTIAL
+  FULL
+  DISPUTED
+}
+
+// ─── Agreement model ──────────────────────────────────────────────────────────
+
+model Agreement {
+  id              String  @id @default(uuid())
+  agreementNumber String  @unique @db.VarChar(50)
+
+  propertyId String
+  property   Property @relation(fields: [propertyId], references: [id])
+
+  ownerId String
+  owner   User   @relation("AgreementOwner", fields: [ownerId], references: [id])
+
+  tenantId String
+  tenant   User   @relation("AgreementTenant", fields: [tenantId], references: [id])
+
+  // Terms
+  startDate           DateTime
+  endDate             DateTime
+  lockInPeriodMonths  Int
+  noticePeriodMonths  Int
+
+  // Financial
+  monthlyRent              Decimal @db.Decimal(10, 2)
+  depositAmount            Decimal @db.Decimal(10, 2)
+  maintenanceCharges       Decimal @default(0) @db.Decimal(8, 2)
+  maintenanceIncluded      Boolean @default(true)
+  lateFeePerDay            Decimal @default(100) @db.Decimal(8, 2)
+  lateFeeGracePeriodDays   Int     @default(3)
+  rentEscalationPercentage Decimal @default(0) @db.Decimal(5, 2)
+
+  // Content
+  termsAndConditions Json?
+  customClauses      String?
+  tenantRemarks      String?
+
+  // Signatures
+  ownerSignatureUrl  String?
+  ownerSignedAt      DateTime?
+  tenantSignatureUrl String?
+  tenantSignedAt     DateTime?
+  agreementPdfUrl    String?
+
+  // Status
+  status            AgreementStatus @default(DRAFT)
+  terminationReason String?
+  terminatedAt      DateTime?
+  terminatedById    String?
+  terminatedBy      User?           @relation("AgreementTerminatedBy", fields: [terminatedById], references: [id])
+
+  // Deposit tracking
+  depositPaid          Boolean             @default(false)
+  depositPaidAt        DateTime?
+  depositRefundStatus  DepositRefundStatus?
+  depositRefundAmount  Decimal?            @db.Decimal(10, 2)
+  depositRefundDate    DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([agreementNumber])
+  @@index([propertyId])
+  @@index([ownerId])
+  @@index([tenantId])
+  @@index([status])
+  @@index([startDate, endDate])
 }
