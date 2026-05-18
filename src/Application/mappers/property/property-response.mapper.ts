@@ -39,6 +39,7 @@ export class PropertyResponseMapper {
             wishlistCount: entity.wishlistCount,
             rejectionReason: entity.rejectionReason,
             approvedAt: entity.approvedAt,
+            owner: entity.owner,
 
             // Flattened details
             bhk: entity.details?.bhk,

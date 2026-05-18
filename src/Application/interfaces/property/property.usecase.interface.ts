@@ -78,9 +78,20 @@ export interface IRelistPropertyUseCase {
     execute(id: string): Promise<void>;
 }
 
+export interface PaginatedServiceProviderResponse {
+    providers: ServiceProviderResponseDTO[];
+    total: number;
+    page: number;
+    limit: number;
+}
+
 export interface IServiceProviderUseCase {
     addProvider(data: CreateServiceProviderDTO): Promise<ServiceProviderResponseDTO>;
-    getProvidersByProperty(propertyId: string): Promise<ServiceProviderResponseDTO[]>;
+    getProvidersByProperty(
+        propertyId: string,
+        page?: number,
+        limit?: number,
+    ): Promise<PaginatedServiceProviderResponse>;
     deleteProvider(id: string): Promise<void>;
     toggleProviderStatus(id: string, isActive: boolean): Promise<void>;
 }

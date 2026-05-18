@@ -1,10 +1,13 @@
 import { PropertyEntity } from '@core/entities/property.entity';
 import { PropertyDetailsEntity } from '@core/entities/property-details.entity';
 import { PropertyTypeData } from '@core/types/property.types';
-import { Property, PropertyDetails, PropertyVerificationStatus } from '@prisma/client';
+import { User, Property, PropertyDetails, PropertyVerificationStatus } from '@prisma/client';
 import { PropertyStatus, PropertyType } from '@shared/enums/property-type-status.enum';
 
-type PrismaPropertyWithDetails = Property & { details?: PropertyDetails | null };
+type PrismaPropertyWithDetails = Property & {
+    details?: PropertyDetails | null;
+    owner?: User | null;
+};
 export class PropertyPersistenceMapper {
     // db to domain
     static toEntity(raw: PrismaPropertyWithDetails): PropertyEntity {
@@ -73,6 +76,13 @@ export class PropertyPersistenceMapper {
                       maximumOccupants: raw.details.maximumOccupants ?? undefined,
                       createdAt: raw.details.createdAt,
                       updatedAt: raw.details.updatedAt,
+                  }
+                : undefined,
+            owner: raw.owner
+                ? {
+                      fullName: raw.owner.fullName,
+                      email: raw.owner.email,
+                      phone: raw.owner.phone,
                   }
                 : undefined,
         };

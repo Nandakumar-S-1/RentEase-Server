@@ -29,7 +29,7 @@ export class VerifyOwnerUseCase implements IVerifyOwnerUseCase {
         if (!ownerProfile) {
             throw new OwnerProfileNotFoundError();
         }
-        ownerProfile.reject(reason); //also domaain method
+        ownerProfile.reject(reason);
         const updated = await this._ownerRepository.updateVerificationStatus(
             ownerId,
             Owner_Verification_Status.REJECTED,

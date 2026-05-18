@@ -15,8 +15,8 @@ import {
     verifyResetOtpSchema,
     googleAuthSchema,
     refreshTokenSchema,
-} from 'application/validators/auth.validators';
-import { authLimiter } from 'presentation/middlewares/rate-limiter';
+} from '@application/validators/auth.validators';
+import { authLimiter } from '@presentation/middlewares/rate-limiter';
 
 @injectable()
 export class UserRoutes extends BaseRoute {

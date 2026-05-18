@@ -48,6 +48,26 @@ export const createPropertySchema = z.object({
     longitude: z.number().optional().nullable(),
     nearbyLandmarks: z.string().max(200).optional().nullable(),
     primaryPhotoIndex: z.number().int().min(0).default(0),
+
+    bhk: z.number().int().positive().optional().nullable(),
+    bathrooms: z.number().int().positive().optional().nullable(),
+    totalFloors: z.number().int().positive().optional().nullable(),
+    maximumOccupants: z.number().int().positive().optional().nullable(),
+    maintenanceCharges: z.number().nonnegative().optional().default(0),
+    roadWidthFeet: z.number().nonnegative().optional().nullable(),
+    floorNumber: z.string().optional().nullable(),
+    propertyAge: z.string().optional().nullable(),
+    facingDirection: z.string().optional().nullable(),
+    furnishingStatus: z.string().optional().nullable(),
+    landType: z.string().optional().nullable(),
+    shopType: z.string().optional().nullable(),
+    isCornerPlot: z.boolean().optional().nullable(),
+    hasParking: z.boolean().optional().nullable(),
+    maintenanceIncluded: z.boolean().optional().default(false),
+    petsAllowed: z.boolean().optional().default(false),
+    smokingAllowed: z.boolean().optional().default(false),
+    amenities: z.array(z.string()).optional(),
+    preferredTenantType: z.array(z.string()).optional(),
 });
 
 export const propertyFilterSchema = z.object({
@@ -70,8 +90,15 @@ export const createServiceProviderSchema = z
     .object({
         propertyId: z.string(),
         providerType: z.enum(SERVICE_PROVIDER_TYPES),
-        providerName: z.string().trim().min(3, 'Name must be at least 3 characters').max(100, 'Name is too long'),
-        phone: z.string().trim().regex(/^\+?[\d\s-]{10,}$/, 'Invalid phone number (minimum 10 digits)'),
+        providerName: z
+            .string()
+            .trim()
+            .min(3, 'Name must be at least 3 characters')
+            .max(100, 'Name is too long'),
+        phone: z
+            .string()
+            .trim()
+            .regex(/^\+?[\d\s-]{10,}$/, 'Invalid phone number (minimum 10 digits)'),
         typicalChargesMin: z.preprocess(
             (v) => (typeof v === 'string' && v.trim() === '' ? undefined : v),
             z.coerce.number().nonnegative('Charges cannot be negative').optional(),

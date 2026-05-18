@@ -24,7 +24,7 @@ export class PropertyRepository implements IPropertyRepository {
     async findById(id: string): Promise<PropertyEntity | null> {
         const requiredProperty = await prisma.property.findUnique({
             where: { id },
-            include: { details: true },
+            include: { details: true, owner: true },
         });
         if (!requiredProperty) {
             return null;
@@ -132,7 +132,7 @@ export class PropertyRepository implements IPropertyRepository {
             orderBy: {
                 createdAt: 'desc',
             },
-            include: { details: true },
+            include: { details: true, owner: true },
         });
         return properties.map((p) =>
             PropertyPersistenceMapper.toEntity(p as Property & { details: PropertyDetails | null }),

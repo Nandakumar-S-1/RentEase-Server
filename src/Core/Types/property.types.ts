@@ -42,4 +42,9 @@ export type PropertyTypeData = {
     updatedAt?: Date | null;
 
     details?: PropertyDetailsTypeData;
+    owner?: {
+        fullName: string;
+        email: string;
+        phone?: string | null;
+    };
 };

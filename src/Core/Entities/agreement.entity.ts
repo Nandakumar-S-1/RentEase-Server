@@ -1,4 +1,8 @@
-import { AgreementTypeData, AgreementStatus, DepositRefundStatus } from '@core/types/agreement.types';
+import {
+    AgreementTypeData,
+    AgreementStatus,
+    DepositRefundStatus,
+} from '@core/types/agreement.types';
 
 export class AgreementEntity {
     private constructor(
@@ -43,8 +47,7 @@ export class AgreementEntity {
 
         private readonly _createdAt: Date,
         private _updatedAt: Date,
-    ) { }
-
+    ) {}
 
     static create(data: AgreementTypeData): AgreementEntity {
         return new AgreementEntity(
@@ -93,7 +96,6 @@ export class AgreementEntity {
         );
     }
 
-
     signOwner(signatureUrl: string): void {
         this._ownerSignatureUrl = signatureUrl;
         this._ownerSignedAt = new Date();
@@ -132,11 +134,7 @@ export class AgreementEntity {
         this._updatedAt = new Date();
     }
 
-    setDepositRefund(
-        status: DepositRefundStatus,
-        amount: number,
-        refundDate: Date,
-    ): void {
+    setDepositRefund(status: DepositRefundStatus, amount: number, refundDate: Date): void {
         this._depositRefundStatus = status;
         this._depositRefundAmount = amount;
         this._depositRefundDate = refundDate;
@@ -148,47 +146,116 @@ export class AgreementEntity {
         this._updatedAt = new Date();
     }
 
+    get id() {
+        return this._id;
+    }
+    get agreementNumber() {
+        return this._agreementNumber;
+    }
+    get propertyId() {
+        return this._propertyId;
+    }
+    get ownerId() {
+        return this._ownerId;
+    }
+    get tenantId() {
+        return this._tenantId;
+    }
 
-    get id() { return this._id; }
-    get agreementNumber() { return this._agreementNumber; }
-    get propertyId() { return this._propertyId; }
-    get ownerId() { return this._ownerId; }
-    get tenantId() { return this._tenantId; }
+    get startDate() {
+        return this._startDate;
+    }
+    get endDate() {
+        return this._endDate;
+    }
+    get lockInPeriodMonths() {
+        return this._lockInPeriodMonths;
+    }
+    get noticePeriodMonths() {
+        return this._noticePeriodMonths;
+    }
 
-    get startDate() { return this._startDate; }
-    get endDate() { return this._endDate; }
-    get lockInPeriodMonths() { return this._lockInPeriodMonths; }
-    get noticePeriodMonths() { return this._noticePeriodMonths; }
+    get monthlyRent() {
+        return this._monthlyRent;
+    }
+    get depositAmount() {
+        return this._depositAmount;
+    }
+    get maintenanceCharges() {
+        return this._maintenanceCharges;
+    }
+    get maintenanceIncluded() {
+        return this._maintenanceIncluded;
+    }
+    get lateFeePerDay() {
+        return this._lateFeePerDay;
+    }
+    get lateFeeGracePeriodDays() {
+        return this._lateFeeGracePeriodDays;
+    }
+    get rentEscalationPercentage() {
+        return this._rentEscalationPercentage;
+    }
 
-    get monthlyRent() { return this._monthlyRent; }
-    get depositAmount() { return this._depositAmount; }
-    get maintenanceCharges() { return this._maintenanceCharges; }
-    get maintenanceIncluded() { return this._maintenanceIncluded; }
-    get lateFeePerDay() { return this._lateFeePerDay; }
-    get lateFeeGracePeriodDays() { return this._lateFeeGracePeriodDays; }
-    get rentEscalationPercentage() { return this._rentEscalationPercentage; }
+    get termsAndConditions() {
+        return this._termsAndConditions;
+    }
+    get customClauses() {
+        return this._customClauses;
+    }
+    get tenantRemarks() {
+        return this._tenantRemarks;
+    }
 
-    get termsAndConditions() { return this._termsAndConditions; }
-    get customClauses() { return this._customClauses; }
-    get tenantRemarks() { return this._tenantRemarks; }
+    get ownerSignatureUrl() {
+        return this._ownerSignatureUrl;
+    }
+    get ownerSignedAt() {
+        return this._ownerSignedAt;
+    }
+    get tenantSignatureUrl() {
+        return this._tenantSignatureUrl;
+    }
+    get tenantSignedAt() {
+        return this._tenantSignedAt;
+    }
+    get agreementPdfUrl() {
+        return this._agreementPdfUrl;
+    }
 
-    get ownerSignatureUrl() { return this._ownerSignatureUrl; }
-    get ownerSignedAt() { return this._ownerSignedAt; }
-    get tenantSignatureUrl() { return this._tenantSignatureUrl; }
-    get tenantSignedAt() { return this._tenantSignedAt; }
-    get agreementPdfUrl() { return this._agreementPdfUrl; }
+    get status() {
+        return this._status;
+    }
+    get terminationReason() {
+        return this._terminationReason;
+    }
+    get terminatedAt() {
+        return this._terminatedAt;
+    }
+    get terminatedById() {
+        return this._terminatedById;
+    }
 
-    get status() { return this._status; }
-    get terminationReason() { return this._terminationReason; }
-    get terminatedAt() { return this._terminatedAt; }
-    get terminatedById() { return this._terminatedById; }
+    get depositPaid() {
+        return this._depositPaid;
+    }
+    get depositPaidAt() {
+        return this._depositPaidAt;
+    }
+    get depositRefundStatus() {
+        return this._depositRefundStatus;
+    }
+    get depositRefundAmount() {
+        return this._depositRefundAmount;
+    }
+    get depositRefundDate() {
+        return this._depositRefundDate;
+    }
 
-    get depositPaid() { return this._depositPaid; }
-    get depositPaidAt() { return this._depositPaidAt; }
-    get depositRefundStatus() { return this._depositRefundStatus; }
-    get depositRefundAmount() { return this._depositRefundAmount; }
-    get depositRefundDate() { return this._depositRefundDate; }
-
-    get createdAt() { return this._createdAt; }
-    get updatedAt() { return this._updatedAt; }
+    get createdAt() {
+        return this._createdAt;
+    }
+    get updatedAt() {
+        return this._updatedAt;
+    }
 }

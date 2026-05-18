@@ -3,6 +3,7 @@ import { inject, injectable } from 'tsyringe';
 import {
     IGetProfileUseCase,
     IUpdateProfileUseCase,
+    IChangePasswordUseCase,
 } from 'application/interfaces/profile/profile.usecase.interface';
 import { Http_StatusCodes } from 'shared/enums/http-status-codes.enum';
 import { TokenTypes } from 'shared/types/tokens';
@@ -19,6 +20,8 @@ export class ProfileController {
         private readonly _getProfile: IGetProfileUseCase,
         @inject(TokenTypes.UpdateProfileUseCase)
         private readonly _updateProfile: IUpdateProfileUseCase,
+        @inject(TokenTypes.ChangePasswordUseCase)
+        private readonly _changePassword: IChangePasswordUseCase,
         @inject(TokenTypes.IModerationService)
         private readonly _moderationService: IModerationService,
     ) {}
@@ -72,5 +75,12 @@ export class ProfileController {
         });
 
         return ResponseHandler.success(res, result, Profile_Response_Messages.AVATAR_UPLOADED);
+    };
+
+    changePassword = async (req: Request, res: Response): Promise<Response> => {
+        const userId = req.user!.id;
+        logger.info(`Changing password for user: ${userId}`);
+        await this._changePassword.execute(userId, req.body);
+        return ResponseHandler.success(res, null, 'Password changed successfully');
     };
 }

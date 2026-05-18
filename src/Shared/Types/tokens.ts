@@ -40,4 +40,5 @@ export const TokenTypes = {
     IS3Service: 'IS3Service',
     IModerationService: 'IModerationService',
     IRelistPropertyUseCase: 'IRelistPropertyUseCase',
+    ChangePasswordUseCase: 'ChangePasswordUseCase',
 };

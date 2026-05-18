@@ -46,6 +46,7 @@ export const PROFILE_ROUTES = {
     GET: '/',
     UPDATE: '/',
     AVATAR: '/avatar',
+    CHANGE_PASSWORD: '/change-password',
 } as const;
 
 export const API_PREFIXES = {

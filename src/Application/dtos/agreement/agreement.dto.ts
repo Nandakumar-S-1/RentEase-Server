@@ -1,5 +1,5 @@
 import { AgreementStatus, DepositRefundStatus } from '@core/types/agreement.types';
-
+import { UserRole } from '@shared/enums/user-role.enum';
 
 export interface CreateAgreementDTO {
     propertyId: string;
@@ -42,6 +42,6 @@ export interface UpdateDepositDTO {
 
 export interface GetMyAgreementsDTO {
     userId: string;
-    role: 'owner' | 'tenant';
+    role: UserRole;
     status?: AgreementStatus;
 }

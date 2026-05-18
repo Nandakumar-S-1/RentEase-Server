@@ -13,7 +13,12 @@ export interface ServiceProviderData {
 
 export interface IServiceProviderRepository {
     create(data: Omit<ServiceProviderData, 'id'>): Promise<ServiceProviderData>;
-    findByPropertyId(propertyId: string): Promise<ServiceProviderData[]>;
+    findByPropertyId(
+        propertyId: string,
+        skip?: number,
+        limit?: number,
+    ): Promise<ServiceProviderData[]>;
+    countByPropertyId(propertyId: string): Promise<number>;
     delete(id: string): Promise<void>;
     updateStatus(id: string, isActive: boolean): Promise<void>;
 }

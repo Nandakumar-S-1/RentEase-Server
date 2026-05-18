@@ -27,8 +27,13 @@ export class ServiceProviderController {
 
     getProvidersByProperty = async (req: Request, res: Response): Promise<Response> => {
         const propertyId = req.params.propertyId as string;
-        logger.info(`fetching providers for property: ${propertyId}`);
-        const result = await this._providerUseCase.getProvidersByProperty(propertyId);
+        const page = parseInt(req.query.page as string) || 1;
+        const limit = parseInt(req.query.limit as string) || 10;
+
+        logger.info(
+            `fetching providers for property: ${propertyId} (page: ${page}, limit: ${limit})`,
+        );
+        const result = await this._providerUseCase.getProvidersByProperty(propertyId, page, limit);
         return ResponseHandler.success(res, result, ServiceProvider_Response_Messages.FETCHED);
     };
 

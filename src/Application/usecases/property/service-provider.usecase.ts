@@ -1,4 +1,7 @@
-import { IServiceProviderUseCase } from '@application/interfaces/property/property.usecase.interface';
+import {
+    IServiceProviderUseCase,
+    PaginatedServiceProviderResponse,
+} from '@application/interfaces/property/property.usecase.interface';
 import {
     CreateServiceProviderDTO,
     ServiceProviderResponseDTO,
@@ -25,8 +28,23 @@ export class ServiceProviderUseCase implements IServiceProviderUseCase {
         });
     }
 
-    async getProvidersByProperty(propertyId: string): Promise<ServiceProviderResponseDTO[]> {
-        return await this._providerRepo.findByPropertyId(propertyId);
+    async getProvidersByProperty(
+        propertyId: string,
+        page: number = 1,
+        limit: number = 10,
+    ): Promise<PaginatedServiceProviderResponse> {
+        const skip = (page - 1) * limit;
+        const [providers, total] = await Promise.all([
+            this._providerRepo.findByPropertyId(propertyId, skip, limit),
+            this._providerRepo.countByPropertyId(propertyId),
+        ]);
+
+        return {
+            providers,
+            total,
+            page,
+            limit,
+        };
     }
 
     async deleteProvider(id: string): Promise<void> {

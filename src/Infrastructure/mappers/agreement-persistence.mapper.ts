@@ -1,5 +1,9 @@
 import { AgreementEntity } from '@core/entities/agreement.entity';
-import { AgreementTypeData, AgreementStatus, DepositRefundStatus } from '@core/types/agreement.types';
+import {
+    AgreementTypeData,
+    AgreementStatus,
+    DepositRefundStatus,
+} from '@core/types/agreement.types';
 import { Agreement, Prisma } from '@prisma/client';
 
 export class AgreementPersistenceMapper {
@@ -42,7 +46,9 @@ export class AgreementPersistenceMapper {
             depositPaid: raw.depositPaid,
             depositPaidAt: raw.depositPaidAt ?? undefined,
             depositRefundStatus: (raw.depositRefundStatus as DepositRefundStatus) ?? undefined,
-            depositRefundAmount: raw.depositRefundAmount ? Number(raw.depositRefundAmount) : undefined,
+            depositRefundAmount: raw.depositRefundAmount
+                ? Number(raw.depositRefundAmount)
+                : undefined,
             depositRefundDate: raw.depositRefundDate ?? undefined,
 
             createdAt: raw.createdAt,
@@ -51,7 +57,9 @@ export class AgreementPersistenceMapper {
         return AgreementEntity.create(data);
     }
 
-    static toPersistence(entity: AgreementEntity): Prisma.AgreementCreateInput | Prisma.AgreementUpdateInput {
+    static toPersistence(
+        entity: AgreementEntity,
+    ): Prisma.AgreementCreateInput | Prisma.AgreementUpdateInput {
         return {
             id: entity.id,
             agreementNumber: entity.agreementNumber,
@@ -85,12 +93,16 @@ export class AgreementPersistenceMapper {
             status: entity.status,
             terminationReason: entity.terminationReason,
             terminatedAt: entity.terminatedAt,
-            terminatedBy: entity.terminatedById ? { connect: { id: entity.terminatedById } } : undefined,
+            terminatedBy: entity.terminatedById
+                ? { connect: { id: entity.terminatedById } }
+                : undefined,
 
             depositPaid: entity.depositPaid,
             depositPaidAt: entity.depositPaidAt,
             depositRefundStatus: entity.depositRefundStatus,
-            depositRefundAmount: entity.depositRefundAmount ? new Prisma.Decimal(entity.depositRefundAmount) : undefined,
+            depositRefundAmount: entity.depositRefundAmount
+                ? new Prisma.Decimal(entity.depositRefundAmount)
+                : undefined,
             depositRefundDate: entity.depositRefundDate,
 
             createdAt: entity.createdAt,

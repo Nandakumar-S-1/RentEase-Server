@@ -4,7 +4,10 @@ import { ProfileController } from 'presentation/controllers/profile/profile.cont
 import { PROFILE_ROUTES } from '@shared/constants/routes';
 import { authMiddleware } from '@presentation/middlewares/auth.middleware';
 import { validationRequestMiddleware } from '@presentation/middlewares/validation.middleware';
-import { updateProfileSchema } from 'application/validators/profile.validators';
+import {
+    updateProfileSchema,
+    ChangePasswordSchema,
+} from 'application/validators/profile.validators';
 import { asyncHandlerFunction } from '@presentation/utils/async-handler';
 import { upload } from 'shared/uploads/cloudinary.upload';
 
@@ -32,6 +35,12 @@ export class ProfileRoutes extends BaseRoute {
             authMiddleware,
             upload.single('avatar'),
             asyncHandlerFunction(this._controller.uploadAvatar.bind(this._controller)),
+        );
+        this.router.post(
+            PROFILE_ROUTES.CHANGE_PASSWORD,
+            authMiddleware,
+            validationRequestMiddleware(ChangePasswordSchema),
+            asyncHandlerFunction(this._controller.changePassword.bind(this._controller)),
         );
     }
 }

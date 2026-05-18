@@ -44,6 +44,7 @@ export class PropertyEntity {
         private _updatedAt: Date,
 
         private _details?: PropertyDetailsEntity,
+        private _owner?: { fullName: string; email: string; phone?: string | null },
     ) {}
 
     static create(data: PropertyTypeData): PropertyEntity {
@@ -93,6 +94,7 @@ export class PropertyEntity {
             data.updatedAt ?? new Date(),
 
             detailsEntity,
+            data.owner,
         );
     }
 
@@ -179,6 +181,9 @@ export class PropertyEntity {
     }
     get nearbyLandmarks() {
         return this._nearbyLandMarks;
+    }
+    get owner() {
+        return this._owner;
     }
 
     approve(adminId: string): void {

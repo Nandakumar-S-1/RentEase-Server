@@ -22,9 +22,11 @@ import { ISubmitVerificationUseCase } from 'application/interfaces/owner/submit-
 import {
     IGetProfileUseCase,
     IUpdateProfileUseCase,
+    IChangePasswordUseCase,
 } from 'application/interfaces/profile/profile.usecase.interface';
 import { GetProfileUseCase } from 'application/usecases/profile/get-profile.usecase';
 import { UpdateProfileUseCase } from 'application/usecases/profile/update-profile.usecase';
+import { ChangePasswordUseCase } from 'application/usecases/profile/change-password.usecase';
 import { CreatePropertyUseCase } from '@application/usecases/property/create-property.usecase';
 import {
     ICreatePropertyUseCase,
@@ -92,6 +94,9 @@ export class UseCaseModule {
         });
         container.register<IUpdateProfileUseCase>(TokenTypes.UpdateProfileUseCase, {
             useClass: UpdateProfileUseCase,
+        });
+        container.register<IChangePasswordUseCase>(TokenTypes.ChangePasswordUseCase, {
+            useClass: ChangePasswordUseCase,
         });
         container.register<ICreatePropertyUseCase>(TokenTypes.ICreatePropertyUseCase, {
             useClass: CreatePropertyUseCase,

@@ -23,12 +23,24 @@ export class ServiceProviderRepository implements IServiceProviderRepository {
         return this._toData(result);
     }
 
-    async findByPropertyId(propertyId: string): Promise<ServiceProviderData[]> {
+    async findByPropertyId(
+        propertyId: string,
+        skip?: number,
+        limit?: number,
+    ): Promise<ServiceProviderData[]> {
         const results = await prisma.serviceProvider.findMany({
             where: { property_id: propertyId },
             orderBy: { created_at: 'desc' },
+            skip,
+            take: limit,
         });
         return results.map((r) => this._toData(r));
+    }
+
+    async countByPropertyId(propertyId: string): Promise<number> {
+        return await prisma.serviceProvider.count({
+            where: { property_id: propertyId },
+        });
     }
 
     async delete(id: string): Promise<void> {

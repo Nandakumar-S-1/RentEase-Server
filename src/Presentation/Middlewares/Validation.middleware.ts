@@ -17,7 +17,7 @@ export const validationRequestMiddleware = (schema: ZodObject<ZodRawShape>) => {
                 };
 
                 if (requestAny.file) {
-                    await fs.unlink(requestAny.file.path).catch(() => { });
+                    await fs.unlink(requestAny.file.path).catch(() => {});
                 }
                 if (requestAny.files && Array.isArray(requestAny.files)) {
                     await Promise.all(
