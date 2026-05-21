@@ -9,4 +9,5 @@ export interface UserResponseDTO {
     isActive: boolean;
     isEmailVerified: boolean;
     verificationStatus?: string | null;
+    authProvider?: string;
 }

@@ -3,24 +3,17 @@ import {
     ServiceProviderData,
 } from '@core/interfaces/repository/service-provider.repository.interface';
 import { prisma } from '@infrastructure/database/prisma/prisma.client';
-import { ServiceProvider } from '@prisma/client';
+import { ServiceProviderPersistenceMapper } from 'infrastructure/mappers/service-provider-persistence.mapper';
 import { injectable } from 'tsyringe';
 
 @injectable()
 export class ServiceProviderRepository implements IServiceProviderRepository {
     async create(data: Omit<ServiceProviderData, 'id'>): Promise<ServiceProviderData> {
+        const prismaData = ServiceProviderPersistenceMapper.toPrismaCreate(data);
         const result = await prisma.serviceProvider.create({
-            data: {
-                property_id: data.propertyId,
-                provider_type: data.providerType,
-                provider_name: data.providerName,
-                phone: data.phone,
-                typical_charges_min: data.typicalChargesMin,
-                typical_charges_max: data.typicalChargesMax,
-                is_active: data.isActive ?? true,
-            },
+            data: prismaData,
         });
-        return this._toData(result);
+        return ServiceProviderPersistenceMapper.toData(result);
     }
 
     async findByPropertyId(
@@ -34,7 +27,7 @@ export class ServiceProviderRepository implements IServiceProviderRepository {
             skip,
             take: limit,
         });
-        return results.map((r) => this._toData(r));
+        return results.map(ServiceProviderPersistenceMapper.toData);
     }
 
     async countByPropertyId(propertyId: string): Promise<number> {
@@ -54,20 +47,5 @@ export class ServiceProviderRepository implements IServiceProviderRepository {
             where: { id },
             data: { is_active: isActive },
         });
-    }
-
-    private _toData(p: ServiceProvider): ServiceProviderData {
-        return {
-            id: p.id,
-            propertyId: p.property_id,
-            providerType: p.provider_type,
-            providerName: p.provider_name,
-            phone: p.phone,
-            typicalChargesMin: p.typical_charges_min ? Number(p.typical_charges_min) : null,
-            typicalChargesMax: p.typical_charges_max ? Number(p.typical_charges_max) : null,
-            rating: p.rating ? Number(p.rating) : 0,
-            totalJobsCompleted: p.total_jobs_completed || 0,
-            isActive: p.is_active ?? true,
-        };
     }
 }

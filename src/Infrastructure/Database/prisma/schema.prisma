@@ -12,6 +12,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 enum UserRole {
@@ -57,6 +58,7 @@ model User {
   tokens     VerificationToken[]
   properties Property[]
   wishlist   Wishlist[]
+  notifications Notification[]
 
   ownedAgreements      Agreement[] @relation("AgreementOwner")
   tenantAgreements     Agreement[] @relation("AgreementTenant")
@@ -252,6 +254,50 @@ model ServiceProvider {
   @@index([provider_type])
 }
 
+enum NotificationType{
+  OWNER_VERIFICATION_APPROVED
+  OWNER_VERIFICATION_REJECTED
+
+  PROPERTY_APPROVED
+  PROPERTY_REJECTED
+  PROPERTY_UNLISTED
+
+  USER_SUSPENDED
+  AGREEMENT_CREATED
+  AGREEMENT_SIGNED
+
+  NEW_MESSAGE
+}
+
+model Notification{
+  id String @id @default(uuid())
+  userId String
+  user User @relation(fields:[userId],references:[id],onDelete:Cascade)
+
+  notificationType NotificationType
+  title String
+  message String
+
+  notificationData Json?
+  actionUrl String?
+
+  relatedEntityType String?
+  relatedEntityId String?
+
+  isRead Boolean @default(false)
+  readAt DateTime?
+
+  sentThroughEmail Boolean @default(false)
+  sentThroughPush Boolean @default(false)
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([isRead])
+  @@index([notificationType])
+  @@index([createdAt])
+}
+
 // ─── Agreement enums ──────────────────────────────────────────────────────────
 
 enum AgreementStatus {
@@ -310,6 +356,7 @@ model Agreement {
   tenantSignatureUrl String?
   tenantSignedAt     DateTime?
   agreementPdfUrl    String?
+  tenantKycDocumentUrl String?
 
   // Status
   status            AgreementStatus @default(DRAFT)

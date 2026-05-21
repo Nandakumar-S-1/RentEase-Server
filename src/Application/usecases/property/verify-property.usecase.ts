@@ -19,7 +19,7 @@ export class VerifyPropertyUseCase implements IVerifyPropertyUseCase {
     async getPendingProperties(page: number, limit: number): Promise<PaginatedPropertyResponse> {
         const skip = (page - 1) * limit;
         const [pendingProperties, total] = await Promise.all([
-            this._propertyRepo.findPending(skip, limit),
+            this._propertyRepo.findPending({ skip, take: limit }),
             this._propertyRepo.countAll(PropertyStatus.PENDING_APPROVAL),
         ]);
 
@@ -40,7 +40,7 @@ export class VerifyPropertyUseCase implements IVerifyPropertyUseCase {
     ): Promise<PaginatedPropertyResponse> {
         const skip = (page - 1) * limit;
         const [properties, total] = await Promise.all([
-            this._propertyRepo.findAll(status, skip, limit),
+            this._propertyRepo.findAll({ status, skip, take: limit }),
             this._propertyRepo.countAll(status),
         ]);
 

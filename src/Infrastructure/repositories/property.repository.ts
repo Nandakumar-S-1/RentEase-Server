@@ -1,6 +1,7 @@
 import { PropertyEntity } from '@core/entities/property.entity';
 import { GetAllPropertiesDTO } from '@application/interfaces/property/property.usecase.interface';
 import { IPropertyRepository } from '@core/interfaces/repository/property-repository.interface';
+import { QueryOptions } from '@core/interfaces/base/query-options.interface';
 import { prisma } from '@infrastructure/database/prisma/prisma.client';
 import { PropertyPersistenceMapper } from '@infrastructure/mappers/property-persistence.mapper';
 import { Prisma, Property, PropertyDetails, PropertyVerificationStatus } from '@prisma/client';
@@ -33,17 +34,15 @@ export class PropertyRepository implements IPropertyRepository {
     }
     async findByOwnerId(
         ownerId: string,
-        status?: string,
-        skip?: number,
-        take?: number,
+        options?: QueryOptions,
     ): Promise<PropertyEntity[]> {
         const ownersProperty = await prisma.property.findMany({
             where: {
                 ownerId,
-                ...(status && { status: status as PropertyVerificationStatus }),
+                ...(options?.status && { status: options.status as PropertyVerificationStatus }),
             },
-            skip,
-            take,
+            skip: options?.skip,
+            take: options?.take,
             orderBy: {
                 createdAt: 'desc',
             },
@@ -62,13 +61,13 @@ export class PropertyRepository implements IPropertyRepository {
             },
         });
     }
-    async findPending(skip?: number, take?: number): Promise<PropertyEntity[]> {
+    async findPending(options?: Omit<QueryOptions, 'status'>): Promise<PropertyEntity[]> {
         const pendingProperties = await prisma.property.findMany({
             where: {
                 status: PropertyVerificationStatus.PENDING_APPROVAL,
             },
-            skip,
-            take,
+            skip: options?.skip,
+            take: options?.take,
             orderBy: {
                 createdAt: 'desc',
             },
@@ -119,16 +118,14 @@ export class PropertyRepository implements IPropertyRepository {
     }
 
     async findAll(
-        status?: string,
-        skip?: number,
-        take?: number,
+        options?: QueryOptions,
         filters?: Partial<GetAllPropertiesDTO>,
     ): Promise<PropertyEntity[]> {
-        const where = this._buildWhereClause(status, filters);
+        const where = this._buildWhereClause(options?.status, filters);
         const properties = await prisma.property.findMany({
             where,
-            skip,
-            take,
+            skip: options?.skip,
+            take: options?.take,
             orderBy: {
                 createdAt: 'desc',
             },

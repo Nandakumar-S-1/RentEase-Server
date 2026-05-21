@@ -51,3 +51,7 @@ export interface ITerminateAgreementUseCase {
 export interface IUpdateDepositUseCase {
     execute(id: string, dto: UpdateDepositDTO): Promise<void>;
 }
+
+export interface IUploadTenantKycUseCase {
+    execute(id: string, kycUrl: string): Promise<AgreementResponseDTO>;
+}

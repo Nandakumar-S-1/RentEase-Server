@@ -52,21 +52,14 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
             });
         }
 
-        let verificationStatus;
+        let verificationStatus: string | null = null;
         if (user.role === UserRole.OWNER) {
             const owner = await ownerRepo.findByUserId(user.id);
-            verificationStatus = owner?.verificationStatus;
+            verificationStatus = owner ? owner.verificationStatus : null;
         }
+        user.setVerificationStatus(verificationStatus);
 
-        req.user = {
-            id: user.id,
-            email: user.email,
-            fullname: user.fullname,
-            phone: user.phone ?? '',
-            role: user.role,
-            avatarUrl: user.avatarUrl,
-            verificationStatus,
-        };
+        req.user = user;
 
         next();
     } catch {

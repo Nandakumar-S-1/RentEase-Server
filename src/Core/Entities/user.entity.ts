@@ -103,4 +103,7 @@ export class UserEntity {
     setPassword(hash: string): void {
         this._password = hash;
     }
+    setVerificationStatus(status: string | null): void {
+        this._verificationStatus = status;
+    }
 }

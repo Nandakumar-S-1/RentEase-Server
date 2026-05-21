@@ -24,7 +24,7 @@ export class GetMyPropertiesUseCase implements IGetMyPropertiesUseCase {
         const take = dto.limit;
 
         const [properties, total] = await Promise.all([
-            this._propertyRepo.findByOwnerId(dto.ownerId, dto.status, skip, take),
+            this._propertyRepo.findByOwnerId(dto.ownerId, { status: dto.status, skip, take }),
             this._propertyRepo.countByOwnerId(dto.ownerId, dto.status),
         ]);
 

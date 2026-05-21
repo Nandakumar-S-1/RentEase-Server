@@ -20,7 +20,7 @@ export class ForgotPasswordUseCase implements IForgotPasswordUseCase {
         private readonly _otpService: IOtpService,
         @inject(TokenTypes.IMailService)
         private readonly _mailService: IMailService,
-    ) {}
+    ) { }
 
     async execute(dto: ForgotPasswordRequestDto): Promise<void> {
         const user = await this._userRepository.findByEmail(dto.email);
@@ -30,6 +30,8 @@ export class ForgotPasswordUseCase implements IForgotPasswordUseCase {
         }
         const otp = this._otpService.generateOTP();
         const redisKey = `resetPassword_otp:${dto.email}`;
+
+        logger.info(`OTP for password reset ${dto.email}---------------${otp}`);
 
         await this._redisService.set(redisKey, otp, 300);
         await this._mailService.sendMail(

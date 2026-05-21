@@ -37,6 +37,7 @@ export class AgreementPersistenceMapper {
             tenantSignatureUrl: raw.tenantSignatureUrl ?? undefined,
             tenantSignedAt: raw.tenantSignedAt ?? undefined,
             agreementPdfUrl: raw.agreementPdfUrl ?? undefined,
+            tenantKycDocumentUrl: raw.tenantKycDocumentUrl ?? undefined,
 
             status: raw.status as AgreementStatus,
             terminationReason: raw.terminationReason ?? undefined,
@@ -55,6 +56,15 @@ export class AgreementPersistenceMapper {
             updatedAt: raw.updatedAt,
         };
         return AgreementEntity.create(data);
+    }
+
+    static toPrismaCreate(entity: AgreementEntity): Prisma.AgreementCreateInput {
+        return this.toPersistence(entity) as Prisma.AgreementCreateInput;
+    }
+
+    static toPrismaUpdate(entity: Partial<AgreementEntity>): Prisma.AgreementUpdateInput {
+        if (!entity.id) throw new Error("Entity ID is required for update");
+        return this.toPersistence(entity as AgreementEntity) as Prisma.AgreementUpdateInput;
     }
 
     static toPersistence(
@@ -89,6 +99,7 @@ export class AgreementPersistenceMapper {
             tenantSignatureUrl: entity.tenantSignatureUrl,
             tenantSignedAt: entity.tenantSignedAt,
             agreementPdfUrl: entity.agreementPdfUrl,
+            tenantKycDocumentUrl: entity.tenantKycDocumentUrl,
 
             status: entity.status,
             terminationReason: entity.terminationReason,

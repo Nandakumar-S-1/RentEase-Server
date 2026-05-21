@@ -6,6 +6,12 @@ import { injectable } from 'tsyringe';
 
 @injectable()
 export class TenantProfileRepository implements ITenantProfileRepository {
+    async findById(id: string): Promise<TenantProfileEntity | null> {
+        const result = await prisma.tenantProfile.findUnique({
+            where: { id },
+        });
+        return result ? TenantProfilePersistenceMapper.toEntity(result) : null;
+    }
     async findByUserId(userId: string): Promise<TenantProfileEntity | null> {
         const result = await prisma.tenantProfile.findUnique({
             where: { userId },

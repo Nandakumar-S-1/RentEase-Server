@@ -55,6 +55,12 @@ import {
     IWishlistUseCase,
 } from '@application/interfaces/property/property.usecase.interface';
 
+import { CreateAgreementUseCase } from '@application/usecases/agreement/create-agreement.usecase';
+import { SignOwnerUseCase } from '@application/usecases/agreement/sign-owner.usecase';
+import { SignTenantUseCase } from '@application/usecases/agreement/sign-tenant.usecase';
+import { GenerateAgreementPdfUseCase } from '@application/usecases/agreement/generate-agreement-pdf.usecase';
+import { UploadTenantKycUseCase } from '@application/usecases/agreement/upload-tenant-kyc.usecase';
+
 export class UseCaseModule {
     static registerModules(): void {
         //registering interface token to the concrete class
@@ -131,6 +137,22 @@ export class UseCaseModule {
 
         container.register<IRelistPropertyUseCase>(TokenTypes.IRelistPropertyUseCase, {
             useClass: RelistPropertyUseCase,
+        });
+
+        container.register('ICreateAgreementUseCase', {
+            useClass: CreateAgreementUseCase,
+        });
+        container.register('ISignOwnerUseCase', {
+            useClass: SignOwnerUseCase,
+        });
+        container.register('ISignTenantUseCase', {
+            useClass: SignTenantUseCase,
+        });
+        container.register('IGeneratePdfUseCase', {
+            useClass: GenerateAgreementPdfUseCase,
+        });
+        container.register('IUploadTenantKycUseCase', {
+            useClass: UploadTenantKycUseCase,
         });
     }
 }

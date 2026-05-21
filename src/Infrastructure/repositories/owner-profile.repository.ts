@@ -8,6 +8,12 @@ import { injectable } from 'tsyringe';
 
 @injectable()
 export class OwnerProfileRepository implements IOwnerProfileRepository {
+    async findById(id: string): Promise<OwnerProfileEntity | null> {
+        const result = await prisma.ownerProfile.findUnique({
+            where: { id },
+        });
+        return result ? OwnerProfilePersistenceMapper.toEntity(result) : null;
+    }
     async create(entity: OwnerProfileEntity): Promise<OwnerProfileEntity> {
         const result = await prisma.ownerProfile.create({
             data: {
@@ -65,26 +71,21 @@ export class OwnerProfileRepository implements IOwnerProfileRepository {
         return OwnerProfilePersistenceMapper.toEntity(result);
     }
     async save(entity: OwnerProfileEntity): Promise<OwnerProfileEntity> {
+        const data = {
+            bio: entity.bio,
+            occupation: entity.occupation,
+            documentType: entity.documentType,
+            documentUrl: entity.documentUrl,
+            verificationStatus: entity.verificationStatus,
+            rejectionReason: entity.rejectionReason,
+            verifiedAt: entity.verifiedAt ?? undefined,
+        };
         const result = await prisma.ownerProfile.upsert({
             where: { userId: entity.userId },
-            update: {
-                bio: entity.bio,
-                occupation: entity.occupation,
-                documentType: entity.documentType,
-                documentUrl: entity.documentUrl,
-                verificationStatus: entity.verificationStatus,
-                rejectionReason: entity.rejectionReason,
-                verifiedAt: entity.verifiedAt ?? undefined,
-            },
+            update: data,
             create: {
                 userId: entity.userId,
-                bio: entity.bio,
-                occupation: entity.occupation,
-                documentType: entity.documentType,
-                documentUrl: entity.documentUrl,
-                verificationStatus: entity.verificationStatus,
-                rejectionReason: entity.rejectionReason,
-                verifiedAt: entity.verifiedAt ?? undefined,
+                ...data,
             },
         });
         return OwnerProfilePersistenceMapper.toEntity(result);

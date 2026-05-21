@@ -1,14 +1,13 @@
 import { PropertyEntity } from '@core/entities/property.entity';
 import { GetAllPropertiesDTO } from '@application/interfaces/property/property.usecase.interface';
 import { IBaseRepository } from '../base/base-repository.interface';
+import { QueryOptions } from '../base/query-options.interface';
 
-export interface IPropertyRepository extends IBaseRepository<PropertyEntity> {
+export interface IPropertyRepository extends IBaseRepository<PropertyEntity, PropertyEntity, (entity: PropertyEntity) => Promise<PropertyEntity>> {
     findById(id: string): Promise<PropertyEntity | null>;
     findByOwnerId(
         ownerId: string,
-        status?: string,
-        skip?: number,
-        take?: number,
+        options?: QueryOptions,
     ): Promise<PropertyEntity[]>;
     countByOwnerId(ownerId: string, status?: string): Promise<number>;
     update(entity: PropertyEntity): Promise<PropertyEntity>;
@@ -16,12 +15,9 @@ export interface IPropertyRepository extends IBaseRepository<PropertyEntity> {
     delete(id: string): Promise<void>;
     relist(id: string): Promise<void>;
     incrementViews(id: string): Promise<void>;
-    // search(filters:any):Promise<PropertyEntity[]>
-    findPending(skip?: number, take?: number): Promise<PropertyEntity[]>;
+    findPending(options?: Omit<QueryOptions, 'status'>): Promise<PropertyEntity[]>;
     findAll(
-        status?: string,
-        skip?: number,
-        take?: number,
+        options?: QueryOptions,
         filters?: Partial<GetAllPropertiesDTO>,
     ): Promise<PropertyEntity[]>;
     countAll(status?: string, filters?: Partial<GetAllPropertiesDTO>): Promise<number>;

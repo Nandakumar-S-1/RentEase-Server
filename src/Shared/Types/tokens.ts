@@ -20,6 +20,7 @@ export const TokenTypes = {
     IRefreshTokenUseCase: 'IRefreshTokenUseCase',
     IOwnerProfileRepository: 'IOwnerProfileRepository',
     ITenantProfileRepository: 'ITenantProfileRepository',
+    IAgreementRepository: 'IAgreementRepository',
     SubmitVerificationUseCase: 'SubmitVerificationUseCase',
     VerifyOwnerUseCase: 'VerifyOwnerUseCase',
     GetProfileUseCase: 'GetProfileUseCase',

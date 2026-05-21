@@ -40,6 +40,7 @@ export interface AgreementTypeData {
     tenantSignatureUrl?: string;
     tenantSignedAt?: Date;
     agreementPdfUrl?: string;
+    tenantKycDocumentUrl?: string;
 
     // Status
     status: AgreementStatus;

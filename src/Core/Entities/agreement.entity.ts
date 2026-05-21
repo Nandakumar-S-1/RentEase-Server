@@ -34,6 +34,7 @@ export class AgreementEntity {
         private _tenantSignatureUrl: string | undefined,
         private _tenantSignedAt: Date | undefined,
         private _agreementPdfUrl: string | undefined,
+        private _tenantKycDocumentUrl: string | undefined,
 
         private _status: AgreementStatus,
         private _terminationReason: string | undefined,
@@ -79,8 +80,9 @@ export class AgreementEntity {
             data.tenantSignatureUrl,
             data.tenantSignedAt,
             data.agreementPdfUrl,
+            data.tenantKycDocumentUrl,
 
-            data.status ?? 'draft',
+            data.status ?? 'DRAFT',
             data.terminationReason,
             data.terminatedAt,
             data.terminatedById,
@@ -117,6 +119,11 @@ export class AgreementEntity {
 
     setPdfUrl(url: string): void {
         this._agreementPdfUrl = url;
+        this._updatedAt = new Date();
+    }
+
+    updateKycDocument(kycUrl: string): void {
+        this._tenantKycDocumentUrl = kycUrl;
         this._updatedAt = new Date();
     }
 
@@ -221,6 +228,9 @@ export class AgreementEntity {
     }
     get agreementPdfUrl() {
         return this._agreementPdfUrl;
+    }
+    get tenantKycDocumentUrl() {
+        return this._tenantKycDocumentUrl;
     }
 
     get status() {

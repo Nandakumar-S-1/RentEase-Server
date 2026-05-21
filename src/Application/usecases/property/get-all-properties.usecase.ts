@@ -20,7 +20,7 @@ export class GetAllPropertiesUseCase implements IGetAllPropertiesUseCase {
         const skip = (page - 1) * limit;
 
         const [properties, total] = await Promise.all([
-            this._propertyRepository.findAll(status, skip, limit, filters),
+            this._propertyRepository.findAll({ status, skip, take: limit }, filters),
             this._propertyRepository.countAll(status, filters),
         ]);
 

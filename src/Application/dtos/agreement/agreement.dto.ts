@@ -3,8 +3,9 @@ import { UserRole } from '@shared/enums/user-role.enum';
 
 export interface CreateAgreementDTO {
     propertyId: string;
-    tenantId: string;
-    ownerId: string;
+    tenantEmail: string;
+    tenantId?: string;
+    ownerId?: string;
     startDate: string;
     endDate: string;
     lockInPeriodMonths: number;

@@ -11,8 +11,10 @@ export interface ServiceProviderData {
     isActive: boolean;
 }
 
-export interface IServiceProviderRepository {
-    create(data: Omit<ServiceProviderData, 'id'>): Promise<ServiceProviderData>;
+import { IBaseRepository } from '../base/base-repository.interface';
+
+export interface IServiceProviderRepository
+    extends IBaseRepository<ServiceProviderData, Omit<ServiceProviderData, 'id'>> {
     findByPropertyId(
         propertyId: string,
         skip?: number,

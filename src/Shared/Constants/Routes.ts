@@ -57,6 +57,7 @@ export const API_PREFIXES = {
     PROPERTY: '/properties',
     SERVICE_PROVIDER: '/service-providers',
     WISHLIST: '/wishlist',
+    AGREEMENT: '/agreements',
 } as const;
 
 export const PROPERTY_ROUTES = {
