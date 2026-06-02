@@ -52,6 +52,7 @@ export class AgreementEntity {
 
     static create(data: AgreementTypeData): AgreementEntity {
         return new AgreementEntity(
+            
             data.id,
             data.agreementNumber,
             data.propertyId,

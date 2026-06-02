@@ -10,7 +10,7 @@ export class NotificationEntity {
         private readonly _notificationType:NotificationType,
         private readonly _title:string,
         private readonly _message:string,
-        private readonly _notificationData: Record<string,unknown>|null,
+        private readonly _notificationData:  Record<string, unknown> | null,
 
         private readonly _actionUrl:string|null,
         private readonly _relatedEntityType:string |null,
@@ -64,8 +64,30 @@ export class NotificationEntity {
     get readAt(){
         return this._readAt
     }
+    get notificationData(): Record<string, unknown> | null {
+        return this._notificationData;
+    }
+    get actionUrl(){
+        return this._actionUrl
+    }
+    get relatedEntityType(){
+        return this._relatedEntityType
+    }
+    get relatedEntityId(){
+        return this._relatedEntityId
+    }
+    get sentThroughEmail(){
+        return this._sentThroughEmail
+    }
+    get sentThroughPush(){
+        return this._sentThroughPushNote
+    }
+    get createdAt(){
+        return this._createdAt
+    }
     markAsRead():void{
         this._isRead=true
         this._readAt=new Date()
     }
+
 }

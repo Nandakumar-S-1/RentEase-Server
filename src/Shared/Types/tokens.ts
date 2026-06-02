@@ -28,6 +28,7 @@ export const TokenTypes = {
     IPropertyRepository: 'IPropertyRepository',
     IServiceProviderRepository: 'IServiceProviderRepository',
     IWishlistRepository: 'IWishlistRepository',
+    INotificationRepository:'INotificationRepository',
     ICreatePropertyUseCase: 'ICreatePropertyUseCase',
     IGetPropertyByIdUseCase: 'IGetPropertyByIdUseCase',
     IUpdatePropertyUseCase: 'IUpdatePropertyUseCase',

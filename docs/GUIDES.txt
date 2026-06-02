@@ -1,0 +1,115 @@
+prisma - The Prisma CLI for running commands like prisma init, prisma migrate, and prisma generate
+@prisma/client - The Prisma Client library for querying your database
+@prisma/adapter-pg - The node-postgres driver adapter that connects Prisma Client to your database
+pg - The node-postgres database driver
+@types/pg - TypeScript type definitions for node-postgres
+dotenv - Loads environment variables from your .env file
+
+
+
+HTTP Request
+    |
+Routes (user.routes.ts)
+    |
+Controller (UserRegisterController.register)
+    |
+Use Case (CreateUserUseCase.execute)
+    |
+Application Mapper (UserMapper.toEntity) ← Creates domain entity from DTO
+    |
+Repository Interface (IUserRepository.create) ← Called on the interface
+    |
+Repository Implementation (UserRepository.create) ← Actually runs via polymorphism
+    |
+Prisma/PostgreSQL ← Actual database operation
+    |
+Persistence Mapper (UserPersistenceMapper.toEntity) ← DB record back to domain
+    |
+Response bubbles back up through each layer
+    |
+HTTP Response (JSON)
+
+
+
+now the main parts where I implemented each of the pillirs of oops are
+1, encapsulation:
+
+userEntity which holds all the related properties and methods of a user like there fields and getter and setter methods
+
+UserRepository , where it hides the database queries inside that class and the controller only knows that it has a create method
+
+UserRegisterController , where it contains a private method which is createUser and it is a dependency injection
+
+baserepository  which uses the protected properties of the model and mapper to perform database operations
+
+
+
+2) inheritance:
+
+baserepository which is an abstract class that will provide basic functionality to the repository implementation
+
+IUserRepository extends the base repository and provides user specific functionality
+
+custom errors extends the base error class
+
+
+3) polymorphism:
+=> the UserRegisterController 
+
+  constructor(@inject('ICreateUserUseCase') private readonly createUser: ICreateUserUseCase) {} // inject using the token  defined in UseCaseModule     //the controllers is only need to do receve http request, extract data from the req body, // pass it to the corresponding use case and format respone to json .
+
+  register = async (req: Request, res: Response): Promise<Response> => {
+      const user = await this.createUser.execute(req.body);
+
+takes the ICreateUserUseCase as a dependency and 
+
+export interface ICreateUserUseCase {
+  execute(dto: ICreateUserDTO): Promise<UserEntity>;
+}
+
+implement its own way of execute method 
+
+=> BaseRepository works with the type <T> and it is a generic type which means
+in the base of polymorphism which can be used for different types of data 
+
+
+4) Absstraction
+=> the IUserRepository defines the contract for user data access with the methods like
+findByEmail, findByPhone, update
+which means it is an abstraction of the user data access, 
+that menas the implementation of the repository is hidden from the controller 
+and the controller only knows that it has a create method
+
+=>ICreateUserUseCase in the context of abstraction , defines the registration usecases structure.
+
+
+
+SOLID PRINICPLES Implementation in the projext
+
+SINGLE RESPONSIBILITY PRINCIPLE:
+
+-> UserPersistenceMapper is only responsible for mapping the user entity to the database
+->UserMapper is only responsible for mapping the user entity to the dto
+->prisma.client is only responsible for initializing the database connection
+->UserRepository is only responsible for database operations
+->UserRegisterController is only responsible for receiving http request, extracting data from the req body, passing it to the corresponding use case and formatting respone to json
+
+
+
+OPEN CLOSED PRINCIPLE:
+
+-> IbaseRepository can be used to create new repository types without changing the base interface
+->httpstatus coede enum alow adding new status code without breaking current once.
+
+
+liskows substitution principle
+==> User UserRegisterController works correctly wih any class that implements ICreateUserUseCase
+==> UserRepository works correctly with any class that implements IUserRepository
+
+Interface segregation principle
+-> the IUserRepository interface is not forced to implement methods that it doesn't need
+
+
+Dependency Inversion Principle
+=>  UserRepository depends on abstractions (IUserRepository) instead of concrete implementations
+-> user repo depends on userEntity and IUserRepository, which is the INVERSION OF CONTROL
