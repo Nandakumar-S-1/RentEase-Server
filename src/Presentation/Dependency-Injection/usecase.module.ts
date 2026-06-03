@@ -60,6 +60,9 @@ import { SignOwnerUseCase } from '@application/usecases/agreement/sign-owner.use
 import { SignTenantUseCase } from '@application/usecases/agreement/sign-tenant.usecase';
 import { GenerateAgreementPdfUseCase } from '@application/usecases/agreement/generate-agreement-pdf.usecase';
 import { UploadTenantKycUseCase } from '@application/usecases/agreement/upload-tenant-kyc.usecase';
+import { ICreateNotificationUsecase, IGetUserNotificationsUseCase } from '@application/interfaces/notification/notification.usecase.interface';
+import { CreateNotificationUseCase } from '@application/usecases/notification/create-notification.usecase';
+import { GetUserNotificationsUseCase } from '@application/usecases/notification/get-user-notifications.usecase';
 
 export class UseCaseModule {
     static registerModules(): void {
@@ -153,6 +156,14 @@ export class UseCaseModule {
         });
         container.register('IUploadTenantKycUseCase', {
             useClass: UploadTenantKycUseCase,
+        });
+
+        // Notification use cases
+        container.register<ICreateNotificationUsecase>(TokenTypes.ICreateNotificationUseCase, {
+            useClass: CreateNotificationUseCase,
+        });
+        container.register<IGetUserNotificationsUseCase>(TokenTypes.IGetUserNotificationsUseCase, {
+            useClass: GetUserNotificationsUseCase,
         });
     }
 }

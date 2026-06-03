@@ -2,13 +2,15 @@ import { CreateNotificationDTO } from "@application/dtos/notification/create-not
 import { ICreateNotificationUsecase } from "@application/interfaces/notification/notification.usecase.interface";
 import { NotificationEntity } from "@core/entities/notification.entity";
 import { INotificationRepository } from "@core/interfaces/repository/notification.repository.interface";
+import { inject, injectable } from "tsyringe";
+import { TokenTypes } from "@shared/types/tokens";
 
+@injectable()
 export class CreateNotificationUseCase implements ICreateNotificationUsecase{
     constructor(
+        @inject(TokenTypes.INotificationRepository)
         private readonly notificationRepository:INotificationRepository
-    ){
-
-    }
+    ){}
     async execute(dto: CreateNotificationDTO): Promise<NotificationEntity> {
         const notification=NotificationEntity.create({
             id:crypto.randomUUID(),

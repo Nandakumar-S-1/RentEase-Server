@@ -9,6 +9,8 @@ import { PropertyRoutes } from './property/property.routes';
 import { ServiceProviderRoutes } from './property/service-provider.routes';
 import { WishlistRoutes } from './property/wishlist.routes';
 import agreementRouter from './agreement.routes';
+import { NotificationRoutes } from './notification/notification.routes';
+
 const router = Router();
 const userRoutes = container.resolve(UserRoutes);
 const adminRoutes = container.resolve(AdminRoutes);
@@ -17,6 +19,7 @@ const profileRoutes = container.resolve(ProfileRoutes);
 const propertyRoutes = container.resolve(PropertyRoutes);
 const serviceProviderRoutes = container.resolve(ServiceProviderRoutes);
 const wishlistRoutes = container.resolve(WishlistRoutes);
+const notificationRoutes = container.resolve(NotificationRoutes);
 
 router.use(API_PREFIXES.AUTH, userRoutes.router);
 router.use(API_PREFIXES.ADMIN, adminRoutes.router);
@@ -26,4 +29,5 @@ router.use(API_PREFIXES.PROPERTY, propertyRoutes.router);
 router.use(API_PREFIXES.SERVICE_PROVIDER, serviceProviderRoutes.router);
 router.use(API_PREFIXES.WISHLIST, wishlistRoutes.router);
 router.use(API_PREFIXES.AGREEMENT, agreementRouter);
+router.use(API_PREFIXES.NOTIFICATION, notificationRoutes.router);
 export default router;

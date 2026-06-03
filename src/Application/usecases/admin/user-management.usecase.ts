@@ -3,8 +3,10 @@ import { IGetAllUsersDTO } from 'application/dtos/admin/response/get-all-users-r
 import { IUserManagement } from 'application/interfaces/admin/user-management.interface';
 import { UserEntity } from 'core/entities/user.entity';
 import { IUserRepository } from '@core/interfaces/repository/user-repository.interface';
+import { ICreateNotificationUsecase } from '@application/interfaces/notification/notification.usecase.interface';
 import { logger } from 'shared/log/logger';
 import { TokenTypes } from 'shared/types/tokens';
+import { NotificationType } from '@shared/enums/notification-type.enum';
 import { inject, injectable } from 'tsyringe';
 
 @injectable()
@@ -12,6 +14,8 @@ export class UserManagementUseCase implements IUserManagement {
     constructor(
         @inject(TokenTypes.IUserRepository)
         private readonly _userRepository: IUserRepository,
+        @inject(TokenTypes.ICreateNotificationUseCase)
+        private readonly _createNotification: ICreateNotificationUsecase,
     ) {}
     async getUsers(dto: IGetUsersRequestDTO): Promise<{ users: IGetAllUsersDTO[]; total: number }> {
         const { page = 1, limit = 10, role } = dto;
@@ -78,6 +82,16 @@ export class UserManagementUseCase implements IUserManagement {
         }
         user.suspendUser();
         await this._userRepository.update(user.id, user);
+
+        await this._createNotification.execute({
+            userId,
+            notificationType: NotificationType.USER_SUSPENDED,
+            title: 'Account Suspended',
+            message: 'Your account has been suspended by an administrator. Please contact support if you have questions.',
+            actionUrl: '/support',
+            relatedEntityType: 'User',
+            relatedEntityId: userId
+        });
     }
 
     async activateUser(userId: string): Promise<void> {

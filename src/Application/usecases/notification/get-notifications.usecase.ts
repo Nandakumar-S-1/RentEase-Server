@@ -20,7 +20,12 @@ export class GetUserNotificationsUseCase implements IGetUserNotificationsUseCase
             notificationType: notification.notificationType,
             title: notification.title,
             message: notification.message,
+            notificationData: notification.notificationData,
+            actionUrl: notification.actionUrl,
+            relatedEntityType: notification.relatedEntityType,
+            relatedEntityId: notification.relatedEntityId,
             isRead: notification.isRead,
+            readAt: notification.readAt,
             createdAt: notification.createdAt,
         }));
     }

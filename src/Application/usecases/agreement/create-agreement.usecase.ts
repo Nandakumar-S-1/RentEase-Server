@@ -3,6 +3,9 @@ import { CreateAgreementDTO } from '@application/dtos/agreement/agreement.dto';
 import { AgreementResponseDTO } from '@application/dtos/agreement/res/agreement-response.dto';
 import { IAgreementRepository } from '@core/interfaces/repository/agreement-repository.interface';
 import { AgreementEntity } from '@core/entities/agreement.entity';
+import { ICreateNotificationUsecase } from '@application/interfaces/notification/notification.usecase.interface';
+import { TokenTypes } from '@shared/types/tokens';
+import { NotificationType } from '@shared/enums/notification-type.enum';
 import crypto from 'crypto';
 import { inject, injectable } from 'tsyringe';
 import { logger } from '@shared/log/logger';
@@ -13,6 +16,7 @@ export class CreateAgreementUseCase implements ICreateAgreementUseCase {
     constructor(
         @inject('IAgreementRepository') private agreementRepository: IAgreementRepository,
         @inject('IUserRepository') private userRepository: IUserRepository,
+        @inject(TokenTypes.ICreateNotificationUseCase) private createNotification: ICreateNotificationUsecase,
     ) {}
 
     async execute(dto: CreateAgreementDTO): Promise<AgreementResponseDTO> {
@@ -67,6 +71,21 @@ export class CreateAgreementUseCase implements ICreateAgreementUseCase {
         });
 
         const created = await this.agreementRepository.create(newAgreement);
+
+        try {
+            await this.createNotification.execute({
+                userId: tenant.id,
+                notificationType: NotificationType.AGREEMENT_CREATED,
+                title: 'Rental Agreement Created',
+                message: `A new rental agreement draft (No. ${created.agreementNumber}) has been created by the landlord. Please review and sign it.`,
+                actionUrl: `/agreements/${created.id}`,
+                relatedEntityType: 'Agreement',
+                relatedEntityId: created.id,
+                notificationData: { agreementNumber: created.agreementNumber }
+            });
+        } catch (error) {
+            logger.error({ err: error }, 'Failed to trigger notification for agreement creation');
+        }
 
         return {
             id: created.id,

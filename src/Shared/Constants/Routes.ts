@@ -58,6 +58,7 @@ export const API_PREFIXES = {
     SERVICE_PROVIDER: '/service-providers',
     WISHLIST: '/wishlist',
     AGREEMENT: '/agreements',
+    NOTIFICATION: '/notifications',
 } as const;
 
 export const PROPERTY_ROUTES = {
@@ -83,4 +84,11 @@ export const WISHLIST_ROUTES = {
     TOGGLE: '/:propertyId',
     GET_MY: '/',
     CHECK: '/check/:propertyId',
+} as const;
+
+export const NOTIFICATION_ROUTES = {
+    GET_MY: '/',
+    UNREAD_COUNT: '/unread-count',
+    MARK_AS_READ: '/:id/read',
+    MARK_ALL_AS_READ: '/read-all',
 } as const;

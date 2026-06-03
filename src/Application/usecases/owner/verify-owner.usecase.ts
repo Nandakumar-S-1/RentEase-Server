@@ -4,6 +4,8 @@ import { IOwnerProfileRepository } from '@core/interfaces/repository/owner-repos
 import { Owner_Verification_Status } from 'shared/enums/owner-verification-status.enum';
 import { OwnerProfileNotFoundError } from 'shared/errors/owner-errors';
 import { TokenTypes } from 'shared/types/tokens';
+import { ICreateNotificationUsecase } from '@application/interfaces/notification/notification.usecase.interface';
+import { NotificationType } from '@shared/enums/notification-type.enum';
 import { inject, injectable } from 'tsyringe';
 
 @injectable()
@@ -11,6 +13,8 @@ export class VerifyOwnerUseCase implements IVerifyOwnerUseCase {
     constructor(
         @inject(TokenTypes.IOwnerProfileRepository)
         private readonly _ownerRepository: IOwnerProfileRepository,
+        @inject(TokenTypes.ICreateNotificationUseCase)
+        private readonly _createNotification: ICreateNotificationUsecase,
     ) {}
     async verifyOwner(ownerId: string) {
         const ownerProfile = await this._ownerRepository.findByUserId(ownerId);
@@ -22,6 +26,17 @@ export class VerifyOwnerUseCase implements IVerifyOwnerUseCase {
             ownerId,
             Owner_Verification_Status.VERIFIED,
         );
+
+        await this._createNotification.execute({
+            userId: ownerId,
+            notificationType: NotificationType.OWNER_VERIFICATION_APPROVED,
+            title: 'Landlord Verification Approved',
+            message: 'Your landlord verification status has been approved! You can now list properties.',
+            actionUrl: '/profile',
+            relatedEntityType: 'OwnerProfile',
+            relatedEntityId: ownerProfile.id
+        });
+
         return OwnerVerificationMapper.toResponse(updated);
     }
     async rejectOwner(ownerId: string, reason: string) {
@@ -35,6 +50,18 @@ export class VerifyOwnerUseCase implements IVerifyOwnerUseCase {
             Owner_Verification_Status.REJECTED,
             reason,
         );
+
+        await this._createNotification.execute({
+            userId: ownerId,
+            notificationType: NotificationType.OWNER_VERIFICATION_REJECTED,
+            title: 'Landlord Verification Rejected',
+            message: `Your landlord verification status was rejected. Reason: ${reason}`,
+            actionUrl: '/profile',
+            relatedEntityType: 'OwnerProfile',
+            relatedEntityId: ownerProfile.id,
+            notificationData: { reason }
+        });
+
         return OwnerVerificationMapper.toResponse(updated);
     }
     async getPendingOwners() {

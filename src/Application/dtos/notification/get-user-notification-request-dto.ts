@@ -1,3 +1,5 @@
-export interface IGetUserNotificationRequestDTO{
-    userId:string
+export interface IGetUserNotificationRequestDTO {
+    userId: string;
+    page?: number;
+    limit?: number;
 }

@@ -8,12 +8,16 @@ import { TokenTypes } from '@shared/types/tokens';
 import { inject, injectable } from 'tsyringe';
 import { PropertyNotFoundError } from '@shared/errors/property-errors';
 import { PropertyStatus } from '@shared/enums/property-type-status.enum';
+import { ICreateNotificationUsecase } from '@application/interfaces/notification/notification.usecase.interface';
+import { NotificationType } from '@shared/enums/notification-type.enum';
 
 @injectable()
 export class VerifyPropertyUseCase implements IVerifyPropertyUseCase {
     constructor(
         @inject(TokenTypes.IPropertyRepository)
         private readonly _propertyRepo: IPropertyRepository,
+        @inject(TokenTypes.ICreateNotificationUseCase)
+        private readonly _createNotification: ICreateNotificationUsecase,
     ) {}
 
     async getPendingProperties(page: number, limit: number): Promise<PaginatedPropertyResponse> {
@@ -62,6 +66,17 @@ export class VerifyPropertyUseCase implements IVerifyPropertyUseCase {
 
         property.approve(adminId);
         await this._propertyRepo.update(property);
+
+        await this._createNotification.execute({
+            userId: property.ownerId,
+            notificationType: NotificationType.PROPERTY_APPROVED,
+            title: 'Property Approved',
+            message: `Your property "${property.title}" has been approved and is now active.`,
+            actionUrl: `/properties/${property.id}`,
+            relatedEntityType: 'Property',
+            relatedEntityId: property.id,
+            notificationData: { propertyId: property.id, title: property.title },
+        });
     }
 
     async rejectProperty(propertyId: string, reason?: string): Promise<void> {
@@ -72,5 +87,16 @@ export class VerifyPropertyUseCase implements IVerifyPropertyUseCase {
 
         property.reject(reason);
         await this._propertyRepo.update(property);
+
+        await this._createNotification.execute({
+            userId: property.ownerId,
+            notificationType: NotificationType.PROPERTY_REJECTED,
+            title: 'Property Rejected',
+            message: `Your property "${property.title}" was rejected. Reason: ${reason || 'No reason provided'}.`,
+            actionUrl: `/properties/${property.id}`,
+            relatedEntityType: 'Property',
+            relatedEntityId: property.id,
+            notificationData: { propertyId: property.id, title: property.title, reason },
+        });
     }
 }

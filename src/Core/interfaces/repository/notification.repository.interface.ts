@@ -1,11 +1,10 @@
-import { NotificationEntity } from "@core/entities/notification.entity";
-import { IBaseRepository } from "../base/base-repository.interface";
+import { NotificationEntity } from '@core/entities/notification.entity';
+import { IBaseRepository } from '../base/base-repository.interface';
 
-export interface INotificationRepository extends IBaseRepository<NotificationEntity>{
-    findById(id:string):Promise<NotificationEntity | null >
-    findByUserId(userId:string):Promise<NotificationEntity[]>
-    markAsRead(notificationId:string):Promise<void>
-    markAllAsRead(userId:string):Promise<void>
-    getUnreadCount(userId:string):Promise<number>
-    save(entity:NotificationEntity):Promise<NotificationEntity>
+export interface INotificationRepository extends IBaseRepository<NotificationEntity> {
+    findById(id: string): Promise<NotificationEntity | null>;
+    findByUserId(userId: string, page?: number, limit?: number): Promise<NotificationEntity[]>;
+    markAsRead(notificationId: string): Promise<void>;
+    markAllAsRead(userId: string): Promise<void>;
+    getUnreadCount(userId: string): Promise<number>;
 }

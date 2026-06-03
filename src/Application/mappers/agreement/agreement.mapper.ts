@@ -11,8 +11,8 @@ export class AgreementMapper {
             id: crypto.randomUUID(),
             agreementNumber: agreementNumber,
             propertyId: dto.propertyId,
-            ownerId: dto.ownerId,
-            tenantId: dto.tenantId,
+            ownerId: dto.ownerId || '',
+            tenantId: dto.tenantId || '',
 
             startDate: new Date(dto.startDate),
             endDate: new Date(dto.endDate),

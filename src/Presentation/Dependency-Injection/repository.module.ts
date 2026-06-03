@@ -16,6 +16,8 @@ import { IWishlistRepository } from '@core/interfaces/repository/wishlist.reposi
 import { WishlistRepository } from '@infrastructure/repositories/wishlist.repository';
 import { IAgreementRepository } from '@core/interfaces/repository/agreement-repository.interface';
 import { AgreementRepository } from '@infrastructure/repositories/agreement.repository';
+import { INotificationRepository } from '@core/interfaces/repository/notification.repository.interface';
+import { NotificationRepository } from '@infrastructure/repositories/notification.repository';
 
 export class RepositoryModule {
     //this is like when a call for Iuserrepo token ,it will give an instance of UserRepository class
@@ -45,6 +47,9 @@ export class RepositoryModule {
 
         container.register<IAgreementRepository>(TokenTypes.IAgreementRepository, {
             useClass: AgreementRepository,
+        });
+        container.register<INotificationRepository>(TokenTypes.INotificationRepository, {
+            useClass: NotificationRepository,
         });
     }
 }
