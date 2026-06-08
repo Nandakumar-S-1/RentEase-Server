@@ -29,7 +29,7 @@ export interface ISignOwnerUseCase {
 }
 
 export interface ISignTenantUseCase {
-    execute(id: string, dto: SignAgreementDTO): Promise<void>;
+    execute(id: string, dto: SignAgreementDTO): Promise<string>;
 }
 
 export interface IAddTenantRemarksUseCase {

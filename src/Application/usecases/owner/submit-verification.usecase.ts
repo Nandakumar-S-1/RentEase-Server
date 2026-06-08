@@ -45,7 +45,7 @@ export class SubmitVerificationUseCase implements ISubmitVerificationUseCase {
                     notificationType: NotificationType.OWNER_VERIFICATION_SUBMITTED,
                     title: 'New Owner Verification Request',
                     message: 'Owner verification documents have been submitted. Please review.',
-                    actionUrl: `/admin/verifications/${ownerProfile.userId}`,
+                    actionUrl: `/admin/owners`,
                     relatedEntityType: 'OwnerProfile',
                     relatedEntityId: ownerProfile.id,
                     notificationData: { ownerId: ownerProfile.userId, profileId: ownerProfile.id }

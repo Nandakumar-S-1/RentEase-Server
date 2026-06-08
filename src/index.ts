@@ -6,6 +6,10 @@ import { App } from 'infrastructure/config/app';
 
 import { logger } from 'shared/log/logger';
 import { verifyServices } from 'infrastructure/connections/verify-services';
+import http from 'http';
+import { container } from 'tsyringe';
+import { TokenTypes } from '@shared/types/tokens';
+import { ISocketService } from '@application/interfaces/services/socket.service.interface';
 
 const PORT = process.env.PORT || 3000;
 
@@ -15,7 +19,12 @@ async function serverStart() {
         const app = new App();
         const expressApplication = app.getApp();
 
-        expressApplication.listen(PORT, () => {
+        const httpServer = http.createServer(expressApplication);
+
+        const socketService = container.resolve<ISocketService>(TokenTypes.ISocketService);
+        socketService.initialize(httpServer);
+
+        httpServer.listen(PORT, () => {
             logger.info(`🚀 Server running on port http://localhost:${PORT}`);
         });
     } catch (error) {

@@ -69,3 +69,13 @@ export const ServiceProvider_Response_Messages = {
     DELETED: 'Service provider deleted successfully',
     STATUS_UPDATED: 'Status updated successfully',
 } as const;
+
+export const Agreement_Response_Messages = {
+    CREATED: 'Agreement created successfully',
+    OWNER_SIGNED: 'Owner signed successfully',
+    TENANT_SIGNED: 'Tenant signed successfully',
+    PDF_GENERATED: 'PDF generated successfully',
+    KYC_UPLOADED: 'KYC uploaded successfully',
+    UPLOAD_URLS_GENERATED: 'Upload URLs generated successfully',
+    FETCHED: 'Agreement fetched successfully',
+} as const;

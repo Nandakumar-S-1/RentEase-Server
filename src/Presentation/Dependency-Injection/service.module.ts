@@ -10,6 +10,8 @@ import { JwtService } from 'infrastructure/services/jwt.service';
 import { MailService } from 'infrastructure/services/mail.service';
 import { OtpService } from 'infrastructure/services/otp.service';
 import { S3Service } from 'infrastructure/services/s3.service';
+import { ISocketService } from '@application/interfaces/services/socket.service.interface';
+import { SocketService } from 'infrastructure/services/socket.service';
 
 import { container } from 'tsyringe';
 import { TokenTypes } from 'shared/types/tokens';
@@ -42,6 +44,9 @@ export class ServiceModule {
 
         container.register<IS3Service>(TokenTypes.IS3Service, {
             useClass: S3Service,
+        });
+        container.register<ISocketService>(TokenTypes.ISocketService, {
+            useClass: SocketService,
         });
         container.register<IModerationService>(TokenTypes.IModerationService, {
             useClass: ModerationService,

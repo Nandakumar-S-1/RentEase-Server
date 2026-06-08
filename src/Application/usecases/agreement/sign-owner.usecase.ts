@@ -6,11 +6,13 @@ import { TokenTypes } from '@shared/types/tokens';
 import { NotificationType } from '@shared/enums/notification-type.enum';
 import { inject, injectable } from 'tsyringe';
 import { logger } from '@shared/log/logger';
+import { AgreementNotFoundError, InvalidAgreementStatusError } from '@shared/errors/agreement-errors';
+import { AgreementStatus } from '@prisma/client';
 
 @injectable()
 export class SignOwnerUseCase implements ISignOwnerUseCase {
     constructor(
-        @inject('IAgreementRepository') private agreementRepository: IAgreementRepository,
+        @inject(TokenTypes.IAgreementRepository) private agreementRepository: IAgreementRepository,
         @inject(TokenTypes.ICreateNotificationUseCase) private createNotification: ICreateNotificationUsecase,
     ) {}
 
@@ -19,11 +21,11 @@ export class SignOwnerUseCase implements ISignOwnerUseCase {
 
         const agreement = await this.agreementRepository.findById(id);
         if (!agreement) {
-            throw new Error('Agreement not found');
+            throw new AgreementNotFoundError();
         }
 
-        if (agreement.status !== 'DRAFT') {
-            throw new Error(`Cannot sign agreement in ${agreement.status} status`);
+        if (agreement.status !== AgreementStatus.DRAFT) {
+            throw new InvalidAgreementStatusError(agreement.status);
         }
 
         agreement.signOwner(dto.signatureUrl);

@@ -6,19 +6,21 @@ import { logger } from '@shared/log/logger';
 import PDFDocument from 'pdfkit';
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import crypto from 'crypto';
+import { TokenTypes } from '@shared/types/tokens';
+import { AgreementNotFoundError, AgreementSignatureRequiredError } from '@shared/errors/agreement-errors';
 
 @injectable()
 export class GenerateAgreementPdfUseCase implements IGeneratePdfUseCase {
     private s3Client: S3Client;
 
     constructor(
-        @inject('IAgreementRepository') private agreementRepository: IAgreementRepository,
+        @inject(TokenTypes.IAgreementRepository) private agreementRepository: IAgreementRepository,
     ) {
         this.s3Client = new S3Client({
             region: process.env.AWS_REGION || 'ap-south-1',
             credentials: {
-                accessKeyId: process.env.AWS_ACCESS_KEY_ID || '',
-                secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || '',
+                accessKeyId: process.env.AWS_ACCESS_KEY || '',
+                secretAccessKey: process.env.AWS_SECRET_KEY || '',
             },
         });
     }
@@ -27,10 +29,10 @@ export class GenerateAgreementPdfUseCase implements IGeneratePdfUseCase {
         logger.info({ agreementId: id }, 'Generating PDF for agreement');
 
         const agreement = await this.agreementRepository.findById(id);
-        if (!agreement) throw new Error('Agreement not found');
+        if (!agreement) throw new AgreementNotFoundError();
 
         if (!agreement.ownerSignatureUrl || !agreement.tenantSignatureUrl) {
-            throw new Error('Both parties must sign before PDF generation');
+            throw new AgreementSignatureRequiredError();
         }
 
         const pdfBuffer = await this.generatePdfBuffer(agreement);
@@ -38,7 +40,7 @@ export class GenerateAgreementPdfUseCase implements IGeneratePdfUseCase {
 
         await this.s3Client.send(
             new PutObjectCommand({
-                Bucket: process.env.AWS_S3_BUCKET_NAME || 'rentease-bucket',
+                Bucket: process.env.AWS_BUCKET_NAME || 'rentease-bucket',
                 Key: fileKey,
                 Body: pdfBuffer,
                 ContentType: 'application/pdf',
@@ -46,7 +48,7 @@ export class GenerateAgreementPdfUseCase implements IGeneratePdfUseCase {
             }),
         );
 
-        const pdfUrl = `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileKey}`;
+        const pdfUrl = `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileKey}`;
 
         agreement.setPdfUrl(pdfUrl);
         await this.agreementRepository.update(agreement);

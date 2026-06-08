@@ -60,7 +60,18 @@ import { SignOwnerUseCase } from '@application/usecases/agreement/sign-owner.use
 import { SignTenantUseCase } from '@application/usecases/agreement/sign-tenant.usecase';
 import { GenerateAgreementPdfUseCase } from '@application/usecases/agreement/generate-agreement-pdf.usecase';
 import { UploadTenantKycUseCase } from '@application/usecases/agreement/upload-tenant-kyc.usecase';
+import { GetAgreementUseCase } from '@application/usecases/agreement/get-agreement.usecase';
+import { GetMyAgreementsUseCase } from '@application/usecases/agreement/get-my-agreements.usecase';
 import { ICreateNotificationUsecase, IGetUserNotificationsUseCase } from '@application/interfaces/notification/notification.usecase.interface';
+import {
+    ICreateAgreementUseCase,
+    ISignOwnerUseCase,
+    ISignTenantUseCase,
+    IGeneratePdfUseCase,
+    IUploadTenantKycUseCase,
+    IGetAgreementUseCase,
+    IGetMyAgreementsUseCase,
+} from '@application/interfaces/agreement/agreement.usecase.interface';
 import { CreateNotificationUseCase } from '@application/usecases/notification/create-notification.usecase';
 import { GetUserNotificationsUseCase } from '@application/usecases/notification/get-user-notifications.usecase';
 
@@ -142,23 +153,27 @@ export class UseCaseModule {
             useClass: RelistPropertyUseCase,
         });
 
-        container.register('ICreateAgreementUseCase', {
+        container.register<ICreateAgreementUseCase>(TokenTypes.ICreateAgreementUseCase, {
             useClass: CreateAgreementUseCase,
         });
-        container.register('ISignOwnerUseCase', {
+        container.register<ISignOwnerUseCase>(TokenTypes.ISignOwnerUseCase, {
             useClass: SignOwnerUseCase,
         });
-        container.register('ISignTenantUseCase', {
+        container.register<ISignTenantUseCase>(TokenTypes.ISignTenantUseCase, {
             useClass: SignTenantUseCase,
         });
-        container.register('IGeneratePdfUseCase', {
+        container.register<IGeneratePdfUseCase>(TokenTypes.IGeneratePdfUseCase, {
             useClass: GenerateAgreementPdfUseCase,
         });
-        container.register('IUploadTenantKycUseCase', {
+        container.register<IUploadTenantKycUseCase>(TokenTypes.IUploadTenantKycUseCase, {
             useClass: UploadTenantKycUseCase,
         });
-
-        // Notification use cases
+        container.register<IGetAgreementUseCase>(TokenTypes.IGetAgreementUseCase, {
+            useClass: GetAgreementUseCase,
+        });
+        container.register<IGetMyAgreementsUseCase>(TokenTypes.IGetMyAgreementsUseCase, {
+            useClass: GetMyAgreementsUseCase,
+        });
         container.register<ICreateNotificationUsecase>(TokenTypes.ICreateNotificationUseCase, {
             useClass: CreateNotificationUseCase,
         });

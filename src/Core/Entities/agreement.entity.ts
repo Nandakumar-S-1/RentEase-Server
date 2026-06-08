@@ -113,6 +113,13 @@ export class AgreementEntity {
         this._updatedAt = new Date();
     }
 
+    revertTenantSignature(): void {
+        this._tenantSignatureUrl = undefined;
+        this._tenantSignedAt = undefined;
+        this._status = 'PENDING_TENANT_SIGNATURE';
+        this._updatedAt = new Date();
+    }
+
     addTenantRemarks(remarks: string): void {
         this._tenantRemarks = remarks;
         this._updatedAt = new Date();

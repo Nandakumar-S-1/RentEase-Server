@@ -1,4 +1,4 @@
-import { ISignTenantUseCase } from '@application/interfaces/agreement/agreement.usecase.interface';
+import { ISignTenantUseCase, IGeneratePdfUseCase } from '@application/interfaces/agreement/agreement.usecase.interface';
 import { SignAgreementDTO } from '@application/dtos/agreement/agreement.dto';
 import { IAgreementRepository } from '@core/interfaces/repository/agreement-repository.interface';
 import { ICreateNotificationUsecase } from '@application/interfaces/notification/notification.usecase.interface';
@@ -6,30 +6,41 @@ import { TokenTypes } from '@shared/types/tokens';
 import { NotificationType } from '@shared/enums/notification-type.enum';
 import { inject, injectable } from 'tsyringe';
 import { logger } from '@shared/log/logger';
+import { AgreementNotFoundError, InvalidAgreementStatusError } from '@shared/errors/agreement-errors';
+import { AgreementStatus } from '@prisma/client';
 
 @injectable()
 export class SignTenantUseCase implements ISignTenantUseCase {
     constructor(
-        @inject('IAgreementRepository') private agreementRepository: IAgreementRepository,
+        @inject(TokenTypes.IAgreementRepository) private agreementRepository: IAgreementRepository,
         @inject(TokenTypes.ICreateNotificationUseCase) private createNotification: ICreateNotificationUsecase,
-    ) {}
+        @inject(TokenTypes.IGeneratePdfUseCase) private generatePdfUseCase: IGeneratePdfUseCase,
+    ) { }
 
-    async execute(id: string, dto: SignAgreementDTO): Promise<void> {
+    async execute(id: string, dto: SignAgreementDTO): Promise<string> {
         logger.info({ agreementId: id }, 'Tenant signing agreement');
 
         const agreement = await this.agreementRepository.findById(id);
         if (!agreement) {
-            throw new Error('Agreement not found');
+            throw new AgreementNotFoundError();
         }
 
-        if (agreement.status !== 'PENDING_TENANT_SIGNATURE') {
-            throw new Error(`Cannot sign agreement in ${agreement.status} status`);
+        if (agreement.status !== AgreementStatus.PENDING_TENANT_SIGNATURE) {
+            throw new InvalidAgreementStatusError(agreement.status);
         }
-
-        // Note: Tenant KYC check would typically happen here. E.g., checking if tenantProfile.verificationStatus is 'VERIFIED'.
 
         agreement.signTenant(dto.signatureUrl);
         await this.agreementRepository.update(agreement);
+
+        let pdfUrl: string;
+        try {
+            pdfUrl = await this.generatePdfUseCase.execute(id);
+        } catch (error) {
+            logger.error({ agreementId: id, err: error }, 'Failed to generate PDF, reverting tenant signature');
+            agreement.revertTenantSignature();
+            await this.agreementRepository.update(agreement);
+            throw error;
+        }
 
         try {
             await this.createNotification.execute({
@@ -45,5 +56,7 @@ export class SignTenantUseCase implements ISignTenantUseCase {
         } catch (error) {
             logger.error({ err: error }, 'Failed to trigger notification for tenant signing');
         }
+
+        return pdfUrl;
     }
 }

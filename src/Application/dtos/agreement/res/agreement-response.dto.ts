@@ -29,6 +29,7 @@ export interface AgreementResponseDTO {
     tenantSignatureUrl?: string;
     tenantSignedAt?: Date;
     agreementPdfUrl?: string;
+    tenantKycDocumentUrl?: string;
 
     status: AgreementStatus;
     terminationReason?: string;

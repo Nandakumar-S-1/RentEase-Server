@@ -92,3 +92,14 @@ export const NOTIFICATION_ROUTES = {
     MARK_AS_READ: '/:id/read',
     MARK_ALL_AS_READ: '/read-all',
 } as const;
+
+export const AGREEMENT_ROUTES = {
+    CREATE: '/',
+    GET_MY: '/me',
+    GET_BY_ID: '/:id',
+    SIGN_OWNER: '/:id/sign-owner',
+    SIGN_TENANT: '/:id/sign-tenant',
+    GENERATE_PDF: '/:id/generate-pdf',
+    UPLOAD_KYC: '/:id/kyc',
+    UPLOAD_URLS: '/:id/upload-urls',
+} as const;

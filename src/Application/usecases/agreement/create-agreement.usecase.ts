@@ -1,6 +1,7 @@
 import { ICreateAgreementUseCase } from '@application/interfaces/agreement/agreement.usecase.interface';
 import { CreateAgreementDTO } from '@application/dtos/agreement/agreement.dto';
 import { AgreementResponseDTO } from '@application/dtos/agreement/res/agreement-response.dto';
+import { AgreementResponseMapper } from '@application/mappers/agreement/agreement-response.mapper';
 import { IAgreementRepository } from '@core/interfaces/repository/agreement-repository.interface';
 import { AgreementEntity } from '@core/entities/agreement.entity';
 import { ICreateNotificationUsecase } from '@application/interfaces/notification/notification.usecase.interface';
@@ -10,32 +11,38 @@ import crypto from 'crypto';
 import { inject, injectable } from 'tsyringe';
 import { logger } from '@shared/log/logger';
 import { IUserRepository } from '@core/interfaces/repository/user-repository.interface';
+import {
+    TenantEmailRequiredError,
+    TenantUserNotFoundError,
+    InvalidTenantRoleError,
+    OwnerIdRequiredError,
+} from '@shared/errors/agreement-errors';
 
 @injectable()
 export class CreateAgreementUseCase implements ICreateAgreementUseCase {
     constructor(
-        @inject('IAgreementRepository') private agreementRepository: IAgreementRepository,
-        @inject('IUserRepository') private userRepository: IUserRepository,
+        @inject(TokenTypes.IAgreementRepository) private agreementRepository: IAgreementRepository,
+        @inject(TokenTypes.IUserRepository) private userRepository: IUserRepository,
         @inject(TokenTypes.ICreateNotificationUseCase) private createNotification: ICreateNotificationUsecase,
-    ) {}
+    ) { }
 
     async execute(dto: CreateAgreementDTO): Promise<AgreementResponseDTO> {
         logger.info({ propertyId: dto.propertyId }, 'Creating new agreement');
 
         if (!dto.tenantEmail) {
-            throw new Error('Tenant email is required');
+            throw new TenantEmailRequiredError();
         }
 
         const tenant = await this.userRepository.findByEmail(dto.tenantEmail);
         if (!tenant) {
-            throw new Error('No registered tenant found with the provided email address');
+            throw new TenantUserNotFoundError();
         }
         if (tenant.role !== 'TENANT') {
-            throw new Error('The user with the provided email address is not registered as a tenant');
+            throw new InvalidTenantRoleError();
         }
 
         if (!dto.ownerId) {
-            throw new Error('Owner ID is required');
+            throw new OwnerIdRequiredError();
         }
 
         const agreementNumber = `AGR-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
@@ -63,7 +70,7 @@ export class CreateAgreementUseCase implements ICreateAgreementUseCase {
             termsAndConditions: dto.termsAndConditions ?? [],
             customClauses: dto.customClauses,
 
-            status: 'DRAFT', // Starts as Draft
+            status: 'DRAFT',
             depositPaid: false,
 
             createdAt: new Date(),
@@ -87,17 +94,6 @@ export class CreateAgreementUseCase implements ICreateAgreementUseCase {
             logger.error({ err: error }, 'Failed to trigger notification for agreement creation');
         }
 
-        return {
-            id: created.id,
-            agreementNumber: created.agreementNumber,
-            propertyId: created.propertyId,
-            ownerId: created.ownerId,
-            tenantId: created.tenantId,
-            status: created.status,
-            startDate: created.startDate,
-            endDate: created.endDate,
-            monthlyRent: created.monthlyRent,
-            depositAmount: created.depositAmount,
-        } as AgreementResponseDTO;
+        return AgreementResponseMapper.toResponse(created);
     }
 }

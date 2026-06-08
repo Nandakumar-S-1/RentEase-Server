@@ -32,6 +32,7 @@ export class AgreementResponseMapper {
             tenantSignatureUrl: entity.tenantSignatureUrl,
             tenantSignedAt: entity.tenantSignedAt,
             agreementPdfUrl: entity.agreementPdfUrl,
+            tenantKycDocumentUrl: entity.tenantKycDocumentUrl,
 
             status: entity.status,
             terminationReason: entity.terminationReason,

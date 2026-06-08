@@ -2,7 +2,8 @@ node_modules
 # Keep environment variables out of version control
 .env
 .vscode/
-/src/generated/prisma
+dist/
+src/generated/prisma
 /src/infrastructure/config/firebase-key.json
 /src/infrastructure/config/firebase-key-gvapi.json
 /src/shared/log/app.1.log

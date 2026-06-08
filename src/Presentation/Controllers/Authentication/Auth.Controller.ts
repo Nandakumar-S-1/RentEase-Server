@@ -54,7 +54,7 @@ export class AuthController {
     ) {}
 
     register = async (req: Request, res: Response): Promise<Response> => {
-        logger.info('registered data from the frontend is ', req.body);
+        logger.info(`register request init for email: ${req.body?.email}`);
         const user = await this._createUserUseCase.execute(req.body);
         const userData = UserMapper.toResponseDTO(user);
 
