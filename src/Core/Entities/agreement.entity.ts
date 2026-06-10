@@ -52,7 +52,6 @@ export class AgreementEntity {
 
     static create(data: AgreementTypeData): AgreementEntity {
         return new AgreementEntity(
-            
             data.id,
             data.agreementNumber,
             data.propertyId,
@@ -109,6 +108,11 @@ export class AgreementEntity {
     signTenant(signatureUrl: string): void {
         this._tenantSignatureUrl = signatureUrl;
         this._tenantSignedAt = new Date();
+        this._status = 'PENDING_PAYMENT';
+        this._updatedAt = new Date();
+    }
+
+    activateAfterDepositPaid(): void {
         this._status = 'ACTIVE';
         this._updatedAt = new Date();
     }

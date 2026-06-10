@@ -17,7 +17,7 @@ export type PropertyDetailsTypeData = {
     roadWidthFeet?: number | null;
 
     // shop
-    shopType?: string | null; // retail, office, warehouse
+    shopType?: string | null; // retail, office
     hasParking?: boolean | null;
 
     preferredTenantType?: string[] | null;

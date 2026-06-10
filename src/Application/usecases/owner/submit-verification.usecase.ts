@@ -13,6 +13,7 @@ import {
     OwnerProfileNotFoundError,
 } from 'shared/errors/owner-errors';
 import { inject, injectable } from 'tsyringe';
+import { logger } from '@shared/log/logger';
 
 @injectable()
 export class SubmitVerificationUseCase implements ISubmitVerificationUseCase {
@@ -48,11 +49,14 @@ export class SubmitVerificationUseCase implements ISubmitVerificationUseCase {
                     actionUrl: `/admin/owners`,
                     relatedEntityType: 'OwnerProfile',
                     relatedEntityId: ownerProfile.id,
-                    notificationData: { ownerId: ownerProfile.userId, profileId: ownerProfile.id }
+                    notificationData: { ownerId: ownerProfile.userId, profileId: ownerProfile.id },
                 });
             }
         } catch (error) {
-            console.error('Failed to send admin notifications for owner verification submission:', error);
+            logger.error(
+                { err: error },
+                'Failed to send admin notifications for owner verification submission',
+            );
         }
 
         return OwnerVerificationMapper.toResponse(updated);

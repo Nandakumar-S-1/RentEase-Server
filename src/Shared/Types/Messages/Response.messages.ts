@@ -79,3 +79,9 @@ export const Agreement_Response_Messages = {
     UPLOAD_URLS_GENERATED: 'Upload URLs generated successfully',
     FETCHED: 'Agreement fetched successfully',
 } as const;
+
+export const Payment_Response_Messages = {
+    FETCHED: 'Payments fetched successfully',
+    CHECKOUT_CREATED: 'Checkout session created successfully',
+    WEBHOOK_RECEIVED: 'Webhook received successfully',
+} as const;

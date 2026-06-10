@@ -10,6 +10,7 @@ import { ServiceProviderRoutes } from './property/service-provider.routes';
 import { WishlistRoutes } from './property/wishlist.routes';
 import { AgreementRoutes } from './agreement.routes';
 import { NotificationRoutes } from './notification/notification.routes';
+import { PaymentRoutes } from './payment.routes';
 
 const router = Router();
 const userRoutes = container.resolve(UserRoutes);
@@ -21,6 +22,7 @@ const serviceProviderRoutes = container.resolve(ServiceProviderRoutes);
 const wishlistRoutes = container.resolve(WishlistRoutes);
 const agreementRoutes = container.resolve(AgreementRoutes);
 const notificationRoutes = container.resolve(NotificationRoutes);
+const paymentRoutes = container.resolve(PaymentRoutes);
 
 router.use(API_PREFIXES.AUTH, userRoutes.router);
 router.use(API_PREFIXES.ADMIN, adminRoutes.router);
@@ -31,4 +33,5 @@ router.use(API_PREFIXES.SERVICE_PROVIDER, serviceProviderRoutes.router);
 router.use(API_PREFIXES.WISHLIST, wishlistRoutes.router);
 router.use(API_PREFIXES.AGREEMENT, agreementRoutes.router);
 router.use(API_PREFIXES.NOTIFICATION, notificationRoutes.router);
+router.use(API_PREFIXES.PAYMENT, paymentRoutes.router);
 export default router;

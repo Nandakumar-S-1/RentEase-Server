@@ -23,8 +23,9 @@ export class CreateAgreementUseCase implements ICreateAgreementUseCase {
     constructor(
         @inject(TokenTypes.IAgreementRepository) private agreementRepository: IAgreementRepository,
         @inject(TokenTypes.IUserRepository) private userRepository: IUserRepository,
-        @inject(TokenTypes.ICreateNotificationUseCase) private createNotification: ICreateNotificationUsecase,
-    ) { }
+        @inject(TokenTypes.ICreateNotificationUseCase)
+        private createNotification: ICreateNotificationUsecase,
+    ) {}
 
     async execute(dto: CreateAgreementDTO): Promise<AgreementResponseDTO> {
         logger.info({ propertyId: dto.propertyId }, 'Creating new agreement');
@@ -88,7 +89,7 @@ export class CreateAgreementUseCase implements ICreateAgreementUseCase {
                 actionUrl: `/agreements/${created.id}`,
                 relatedEntityType: 'Agreement',
                 relatedEntityId: created.id,
-                notificationData: { agreementNumber: created.agreementNumber }
+                notificationData: { agreementNumber: created.agreementNumber },
             });
         } catch (error) {
             logger.error({ err: error }, 'Failed to trigger notification for agreement creation');

@@ -6,6 +6,7 @@ import { AdminLoginController } from 'presentation/controllers/admin/admin-login
 import { ADMIN_ROUTES } from '@shared/constants/routes';
 import { AdminOwnerVerificationController } from 'presentation/controllers/admin/admin-owner-verification.controller';
 import { AdminPropertyVerificationController } from 'presentation/controllers/admin/admin-property-verification.controller';
+import { AdminDataController } from 'presentation/controllers/admin/admin-data.controller';
 import { authMiddleware } from '@presentation/middlewares/auth.middleware';
 import { neededRole } from '@presentation/middlewares/role.middleware';
 import { UserRole } from 'shared/enums/user-role.enum';
@@ -17,6 +18,7 @@ export class AdminRoutes extends BaseRoute {
         private readonly _adminLoginController: AdminLoginController,
         private readonly _adminOwnerVerificationController: AdminOwnerVerificationController,
         private readonly _adminPropertyVerificationController: AdminPropertyVerificationController,
+        private readonly _adminDataController: AdminDataController,
     ) {
         super();
         this.initializeRoutes();
@@ -57,6 +59,22 @@ export class AdminRoutes extends BaseRoute {
                 this._userManagementController.getUserProperties.bind(
                     this._userManagementController,
                 ),
+            ),
+        );
+        this.router.get(
+            ADMIN_ROUTES.USERS.ACTIVITY,
+            authMiddleware,
+            neededRole(UserRole.ADMIN),
+            asyncHandlerFunction(
+                this._adminDataController.getUserActivity.bind(this._adminDataController),
+            ),
+        );
+        this.router.get(
+            ADMIN_ROUTES.USERS.KYC_DOCUMENT,
+            authMiddleware,
+            neededRole(UserRole.ADMIN),
+            asyncHandlerFunction(
+                this._adminDataController.getTenantKycDocument.bind(this._adminDataController),
             ),
         );
         this.router.patch(
@@ -132,6 +150,56 @@ export class AdminRoutes extends BaseRoute {
             authMiddleware,
             neededRole(UserRole.ADMIN),
             asyncHandlerFunction(this._adminPropertyVerificationController.rejectProperty),
+        );
+
+        // Admin Agreements
+        this.router.get(
+            ADMIN_ROUTES.AGREEMENTS.BASE,
+            authMiddleware,
+            neededRole(UserRole.ADMIN),
+            asyncHandlerFunction(
+                this._adminDataController.getAllAgreements.bind(this._adminDataController),
+            ),
+        );
+
+        // Admin Agreement Details
+        this.router.get(
+            ADMIN_ROUTES.AGREEMENTS.DETAILS,
+            authMiddleware,
+            neededRole(UserRole.ADMIN),
+            asyncHandlerFunction(
+                this._adminDataController.getAgreementDetails.bind(this._adminDataController),
+            ),
+        );
+
+        // Admin Payments
+        this.router.get(
+            ADMIN_ROUTES.PAYMENTS.BASE,
+            authMiddleware,
+            neededRole(UserRole.ADMIN),
+            asyncHandlerFunction(
+                this._adminDataController.getAllPayments.bind(this._adminDataController),
+            ),
+        );
+
+        // User Agreements
+        this.router.get(
+            ADMIN_ROUTES.USERS.AGREEMENTS,
+            authMiddleware,
+            neededRole(UserRole.ADMIN),
+            asyncHandlerFunction(
+                this._adminDataController.getUserAgreements.bind(this._adminDataController),
+            ),
+        );
+
+        // User Payments
+        this.router.get(
+            ADMIN_ROUTES.USERS.PAYMENTS,
+            authMiddleware,
+            neededRole(UserRole.ADMIN),
+            asyncHandlerFunction(
+                this._adminDataController.getUserPayments.bind(this._adminDataController),
+            ),
         );
     }
 }

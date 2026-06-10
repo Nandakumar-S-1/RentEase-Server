@@ -71,7 +71,7 @@ export class AgreementRepository implements IAgreementRepository {
         const res = await prisma.agreement.update({
             where: { id },
             data: {
-                ["tenantKycDocumentUrl" as string]: kycUrl,
+                ['tenantKycDocumentUrl' as string]: kycUrl,
             } as unknown as Prisma.AgreementUpdateInput,
         });
         return AgreementPersistenceMapper.toEntity(res);

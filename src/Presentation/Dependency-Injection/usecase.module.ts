@@ -62,7 +62,10 @@ import { GenerateAgreementPdfUseCase } from '@application/usecases/agreement/gen
 import { UploadTenantKycUseCase } from '@application/usecases/agreement/upload-tenant-kyc.usecase';
 import { GetAgreementUseCase } from '@application/usecases/agreement/get-agreement.usecase';
 import { GetMyAgreementsUseCase } from '@application/usecases/agreement/get-my-agreements.usecase';
-import { ICreateNotificationUsecase, IGetUserNotificationsUseCase } from '@application/interfaces/notification/notification.usecase.interface';
+import {
+    ICreateNotificationUsecase,
+    IGetUserNotificationsUseCase,
+} from '@application/interfaces/notification/notification.usecase.interface';
 import {
     ICreateAgreementUseCase,
     ISignOwnerUseCase,
@@ -74,6 +77,18 @@ import {
 } from '@application/interfaces/agreement/agreement.usecase.interface';
 import { CreateNotificationUseCase } from '@application/usecases/notification/create-notification.usecase';
 import { GetUserNotificationsUseCase } from '@application/usecases/notification/get-user-notifications.usecase';
+import { CreateActivationPaymentUseCase } from '@application/usecases/payment/create-activation-payment.usecase';
+import { InitiatePaymentCheckoutUseCase } from '@application/usecases/payment/initiate-payment-checkout.usecase';
+import { HandleStripeWebhookUseCase } from '@application/usecases/payment/handle-stripe-webhook.usecase';
+import { GetAgreementPaymentsUseCase } from '@application/usecases/payment/get-agreement-payments.usecase';
+import { GetPaymentByIdUseCase } from '@application/usecases/payment/get-payment-by-id.usecase';
+import {
+    ICreateActivationPaymentUseCase,
+    IInitiatePaymentCheckoutUseCase,
+    IHandleStripeWebhookUseCase,
+    IGetAgreementPaymentsUseCase,
+    IGetPaymentByIdUseCase,
+} from '@application/interfaces/payment/payment.usecase.interface';
 
 export class UseCaseModule {
     static registerModules(): void {
@@ -179,6 +194,23 @@ export class UseCaseModule {
         });
         container.register<IGetUserNotificationsUseCase>(TokenTypes.IGetUserNotificationsUseCase, {
             useClass: GetUserNotificationsUseCase,
+        });
+        container.register<ICreateActivationPaymentUseCase>(
+            TokenTypes.ICreateActivationPaymentUseCase,
+            { useClass: CreateActivationPaymentUseCase },
+        );
+        container.register<IInitiatePaymentCheckoutUseCase>(
+            TokenTypes.IInitiatePaymentCheckoutUseCase,
+            { useClass: InitiatePaymentCheckoutUseCase },
+        );
+        container.register<IHandleStripeWebhookUseCase>(TokenTypes.IHandleStripeWebhookUseCase, {
+            useClass: HandleStripeWebhookUseCase,
+        });
+        container.register<IGetAgreementPaymentsUseCase>(TokenTypes.IGetAgreementPaymentsUseCase, {
+            useClass: GetAgreementPaymentsUseCase,
+        });
+        container.register<IGetPaymentByIdUseCase>(TokenTypes.IGetPaymentByIdUseCase, {
+            useClass: GetPaymentByIdUseCase,
         });
     }
 }

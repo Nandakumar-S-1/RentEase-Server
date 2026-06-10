@@ -4,7 +4,7 @@ import { ILogger } from '@application/interfaces/services/logger.service.interfa
 // const isProd = process.env.NODE_ENV !== 'production';
 
 export class PinoLogger implements ILogger {
-    private logger: pino.Logger;
+    private _logger: pino.Logger;
 
     constructor() {
         const isProd = process.env.NODE_ENV === 'production';
@@ -13,7 +13,7 @@ export class PinoLogger implements ILogger {
         const logFileSize = process.env.LOG_FILE_SIZE || '10m';
         const logFileCount = Number(process.env.LOG_FILE_COUNT) || 7;
 
-        this.logger = pino({
+        this._logger = pino({
             level: logLevel,
             transport: {
                 targets: [
@@ -80,33 +80,33 @@ export class PinoLogger implements ILogger {
 
     info(message: string | object, ...args: unknown[]): void {
         if (typeof message === 'string') {
-            this.logger.info(this.formatMessage(message, args));
+            this._logger.info(this.formatMessage(message, args));
             return;
         }
-        this.logger.info(this.formatObject(message, args));
+        this._logger.info(this.formatObject(message, args));
     }
 
     error(message: string | object, ...args: unknown[]): void {
         if (typeof message === 'string') {
-            this.logger.error(this.formatMessage(message, args));
+            this._logger.error(this.formatMessage(message, args));
             return;
         }
-        this.logger.error(this.formatObject(message, args));
+        this._logger.error(this.formatObject(message, args));
     }
 
     warn(message: string | object, ...args: unknown[]): void {
         if (typeof message === 'string') {
-            this.logger.warn(this.formatMessage(message, args));
+            this._logger.warn(this.formatMessage(message, args));
             return;
         }
-        this.logger.warn(this.formatObject(message, args));
+        this._logger.warn(this.formatObject(message, args));
     }
 
     debug(message: string | object, ...args: unknown[]): void {
         if (typeof message === 'string') {
-            this.logger.debug(this.formatMessage(message, args));
+            this._logger.debug(this.formatMessage(message, args));
             return;
         }
-        this.logger.debug(this.formatObject(message, args));
+        this._logger.debug(this.formatObject(message, args));
     }
 }

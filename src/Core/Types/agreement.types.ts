@@ -1,6 +1,7 @@
 export type AgreementStatus =
     | 'DRAFT'
     | 'PENDING_TENANT_SIGNATURE'
+    | 'PENDING_PAYMENT'
     | 'ACTIVE'
     | 'EXPIRED'
     | 'TERMINATED';

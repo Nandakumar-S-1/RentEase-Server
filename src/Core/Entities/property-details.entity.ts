@@ -5,7 +5,7 @@ export class PropertyDetailsEntity {
         private readonly _id: string,
         private readonly _propertyId: string,
 
-        // common attributes
+        // common
         private _bhk: number | null,
         private _bathrooms: number | null,
         private _floorNumber: string | null,
@@ -14,12 +14,12 @@ export class PropertyDetailsEntity {
         private _facingDirection: string | null,
         private _furnishingStatus: string | null,
 
-        // land attributes
+        // land
         private _landType: string | null,
         private _isCornerPlot: boolean | null,
         private _roadWidthFeet: number | null,
 
-        // shop attributes
+        // shop
         private _shopType: string | null,
         private _hasParkingArea: boolean | null,
 

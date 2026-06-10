@@ -75,7 +75,7 @@ export class UserManagementUseCase implements IUserManagement {
     }
 
     async suspendUser(userId: string): Promise<void> {
-        logger.info(`Suspending user: ${userId}`);
+        logger.info(`suspending user: ${userId}`);
         const user = await this._userRepository.findById(userId);
         if (!user) {
             throw new Error('User not found');
@@ -87,10 +87,11 @@ export class UserManagementUseCase implements IUserManagement {
             userId,
             notificationType: NotificationType.USER_SUSPENDED,
             title: 'Account Suspended',
-            message: 'Your account has been suspended by an administrator. Please contact support if you have questions.',
+            message:
+                'Your account has been suspended by an administrator. Please contact support if you have questions.',
             actionUrl: '/support',
             relatedEntityType: 'User',
-            relatedEntityId: userId
+            relatedEntityId: userId,
         });
     }
 

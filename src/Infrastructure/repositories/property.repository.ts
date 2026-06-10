@@ -32,10 +32,7 @@ export class PropertyRepository implements IPropertyRepository {
         }
         return PropertyPersistenceMapper.toEntity(requiredProperty);
     }
-    async findByOwnerId(
-        ownerId: string,
-        options?: QueryOptions,
-    ): Promise<PropertyEntity[]> {
+    async findByOwnerId(ownerId: string, options?: QueryOptions): Promise<PropertyEntity[]> {
         const ownersProperty = await prisma.property.findMany({
             where: {
                 ownerId,

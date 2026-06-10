@@ -39,7 +39,7 @@ export class UnlistPropertyUseCase implements IUnlistPropertyUseCase {
             actionUrl: `/properties/${property.id}`,
             relatedEntityType: 'Property',
             relatedEntityId: property.id,
-            notificationData: { propertyId: property.id, title: property.title }
+            notificationData: { propertyId: property.id, title: property.title },
         });
     }
 }

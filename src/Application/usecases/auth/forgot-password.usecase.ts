@@ -20,7 +20,7 @@ export class ForgotPasswordUseCase implements IForgotPasswordUseCase {
         private readonly _otpService: IOtpService,
         @inject(TokenTypes.IMailService)
         private readonly _mailService: IMailService,
-    ) { }
+    ) {}
 
     async execute(dto: ForgotPasswordRequestDto): Promise<void> {
         const user = await this._userRepository.findByEmail(dto.email);

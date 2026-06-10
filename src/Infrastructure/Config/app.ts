@@ -40,6 +40,9 @@ export class App {
             }),
         );
 
+        // Stripe webhook needs raw body for signature verification
+        this._app.use('/api/payments/webhook', express.raw({ type: 'application/json' }));
+
         this._app.use(express.json());
         this._app.use(cookieParser());
     }

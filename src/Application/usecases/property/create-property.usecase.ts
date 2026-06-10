@@ -10,6 +10,7 @@ import { TokenTypes } from '@shared/types/tokens';
 import { UserRole } from '@shared/enums/user-role.enum';
 import { NotificationType } from '@shared/enums/notification-type.enum';
 import { inject, injectable } from 'tsyringe';
+import { logger } from '@shared/log/logger';
 
 @injectable()
 export class CreatePropertyUseCase implements ICreatePropertyUseCase {
@@ -37,11 +38,18 @@ export class CreatePropertyUseCase implements ICreatePropertyUseCase {
                     actionUrl: `/admin/properties/${createdProperty.id}`,
                     relatedEntityType: 'Property',
                     relatedEntityId: createdProperty.id,
-                    notificationData: { propertyId: createdProperty.id, title: createdProperty.title, ownerId: createdProperty.ownerId }
+                    notificationData: {
+                        propertyId: createdProperty.id,
+                        title: createdProperty.title,
+                        ownerId: createdProperty.ownerId,
+                    },
                 });
             }
         } catch (error) {
-            console.error('Failed to send admin notifications for property creation:', error);
+            logger.error(
+                { err: error },
+                'Failed to send admin notifications for property creation',
+            );
         }
 
         return PropertyResponseMapper.toCreateResponse(createdProperty);

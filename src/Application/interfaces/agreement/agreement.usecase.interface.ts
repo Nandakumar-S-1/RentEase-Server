@@ -29,7 +29,7 @@ export interface ISignOwnerUseCase {
 }
 
 export interface ISignTenantUseCase {
-    execute(id: string, dto: SignAgreementDTO): Promise<string>;
+    execute(id: string, userId: string, dto: SignAgreementDTO): Promise<string>;
 }
 
 export interface IAddTenantRemarksUseCase {
@@ -41,7 +41,7 @@ export interface ISendToTenantUseCase {
 }
 
 export interface IGeneratePdfUseCase {
-    execute(id: string): Promise<string>; // returns the S3 PDF URL
+    execute(id: string): Promise<string>;
 }
 
 export interface ITerminateAgreementUseCase {
