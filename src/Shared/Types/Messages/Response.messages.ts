@@ -39,6 +39,7 @@ export const Admin_Response_Messages = {
     PENDING_OWNERS_FETCHED: 'Fetched all pending owners',
     LOGIN_SUCCESS: 'Admin login successful',
     REJECTION_REASON_TOO_SHORT: 'Rejection reason must be at least 10 characters long',
+    KYC_DOCUMENT_FETCHED: 'KYC document fetched successfully',
 } as const;
 
 export const Profile_Response_Messages = {

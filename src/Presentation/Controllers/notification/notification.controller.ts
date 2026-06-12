@@ -5,6 +5,7 @@ import { IGetUserNotificationsUseCase } from '@application/interfaces/notificati
 import { INotificationRepository } from '@core/interfaces/repository/notification.repository.interface';
 import { ResponseHandler } from '@presentation/utils/response-handler';
 import { NotFoundError } from '@shared/errors/common-errors';
+import { IGetUserNotificationRequestDTO } from '@application/dtos/notification/get-user-notification-request-dto';
 
 @injectable()
 export class NotificationController {
@@ -21,11 +22,8 @@ export class NotificationController {
         const page = Number(req.query.page) || 1;
         const limit = Number(req.query.limit) || 20;
 
-        const notifications = await this._getUserNotificationsUseCase.execute({
-            userId,
-            page,
-            limit,
-        });
+        const dto:IGetUserNotificationRequestDTO={userId,page,limit}
+        const notifications = await this._getUserNotificationsUseCase.execute(dto);
 
         const unreadCount = await this._notificationRepository.getUnreadCount(userId);
 

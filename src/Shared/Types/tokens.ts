@@ -60,4 +60,5 @@ export const TokenTypes = {
     IHandleStripeWebhookUseCase: 'IHandleStripeWebhookUseCase',
     IGetAgreementPaymentsUseCase: 'IGetAgreementPaymentsUseCase',
     IGetPaymentByIdUseCase: 'IGetPaymentByIdUseCase',
+    IGetTenantKycDocumentUseCase: 'IGetTenantKycDocumentUseCase',
 };

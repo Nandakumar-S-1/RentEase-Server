@@ -82,6 +82,7 @@ import { InitiatePaymentCheckoutUseCase } from '@application/usecases/payment/in
 import { HandleStripeWebhookUseCase } from '@application/usecases/payment/handle-stripe-webhook.usecase';
 import { GetAgreementPaymentsUseCase } from '@application/usecases/payment/get-agreement-payments.usecase';
 import { GetPaymentByIdUseCase } from '@application/usecases/payment/get-payment-by-id.usecase';
+import { GetTenantKycDocumentUseCase } from '@application/usecases/admin/get-tenant-kyc-document.usecase';
 import {
     ICreateActivationPaymentUseCase,
     IInitiatePaymentCheckoutUseCase,
@@ -211,6 +212,9 @@ export class UseCaseModule {
         });
         container.register<IGetPaymentByIdUseCase>(TokenTypes.IGetPaymentByIdUseCase, {
             useClass: GetPaymentByIdUseCase,
+        });
+        container.register<GetTenantKycDocumentUseCase>(TokenTypes.IGetTenantKycDocumentUseCase, {
+            useClass: GetTenantKycDocumentUseCase,
         });
     }
 }

@@ -6,8 +6,16 @@ import { GetUserAgreementsUseCase } from '@application/usecases/admin/get-user-a
 import { GetUserPaymentsUseCase } from '@application/usecases/admin/get-user-payments.usecase';
 import { GetAgreementUseCase } from '@application/usecases/agreement/get-agreement.usecase';
 import { GetUserNotificationsUseCase } from '@application/usecases/notification/get-user-notifications.usecase';
+import { GetTenantKycDocumentUseCase } from '@application/usecases/admin/get-tenant-kyc-document.usecase';
 import { IGetUserNotificationRequestDTO } from '@application/dtos/notification/get-user-notification-request-dto';
-import { prisma } from '@infrastructure/database/prisma/prisma.client';
+import { GetAllPaymentsInputDTO } from '@application/dtos/admin/admin-payments.dto';
+import { GetAllAgreementsInputDTO } from '@application/dtos/admin/admin-agreements.dto';
+import { GetUserAgreementsInputDTO } from '@application/dtos/admin/user-agreements.dto';
+import { GetUserPaymentsInputDTO } from '@application/dtos/admin/user-payments.dto';
+import { Http_StatusCodes } from '@shared/enums/http-status-codes.enum';
+import { TokenTypes } from '@shared/types/tokens';
+import { ResponseHandler } from '@presentation/utils/response-handler';
+import { Admin_Response_Messages } from '@shared/types/messages/Response.messages';
 
 @injectable()
 export class AdminDataController {
@@ -24,6 +32,8 @@ export class AdminDataController {
         private _getAgreementUseCase: GetAgreementUseCase,
         @inject(GetUserNotificationsUseCase)
         private _getUserNotificationsUseCase: GetUserNotificationsUseCase,
+        @inject(TokenTypes.IGetTenantKycDocumentUseCase)
+        private _getTenantKycDocumentUseCase: GetTenantKycDocumentUseCase,
     ) {}
 
     async getAllAgreements(req: Request, res: Response): Promise<void> {
@@ -32,14 +42,10 @@ export class AdminDataController {
         const status = req.query.status as string | undefined;
         const search = req.query.search as string | undefined;
 
-        const result = await this._getAllAgreementsUseCase.execute({
-            page,
-            limit,
-            status,
-            search,
-        });
+        const dto:GetAllAgreementsInputDTO={page,limit,status,search}
+        const result = await this._getAllAgreementsUseCase.execute(dto);
 
-        res.status(200).json({
+        res.status(Http_StatusCodes.OK).json({
             success: true,
             data: result,
         });
@@ -51,14 +57,11 @@ export class AdminDataController {
         const status = req.query.status as string | undefined;
         const category = req.query.category as string | undefined;
 
-        const result = await this._getAllPaymentsUseCase.execute({
-            page,
-            limit,
-            status,
-            category,
-        });
+        const dto: GetAllPaymentsInputDTO = { page, limit, status, category }
 
-        res.status(200).json({
+        const result = await this._getAllPaymentsUseCase.execute(dto);
+
+        res.status(Http_StatusCodes.OK).json({
             success: true,
             data: result,
         });
@@ -68,7 +71,7 @@ export class AdminDataController {
         const userId = req.params.id as string;
         const page = parseInt(req.query.page as string) || 1;
         const limit = parseInt(req.query.limit as string) || 20;
-
+        
         const dto: IGetUserNotificationRequestDTO = {
             userId,
             page,
@@ -77,55 +80,28 @@ export class AdminDataController {
 
         const result = await this._getUserNotificationsUseCase.execute(dto);
 
-        res.status(200).json({
+        res.status(Http_StatusCodes.OK).json({
             success: true,
             data: result,
         });
     }
 
-    async getTenantKycDocument(req: Request, res: Response): Promise<void> {
+    async getTenantKycDocument(req: Request, res: Response): Promise<Response> {
         const userId = req.params.id as string;
-
-        const agreement = await prisma.agreement.findFirst({
-            where: { tenantId: userId },
-            select: {
-                id: true,
-                agreementNumber: true,
-                tenantKycDocumentUrl: true,
-            },
-            orderBy: { createdAt: 'desc' },
-        });
-
-        if (!agreement) {
-            res.status(200).json({
-                success: true,
-                data: null,
-            });
-            return;
-        }
-
-        res.status(200).json({
-            success: true,
-            data: {
-                documentUrl: agreement.tenantKycDocumentUrl,
-                agreementNumber: agreement.agreementNumber,
-                agreementId: agreement.id,
-            },
-        });
+        const result = await this._getTenantKycDocumentUseCase.execute(userId);
+        return ResponseHandler.success(res, result, Admin_Response_Messages.KYC_DOCUMENT_FETCHED);
     }
 
     async getUserAgreements(req: Request, res: Response): Promise<void> {
         const userId = req.params.id as string;
         const page = parseInt(req.query.page as string) || 1;
         const limit = parseInt(req.query.limit as string) || 10;
+        const role = (req.user?.role ?? '') as string
 
-        const result = await this._getUserAgreementsUseCase.execute({
-            userId,
-            page,
-            limit,
-        });
+        const dto:GetUserAgreementsInputDTO={userId,page,limit,role}
+        const result = await this._getUserAgreementsUseCase.execute(dto);
 
-        res.status(200).json({
+        res.status(Http_StatusCodes.OK).json({
             success: true,
             data: result,
         });
@@ -136,13 +112,10 @@ export class AdminDataController {
         const page = parseInt(req.query.page as string) || 1;
         const limit = parseInt(req.query.limit as string) || 10;
 
-        const result = await this._getUserPaymentsUseCase.execute({
-            userId,
-            page,
-            limit,
-        });
+        const dto:GetUserPaymentsInputDTO={userId,page,limit}
+        const result = await this._getUserPaymentsUseCase.execute(dto);
 
-        res.status(200).json({
+        res.status(Http_StatusCodes.OK).json({
             success: true,
             data: result,
         });
@@ -153,7 +126,7 @@ export class AdminDataController {
 
         const result = await this._getAgreementUseCase.execute(agreementId);
 
-        res.status(200).json({
+        res.status(Http_StatusCodes.OK).json({
             success: true,
             data: result,
         });
