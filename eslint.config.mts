@@ -31,6 +31,15 @@ export default defineConfig([
             'no-console': 'warn',
             // '@typescript-eslint/no-unused-vars': 'error',
             '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+            '@typescript-eslint/naming-convention': [
+                'error',
+                {
+                    selector: 'property',
+                    modifiers: ['private'],
+                    format: ['camelCase', 'UPPER_CASE'],
+                    leadingUnderscore: 'require',
+                },
+            ],
         },
     },
 ]);

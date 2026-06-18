@@ -19,6 +19,8 @@ import { IFirebaseService } from '@application/interfaces/services/firebase.serv
 import { FirebaseService } from 'infrastructure/services/firebase.service';
 import { IModerationService } from '@application/interfaces/services/moderation.service.interface';
 import { ModerationService } from 'infrastructure/services/moderation.service';
+import { IStripeService } from '@application/interfaces/services/stripe.service.interface';
+import { StripeService } from 'infrastructure/services/stripe.service';
 
 export class ServiceModule {
     static registerModules(): void {
@@ -50,6 +52,9 @@ export class ServiceModule {
         });
         container.register<IModerationService>(TokenTypes.IModerationService, {
             useClass: ModerationService,
+        });
+        container.register<IStripeService>(TokenTypes.IStripeService, {
+            useClass: StripeService,
         });
     }
 }

@@ -6,18 +6,18 @@ import { logger } from '@shared/log/logger';
 
 @injectable()
 export class SocketService implements ISocketService {
-    private io: Server | null = null;
-    private userSocketMap: Map<string, string[]> = new Map();
+    private _io: Server | null = null;
+    private _userSocketMap: Map<string, string[]> = new Map();
 
     initialize(server: HttpServer): void {
-        this.io = new Server(server, {
+        this._io = new Server(server, {
             cors: {
                 origin: ['http://localhost:5173', 'http://localhost:5174'],
                 credentials: true,
             },
         });
 
-        this.io.on('connection', (socket: Socket) => {
+        this._io.on('connection', (socket: Socket) => {
             const userId = socket.handshake.query.userId as string;
 
             if (userId) {
@@ -37,34 +37,34 @@ export class SocketService implements ISocketService {
     }
 
     private addUserSocket(userId: string, socketId: string) {
-        if (!this.userSocketMap.has(userId)) {
-            this.userSocketMap.set(userId, []);
+        if (!this._userSocketMap.has(userId)) {
+            this._userSocketMap.set(userId, []);
         }
-        this.userSocketMap.get(userId)?.push(socketId);
+        this._userSocketMap.get(userId)?.push(socketId);
     }
 
     private removeUserSocket(userId: string, socketId: string) {
-        const sockets = this.userSocketMap.get(userId);
+        const sockets = this._userSocketMap.get(userId);
         if (sockets) {
             const updatedSockets = sockets.filter((id) => id !== socketId);
             if (updatedSockets.length === 0) {
-                this.userSocketMap.delete(userId);
+                this._userSocketMap.delete(userId);
             } else {
-                this.userSocketMap.set(userId, updatedSockets);
+                this._userSocketMap.set(userId, updatedSockets);
             }
         }
     }
 
-    emitToUser(userId: string, event: string, data: any): void {
-        if (!this.io) {
+    emitToUser(userId: string, event: string, data: unknown): void {
+        if (!this._io) {
             logger.error('SocketService not initialized before emitToUser');
             return;
         }
 
-        const socketIds = this.userSocketMap.get(userId);
+        const socketIds = this._userSocketMap.get(userId);
         if (socketIds && socketIds.length > 0) {
             socketIds.forEach((socketId) => {
-                this.io?.to(socketId).emit(event, data);
+                this._io?.to(socketId).emit(event, data);
             });
             logger.info({ userId, event }, 'Emitted socket event to user');
         } else {

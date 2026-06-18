@@ -22,6 +22,10 @@ export const ADMIN_ROUTES = {
         DEACTIVATE: '/users/deactivate/:id',
         DETAILS: '/users/:id',
         PROPERTIES: '/users/:id/properties',
+        AGREEMENTS: '/users/:id/agreements',
+        PAYMENTS: '/users/:id/payments',
+        ACTIVITY: '/users/:id/activity',
+        KYC_DOCUMENT: '/users/:id/kyc-document',
     },
     OWNER_VERIFICATION: {
         PENDING: '/owners/pending',
@@ -34,6 +38,13 @@ export const ADMIN_ROUTES = {
         PENDING: '/properties/pending',
         VERIFY: '/properties/:propertyId/verify',
         REJECT: '/properties/:propertyId/reject',
+    },
+    AGREEMENTS: {
+        BASE: '/agreements',
+        DETAILS: '/agreements/:id',
+    },
+    PAYMENTS: {
+        BASE: '/payments',
     },
 } as const;
 
@@ -59,6 +70,7 @@ export const API_PREFIXES = {
     WISHLIST: '/wishlist',
     AGREEMENT: '/agreements',
     NOTIFICATION: '/notifications',
+    PAYMENT: '/payments',
 } as const;
 
 export const PROPERTY_ROUTES = {
@@ -102,4 +114,11 @@ export const AGREEMENT_ROUTES = {
     GENERATE_PDF: '/:id/generate-pdf',
     UPLOAD_KYC: '/:id/kyc',
     UPLOAD_URLS: '/:id/upload-urls',
+} as const;
+
+export const PAYMENT_ROUTES = {
+    WEBHOOK: '/webhook',
+    CHECKOUT: '/:id/checkout',
+    GET_BY_ID: '/:id',
+    BY_AGREEMENT: '/agreement/:agreementId',
 } as const;

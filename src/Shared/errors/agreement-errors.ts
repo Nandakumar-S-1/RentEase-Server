@@ -68,3 +68,13 @@ export class UnauthorizedRoleAccessError extends ProjectErrors {
         );
     }
 }
+
+export class UnauthorizedAgreementAccessError extends ProjectErrors {
+    constructor() {
+        super(
+            Http_StatusCodes.FORBIDDEN,
+            'UNAUTHORIZED_AGREEMENT_ACCESS',
+            'You are not allowed to perform this action on this agreement',
+        );
+    }
+}

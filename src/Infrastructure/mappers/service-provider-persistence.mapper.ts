@@ -17,14 +17,20 @@ export class ServiceProviderPersistenceMapper {
         };
     }
 
-    static toPrismaCreate(data: Omit<ServiceProviderData, 'id'>): Prisma.ServiceProviderCreateInput {
+    static toPrismaCreate(
+        data: Omit<ServiceProviderData, 'id'>,
+    ): Prisma.ServiceProviderCreateInput {
         return {
             property: { connect: { id: data.propertyId } },
             provider_type: data.providerType,
             provider_name: data.providerName,
             phone: data.phone,
-            typical_charges_min: data.typicalChargesMin ? new Prisma.Decimal(data.typicalChargesMin) : null,
-            typical_charges_max: data.typicalChargesMax ? new Prisma.Decimal(data.typicalChargesMax) : null,
+            typical_charges_min: data.typicalChargesMin
+                ? new Prisma.Decimal(data.typicalChargesMin)
+                : null,
+            typical_charges_max: data.typicalChargesMax
+                ? new Prisma.Decimal(data.typicalChargesMax)
+                : null,
             is_active: data.isActive ?? true,
         };
     }

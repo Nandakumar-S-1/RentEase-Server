@@ -34,9 +34,9 @@ Authorization: Bearer <access_token>
 
 ```json
 {
-  "success": true,
-  "message": "Request successful",
-  "data": {}
+    "success": true,
+    "message": "Request successful",
+    "data": {}
 }
 ```
 
@@ -44,12 +44,12 @@ Authorization: Bearer <access_token>
 
 ```json
 {
-  "success": false,
-  "error": {
-    "code": "ERROR_CODE",
-    "message": "Error message",
-    "details": {}
-  }
+    "success": false,
+    "error": {
+        "code": "ERROR_CODE",
+        "message": "Error message",
+        "details": {}
+    }
 }
 ```
 
@@ -57,17 +57,17 @@ Authorization: Bearer <access_token>
 
 # Status Codes
 
-| Status Code | Description |
-|---|---|
-| 200 | OK |
-| 201 | Resource Created |
-| 300 | Found |
-| 400 | Validation Error |
-| 401 | Unauthorized |
-| 403 | Forbidden |
-| 404 | Resource Not Found |
-| 409 | Conflict |
-| 500 | Internal Server Error |
+| Status Code | Description           |
+| ----------- | --------------------- |
+| 200         | OK                    |
+| 201         | Resource Created      |
+| 300         | Found                 |
+| 400         | Validation Error      |
+| 401         | Unauthorized          |
+| 403         | Forbidden             |
+| 404         | Resource Not Found    |
+| 409         | Conflict              |
+| 500         | Internal Server Error |
 
 ---
 
@@ -85,11 +85,11 @@ POST /auth/register
 
 ```json
 {
-  "full_name": "Nanda Kumar",
-  "email": "nanda@example.com",
-  "phone": "+919876543210",
-  "password": "SecurePass@123",
-  "confirm_password": "SecurePass@123"
+    "full_name": "Nanda Kumar",
+    "email": "nanda@example.com",
+    "phone": "+919876543210",
+    "password": "SecurePass@123",
+    "confirm_password": "SecurePass@123"
 }
 ```
 
@@ -97,14 +97,14 @@ POST /auth/register
 
 ```json
 {
-  "success": true,
-  "message": "Registration successful. Please verify your email.",
-  "data": {
-    "user_id": "uuid",
-    "email": "nanda@example.com",
-    "user_type": "owner",
-    "email_verification_token_sent": true
-  }
+    "success": true,
+    "message": "Registration successful. Please verify your email.",
+    "data": {
+        "user_id": "uuid",
+        "email": "nanda@example.com",
+        "user_type": "owner",
+        "email_verification_token_sent": true
+    }
 }
 ```
 
@@ -112,11 +112,11 @@ POST /auth/register
 
 ```json
 {
-  "success": false,
-  "error": {
-    "code": "VALIDATION_ERROR",
-    "message": "Invalid input data"
-  }
+    "success": false,
+    "error": {
+        "code": "VALIDATION_ERROR",
+        "message": "Invalid input data"
+    }
 }
 ```
 
@@ -140,15 +140,15 @@ GET /admin/users
 
 ```json
 {
-  "success": true,
-  "data": {
-    "stats": {
-      "total": 8542,
-      "active": 8120,
-      "suspended": 98
-    },
-    "users": []
-  }
+    "success": true,
+    "data": {
+        "stats": {
+            "total": 8542,
+            "active": 8120,
+            "suspended": 98
+        },
+        "users": []
+    }
 }
 ```
 
@@ -176,7 +176,7 @@ PATCH /admin/users/:user_id/verify
 
 ```json
 {
-  "verification_type": "email"
+    "verification_type": "email"
 }
 ```
 
@@ -194,8 +194,8 @@ PATCH /admin/users/:user_id/suspend
 
 ```json
 {
-  "suspension_reason": "Fraudulent activity reported",
-  "suspension_duration_days": null
+    "suspension_reason": "Fraudulent activity reported",
+    "suspension_duration_days": null
 }
 ```
 
@@ -223,8 +223,8 @@ DELETE /admin/users/:user_id
 
 ```json
 {
-  "confirm_deletion": true,
-  "deletion_reason": "User requested account deletion"
+    "confirm_deletion": true,
+    "deletion_reason": "User requested account deletion"
 }
 ```
 
@@ -264,7 +264,7 @@ PATCH /admin/properties/:property_id/approve
 
 ```json
 {
-  "is_featured": false
+    "is_featured": false
 }
 ```
 
@@ -272,8 +272,8 @@ PATCH /admin/properties/:property_id/approve
 
 ```json
 {
-  "success": true,
-  "message": "Property approved and published"
+    "success": true,
+    "message": "Property approved and published"
 }
 ```
 
@@ -301,7 +301,7 @@ DELETE /admin/properties/:property_id
 
 ```json
 {
-  "deletion_reason": "Fake listing - property doesn't exist"
+    "deletion_reason": "Fake listing - property doesn't exist"
 }
 ```
 
@@ -341,7 +341,7 @@ PATCH /admin/agreements/:agreement_id/terminate
 
 ```json
 {
-  "termination_reason": "Platform policy violation"
+    "termination_reason": "Platform policy violation"
 }
 ```
 
@@ -381,8 +381,8 @@ POST /admin/payments/:payment_id/refund
 
 ```json
 {
-  "refund_amount": 12000,
-  "refund_reason": "Duplicate payment"
+    "refund_amount": 12000,
+    "refund_reason": "Duplicate payment"
 }
 ```
 
@@ -434,9 +434,9 @@ POST /admin/reports/:report_id/take-action
 
 ```json
 {
-  "action_taken": "content_removed",
-  "action_reason": "Property verified as fake listing",
-  "notify_reporter": true
+    "action_taken": "content_removed",
+    "action_reason": "Property verified as fake listing",
+    "notify_reporter": true
 }
 ```
 
@@ -476,10 +476,10 @@ POST /admin/disputes/:dispute_id/resolve
 
 ```json
 {
-  "resolution_decision": "Based on evidence review",
-  "amount_to_claimant": 18000,
-  "amount_to_respondent": 6000,
-  "resolution_deadline": "2025-02-15"
+    "resolution_decision": "Based on evidence review",
+    "amount_to_claimant": 18000,
+    "amount_to_respondent": 6000,
+    "resolution_deadline": "2025-02-15"
 }
 ```
 
@@ -533,10 +533,10 @@ PUT /admin/settings/:setting_key
 
 ```json
 {
-  "setting_value": {
-    "owner_commission": 3.0,
-    "tenant_commission": 0
-  }
+    "setting_value": {
+        "owner_commission": 3.0,
+        "tenant_commission": 0
+    }
 }
 ```
 
@@ -556,15 +556,11 @@ POST /admin/admins/create
 
 ```json
 {
-  "full_name": "New Admin",
-  "email": "newadmin@rentease.com",
-  "phone": "+919999999999",
-  "admin_role": "admin",
-  "permissions": [
-    "user_management",
-    "property_approval",
-    "payments"
-  ]
+    "full_name": "New Admin",
+    "email": "newadmin@rentease.com",
+    "phone": "+919999999999",
+    "admin_role": "admin",
+    "permissions": ["user_management", "property_approval", "payments"]
 }
 ```
 
@@ -572,8 +568,8 @@ POST /admin/admins/create
 
 ```json
 {
-  "success": true,
-  "message": "Admin user created. Credentials sent via email."
+    "success": true,
+    "message": "Admin user created. Credentials sent via email."
 }
 ```
 
@@ -595,17 +591,14 @@ JWT_REFRESH_TOKEN_SECRET
 JWT_ACCESS_TOKEN_EXPIRY
 JWT_REFRESH_TOKEN_EXPIRY
 
-
 NODEMAILER_EMAIL
 NODEMAILER_PASS
 
 FIREBASE_SERVICE_ACCOUNT_PATH
 
-
 CLOUDINARY_CLOUD_NAME
 CLOUDINARY_API_KEY
 CLOUDINARY_API_SECRET
-
 
 AWS_REGION
 AWS_ACCESS_KEY
@@ -616,7 +609,8 @@ S3_EXPIRY_TIME
 OLA_MAP_TOKEN_API
 OLA_MAP_CLIENT_ID
 OLA_MAP_CLIENT_SECRET
-```
+
+````
 
 ---
 
@@ -628,18 +622,18 @@ Most list endpoints support pagination.
 
 ```http
 GET /admin/users?page=1&limit=10
-```
+````
 
 ## Pagination Response
 
 ```json
 {
-  "pagination": {
-    "total": 8542,
-    "page": 1,
-    "limit": 10,
-    "total_pages": 855
-  }
+    "pagination": {
+        "total": 8542,
+        "page": 1,
+        "limit": 10,
+        "total_pages": 855
+    }
 }
 ```
 

@@ -53,4 +53,12 @@ export const TokenTypes = {
     IUploadTenantKycUseCase: 'IUploadTenantKycUseCase',
     IGetAgreementUseCase: 'IGetAgreementUseCase',
     IGetMyAgreementsUseCase: 'IGetMyAgreementsUseCase',
+    IPaymentRepository: 'IPaymentRepository',
+    IStripeService: 'IStripeService',
+    ICreateActivationPaymentUseCase: 'ICreateActivationPaymentUseCase',
+    IInitiatePaymentCheckoutUseCase: 'IInitiatePaymentCheckoutUseCase',
+    IHandleStripeWebhookUseCase: 'IHandleStripeWebhookUseCase',
+    IGetAgreementPaymentsUseCase: 'IGetAgreementPaymentsUseCase',
+    IGetPaymentByIdUseCase: 'IGetPaymentByIdUseCase',
+    IGetTenantKycDocumentUseCase: 'IGetTenantKycDocumentUseCase',
 };

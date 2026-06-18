@@ -33,7 +33,8 @@ export class UserMapper {
             isActive: user.isActive,
             isEmailVerified: user.isEmailVerified,
             verificationStatus: user.verificationStatus,
-            authProvider: user.password === 'GOOGLE_AUTH_RANDOM_PASSWORD_FOR_HASH' ? 'GOOGLE' : 'LOCAL',
+            authProvider:
+                user.password === 'GOOGLE_AUTH_RANDOM_PASSWORD_FOR_HASH' ? 'GOOGLE' : 'LOCAL',
         };
     }
 }

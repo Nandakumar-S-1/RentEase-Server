@@ -18,6 +18,8 @@ import { IAgreementRepository } from '@core/interfaces/repository/agreement-repo
 import { AgreementRepository } from '@infrastructure/repositories/agreement.repository';
 import { INotificationRepository } from '@core/interfaces/repository/notification.repository.interface';
 import { NotificationRepository } from '@infrastructure/repositories/notification.repository';
+import { IPaymentRepository } from '@core/interfaces/repository/payment-repository.interface';
+import { PaymentRepository } from '@infrastructure/repositories/payment.repository';
 
 export class RepositoryModule {
     //this is like when a call for Iuserrepo token ,it will give an instance of UserRepository class
@@ -50,6 +52,9 @@ export class RepositoryModule {
         });
         container.register<INotificationRepository>(TokenTypes.INotificationRepository, {
             useClass: NotificationRepository,
+        });
+        container.register<IPaymentRepository>(TokenTypes.IPaymentRepository, {
+            useClass: PaymentRepository,
         });
     }
 }

@@ -6,14 +6,18 @@ import { TokenTypes } from '@shared/types/tokens';
 import { NotificationType } from '@shared/enums/notification-type.enum';
 import { inject, injectable } from 'tsyringe';
 import { logger } from '@shared/log/logger';
-import { AgreementNotFoundError, InvalidAgreementStatusError } from '@shared/errors/agreement-errors';
+import {
+    AgreementNotFoundError,
+    InvalidAgreementStatusError,
+} from '@shared/errors/agreement-errors';
 import { AgreementStatus } from '@prisma/client';
 
 @injectable()
 export class SignOwnerUseCase implements ISignOwnerUseCase {
     constructor(
         @inject(TokenTypes.IAgreementRepository) private agreementRepository: IAgreementRepository,
-        @inject(TokenTypes.ICreateNotificationUseCase) private createNotification: ICreateNotificationUsecase,
+        @inject(TokenTypes.ICreateNotificationUseCase)
+        private createNotification: ICreateNotificationUsecase,
     ) {}
 
     async execute(id: string, dto: SignAgreementDTO): Promise<void> {
@@ -40,7 +44,7 @@ export class SignOwnerUseCase implements ISignOwnerUseCase {
                 actionUrl: `/agreements/${agreement.id}`,
                 relatedEntityType: 'Agreement',
                 relatedEntityId: agreement.id,
-                notificationData: { agreementNumber: agreement.agreementNumber }
+                notificationData: { agreementNumber: agreement.agreementNumber },
             });
         } catch (error) {
             logger.error({ err: error }, 'Failed to trigger notification for landlord signing');

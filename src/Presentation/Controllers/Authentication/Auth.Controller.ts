@@ -19,6 +19,7 @@ import { ResponseHandler } from '@presentation/utils/response-handler';
 import { UserMapper } from 'application/mappers/auth/user.mapper';
 import { BadRequestError, NotFoundError } from 'shared/errors/common-errors';
 import { IGoogleAuthUseCase } from '@application/interfaces/auth/google-auth.usecase.interface';
+import { GoogleAuthRequestDTO } from '@application/dtos/authentication/request/google-auth-request.dto';
 @injectable()
 export class AuthController {
     constructor(
@@ -91,8 +92,9 @@ export class AuthController {
     googleAuth = async (req: Request, res: Response): Promise<Response> => {
         logger.info('Auth request for google auth');
         const { idToken, role } = req.body;
+        const dto:GoogleAuthRequestDTO={idToken,role}
 
-        const result = await this._googleAuthUseCase.execute({ idToken, role });
+        const result = await this._googleAuthUseCase.execute(dto);
         const userData = UserMapper.toResponseDTO(result.user);
 
         setRefreshTokenCookie(res, result.refreshToken);

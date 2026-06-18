@@ -63,7 +63,7 @@ export class AgreementPersistenceMapper {
     }
 
     static toPrismaUpdate(entity: Partial<AgreementEntity>): Prisma.AgreementUpdateInput {
-        if (!entity.id) throw new Error("Entity ID is required for update");
+        if (!entity.id) throw new Error('Entity ID is required for update');
         return this.toPersistence(entity as AgreementEntity) as Prisma.AgreementUpdateInput;
     }
 

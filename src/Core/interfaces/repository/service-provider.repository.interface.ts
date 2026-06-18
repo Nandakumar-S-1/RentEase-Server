@@ -13,8 +13,10 @@ export interface ServiceProviderData {
 
 import { IBaseRepository } from '../base/base-repository.interface';
 
-export interface IServiceProviderRepository
-    extends IBaseRepository<ServiceProviderData, Omit<ServiceProviderData, 'id'>> {
+export interface IServiceProviderRepository extends IBaseRepository<
+    ServiceProviderData,
+    Omit<ServiceProviderData, 'id'>
+> {
     findByPropertyId(
         propertyId: string,
         skip?: number,

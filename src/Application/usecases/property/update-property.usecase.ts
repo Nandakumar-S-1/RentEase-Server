@@ -12,6 +12,7 @@ import { TokenTypes } from '@shared/types/tokens';
 import { UserRole } from '@shared/enums/user-role.enum';
 import { NotificationType } from '@shared/enums/notification-type.enum';
 import { inject, injectable } from 'tsyringe';
+import { logger } from '@shared/log/logger';
 
 @injectable()
 export class UpdatePropertyUseCase implements IUpdatePropertyUseCase {
@@ -90,11 +91,15 @@ export class UpdatePropertyUseCase implements IUpdatePropertyUseCase {
                     actionUrl: `/admin/properties/${updatedProperty.id}`,
                     relatedEntityType: 'Property',
                     relatedEntityId: updatedProperty.id,
-                    notificationData: { propertyId: updatedProperty.id, title: updatedProperty.title, ownerId: updatedProperty.ownerId }
+                    notificationData: {
+                        propertyId: updatedProperty.id,
+                        title: updatedProperty.title,
+                        ownerId: updatedProperty.ownerId,
+                    },
                 });
             }
         } catch (error) {
-            console.error('Failed to send admin notifications for property update:', error);
+            logger.error({ err: error }, 'Failed to send admin notifications for property update');
         }
 
         return PropertyResponseMapper.toGeneralResponse(updatedProperty);

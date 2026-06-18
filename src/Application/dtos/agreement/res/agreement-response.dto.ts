@@ -1,11 +1,22 @@
 import { AgreementStatus, DepositRefundStatus } from '@core/types/agreement.types';
 
+export interface AgreementUserDetailsDTO {
+    id: string;
+    fullname: string;
+    email: string;
+    phone?: string;
+    avatarUrl?: string;
+}
+
 export interface AgreementResponseDTO {
     id: string;
     agreementNumber: string;
     propertyId: string;
     ownerId: string;
     tenantId: string;
+
+    owner?: AgreementUserDetailsDTO;
+    tenant?: AgreementUserDetailsDTO;
 
     startDate: Date;
     endDate: Date;

@@ -3,6 +3,7 @@ import 'dotenv/config';
 
 import '@presentation/dependency-injection/Container'; //execute the DI container setup
 import { App } from 'infrastructure/config/app';
+import { paymentScheduler } from '@infrastructure/jobs/payment-scheduler';
 
 import { logger } from 'shared/log/logger';
 import { verifyServices } from 'infrastructure/connections/verify-services';
@@ -26,6 +27,8 @@ async function serverStart() {
 
         httpServer.listen(PORT, () => {
             logger.info(`🚀 Server running on port http://localhost:${PORT}`);
+            paymentScheduler.start();
+            logger.info('✅ Payment scheduler initialized');
         });
     } catch (error) {
         logger.error({ err: error }, 'server startup has failed');

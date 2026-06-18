@@ -8,7 +8,7 @@ import { logger } from '@shared/log/logger';
 
 @injectable()
 export class ModerationService implements IModerationService {
-    private client: vision.ImageAnnotatorClient;
+    private _client: vision.ImageAnnotatorClient;
 
     constructor() {
         const keyPath = process.env.FIREBASE_IMAGE_API_SERVICE_ACCOUNT_PATH;
@@ -19,7 +19,7 @@ export class ModerationService implements IModerationService {
             throw new Error('Google Vision credentials path is missing');
         }
 
-        this.client = new vision.ImageAnnotatorClient({
+        this._client = new vision.ImageAnnotatorClient({
             keyFilename: keyPath,
         });
     }
@@ -27,7 +27,7 @@ export class ModerationService implements IModerationService {
     async checkImage(imageBuffer: Buffer): Promise<ModerationResult> {
         try {
             logger.info('Performing AI image moderation check...');
-            const [result] = await this.client.safeSearchDetection({
+            const [result] = await this._client.safeSearchDetection({
                 image: { content: imageBuffer },
             });
 
@@ -65,7 +65,6 @@ export class ModerationService implements IModerationService {
                 err.message || 'Google Cloud Vision Error',
                 'Moderation check failed - bypassing for development',
             );
-            // If the service is unavailable or billing is disabled, we return SAFE instead of failing completely in dev
             return { status: 'SAFE' };
         }
     }

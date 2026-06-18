@@ -11,7 +11,7 @@ import { AgreementNotFoundError } from '@shared/errors/agreement-errors';
 export class UploadTenantKycUseCase implements IUploadTenantKycUseCase {
     constructor(
         @inject(TokenTypes.IAgreementRepository) private agreementRepository: IAgreementRepository,
-    ) { }
+    ) {}
 
     async execute(id: string, kycUrl: string): Promise<AgreementResponseDTO> {
         logger.info({ id, kycUrl }, 'uploading tenant KYC document for agreement');

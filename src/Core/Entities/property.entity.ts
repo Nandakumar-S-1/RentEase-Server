@@ -205,6 +205,11 @@ export class PropertyEntity {
         this._status = PropertyStatus.ACTIVE;
     }
 
+    markAsRented(): void {
+        this._status = PropertyStatus.RENTED;
+        this._updatedAt = new Date();
+    }
+
     incrementViewsCount(): void {
         this._viewsCount++;
     }

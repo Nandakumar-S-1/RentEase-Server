@@ -31,10 +31,11 @@ export class VerifyOwnerUseCase implements IVerifyOwnerUseCase {
             userId: ownerId,
             notificationType: NotificationType.OWNER_VERIFICATION_APPROVED,
             title: 'Landlord Verification Approved',
-            message: 'Your landlord verification status has been approved! You can now list properties.',
+            message:
+                'Your landlord verification status has been approved! You can now list properties.',
             actionUrl: '/profile',
             relatedEntityType: 'OwnerProfile',
-            relatedEntityId: ownerProfile.id
+            relatedEntityId: ownerProfile.id,
         });
 
         return OwnerVerificationMapper.toResponse(updated);
@@ -59,7 +60,7 @@ export class VerifyOwnerUseCase implements IVerifyOwnerUseCase {
             actionUrl: '/profile',
             relatedEntityType: 'OwnerProfile',
             relatedEntityId: ownerProfile.id,
-            notificationData: { reason }
+            notificationData: { reason },
         });
 
         return OwnerVerificationMapper.toResponse(updated);
