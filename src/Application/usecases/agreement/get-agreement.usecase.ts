@@ -20,33 +20,6 @@ export class GetAgreementUseCase implements IGetAgreementUseCase {
             throw new AgreementNotFoundError();
         }
 
-        const [owner, tenant] = await Promise.all([
-            this._userRepository.findById(agreement.ownerId),
-            this._userRepository.findById(agreement.tenantId),
-        ]);
-
-        const response = AgreementResponseMapper.toResponse(agreement);
-
-        if (owner) {
-            response.owner = {
-                id: owner.id,
-                fullname: owner.fullname,
-                email: owner.email,
-                phone: owner.phone ?? undefined,
-                avatarUrl: owner.avatarUrl ?? undefined,
-            };
-        }
-
-        if (tenant) {
-            response.tenant = {
-                id: tenant.id,
-                fullname: tenant.fullname,
-                email: tenant.email,
-                phone: tenant.phone ?? undefined,
-                avatarUrl: tenant.avatarUrl ?? undefined,
-            };
-        }
-
-        return response;
+        return AgreementResponseMapper.toResponse(agreement);
     }
 }

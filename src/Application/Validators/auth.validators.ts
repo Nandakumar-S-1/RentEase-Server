@@ -29,7 +29,8 @@ const phone = z
         message: 'Phone number cannot have all identical digits.',
     });
 
-const role = z.enum(['TENANT', 'OWNER']);
+import { UserRole } from '@shared/enums/user-role.enum';
+const role = z.enum([UserRole.TENANT, UserRole.OWNER]);
 
 const otp = z
     .string()

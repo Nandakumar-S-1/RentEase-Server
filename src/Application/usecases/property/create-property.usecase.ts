@@ -26,31 +26,33 @@ export class CreatePropertyUseCase implements ICreatePropertyUseCase {
         const entity = PropertyMapper.toEntity(dto);
         const createdProperty = await this._propertyRepo.create(entity);
 
-        try {
-            const allUsers = await this._userRepository.findAll();
-            const admins = allUsers.filter((u) => u.role === UserRole.ADMIN);
-            for (const admin of admins) {
-                await this._createNotification.execute({
-                    userId: admin.id,
-                    notificationType: NotificationType.PROPERTY_SUBMITTED,
-                    title: 'New Property Pending Approval',
-                    message: `A new property listing "${createdProperty.title}" has been submitted and is pending verification.`,
-                    actionUrl: `/admin/properties/${createdProperty.id}`,
-                    relatedEntityType: 'Property',
-                    relatedEntityId: createdProperty.id,
-                    notificationData: {
-                        propertyId: createdProperty.id,
-                        title: createdProperty.title,
-                        ownerId: createdProperty.ownerId,
-                    },
-                });
+        Promise.resolve().then(async () => {
+            try {
+                const allUsers = await this._userRepository.findAll();
+                const admins = allUsers.filter((u) => u.role === UserRole.ADMIN);
+                for (const admin of admins) {
+                    await this._createNotification.execute({
+                        userId: admin.id,
+                        notificationType: NotificationType.PROPERTY_SUBMITTED,
+                        title: 'New Property Pending Approval',
+                        message: `A new property listing "${createdProperty.title}" has been submitted and is pending verification.`,
+                        actionUrl: `/admin/properties/${createdProperty.id}`,
+                        relatedEntityType: 'Property',
+                        relatedEntityId: createdProperty.id,
+                        notificationData: {
+                            propertyId: createdProperty.id,
+                            title: createdProperty.title,
+                            ownerId: createdProperty.ownerId,
+                        },
+                    });
+                }
+            } catch (error) {
+                logger.error(
+                    { err: error },
+                    'Failed to send admin notifications for property creation',
+                );
             }
-        } catch (error) {
-            logger.error(
-                { err: error },
-                'Failed to send admin notifications for property creation',
-            );
-        }
+        });
 
         return PropertyResponseMapper.toCreateResponse(createdProperty);
     }

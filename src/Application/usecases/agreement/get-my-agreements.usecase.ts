@@ -26,45 +26,6 @@ export class GetMyAgreementsUseCase implements IGetMyAgreementsUseCase {
             throw new UnauthorizedRoleAccessError();
         }
 
-        const responses = AgreementResponseMapper.toListResponse(agreements);
-
-        const userIds = new Set<string>();
-        agreements.forEach((a) => {
-            userIds.add(a.ownerId);
-            userIds.add(a.tenantId);
-        });
-
-        const users = await Promise.all(
-            Array.from(userIds).map((id) => this._userRepository.findById(id)),
-        );
-
-        const userMap = new Map(users.filter((u) => u).map((u) => [u!.id, u!]));
-
-        responses.forEach((response) => {
-            const owner = userMap.get(response.ownerId);
-            const tenant = userMap.get(response.tenantId);
-
-            if (owner) {
-                response.owner = {
-                    id: owner.id,
-                    fullname: owner.fullname,
-                    email: owner.email,
-                    phone: owner.phone || undefined,
-                    avatarUrl: owner.avatarUrl || undefined,
-                };
-            }
-
-            if (tenant) {
-                response.tenant = {
-                    id: tenant.id,
-                    fullname: tenant.fullname,
-                    email: tenant.email,
-                    phone: tenant.phone || undefined,
-                    avatarUrl: tenant.avatarUrl || undefined,
-                };
-            }
-        });
-
-        return responses;
+        return AgreementResponseMapper.toListResponse(agreements);
     }
 }

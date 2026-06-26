@@ -55,17 +55,36 @@ model User {
   tenant_profile TenantProfile?
   admin_profile  AdminProfile?
 
-  tokens     VerificationToken[]
-  properties Property[]
-  wishlist   Wishlist[]
+  tokens        VerificationToken[]
+  properties    Property[]
+  wishlist      Wishlist[]
   notifications Notification[]
 
   ownedAgreements      Agreement[] @relation("AgreementOwner")
   tenantAgreements     Agreement[] @relation("AgreementTenant")
   terminatedAgreements Agreement[] @relation("AgreementTerminatedBy")
 
+  chatsAsParticipant1 Chat[]    @relation("ChatParticipant1")
+  chatsAsParticipant2 Chat[]    @relation("ChatParticipant2")
+  messages            Message[]
+
   paymentsAsPayer Payment[] @relation("PayerRelation")
   paymentsAsPayee Payment[] @relation("PayeeRelation")
+
+  maintenanceRequestsAsTenant MaintenanceRequest[] @relation("TenantMaintenanceRequests")
+  maintenanceRequestsAsOwner  MaintenanceRequest[] @relation("OwnerMaintenanceRequests")
+
+  reportsMade     Report[] @relation("UserReports")
+  reportsReviewed Report[] @relation("AdminReviewedReports")
+
+  disputesRaised   Dispute[] @relation("UserRaisedDisputes")
+  disputesAgainst  Dispute[] @relation("UserDisputesAgainst")
+  disputesResolved Dispute[] @relation("AdminResolvedDisputes")
+
+  reviewsGiven    Review[] @relation("UserGivenReviews")
+  reviewsReceived Review[] @relation("UserReceivedReviews")
+
+  subscriptions Subscription[] @relation("OwnerSubscriptions")
 
   @@index([email])
   @@index([phone])
@@ -173,10 +192,10 @@ model Property {
   mainPhotoIndex Int      @default(0)
   videoTourUrl   String?
 
-  status        PropertyVerificationStatus @default(PENDING_APPROVAL)
+  status          PropertyVerificationStatus @default(PENDING_APPROVAL)
   rejectionReason String?
-  isFeatured    Boolean                    @default(false)
-  availableFrom DateTime?
+  isFeatured      Boolean                    @default(false)
+  availableFrom   DateTime?
 
   viewsCount       Int @default(0)
   inquiryCount     Int @default(0)
@@ -192,7 +211,12 @@ model Property {
   serviceProviders ServiceProvider[]
   wishlist         Wishlist[]
   agreements       Agreement[]
+  chats            Chat[]
   payments         Payment[]
+
+  maintenanceRequests MaintenanceRequest[] @relation("PropertyMaintenanceRequests")
+  disputes            Dispute[]            @relation("PropertyDisputes")
+  reviews             Review[]             @relation("PropertyReviews")
 
   @@index([ownerId])
   @@index([status])
@@ -254,11 +278,13 @@ model ServiceProvider {
   created_at           DateTime? @default(now())
   updated_at           DateTime? @default(now())
 
+  maintenanceRequests MaintenanceRequest[] @relation("ProviderMaintenanceRequests")
+
   @@index([property_id])
   @@index([provider_type])
 }
 
-enum NotificationType{
+enum NotificationType {
   OWNER_VERIFICATION_APPROVED
   OWNER_VERIFICATION_REJECTED
   OWNER_VERIFICATION_SUBMITTED
@@ -279,26 +305,26 @@ enum NotificationType{
   NEW_MESSAGE
 }
 
-model Notification{
-  id String @id @default(uuid())
+model Notification {
+  id     String @id @default(uuid())
   userId String
-  user User @relation(fields:[userId],references:[id],onDelete:Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   notificationType NotificationType
-  title String
-  message String
+  title            String
+  message          String
 
   notificationData Json?
-  actionUrl String?
+  actionUrl        String?
 
   relatedEntityType String?
-  relatedEntityId String?
+  relatedEntityId   String?
 
-  isRead Boolean @default(false)
+  isRead Boolean   @default(false)
   readAt DateTime?
 
   sentThroughEmail Boolean @default(false)
-  sentThroughPush Boolean @default(false)
+  sentThroughPush  Boolean @default(false)
 
   createdAt DateTime @default(now())
 
@@ -329,8 +355,8 @@ enum DepositRefundStatus {
 // ─── Agreement model ──────────────────────────────────────────────────────────
 
 model Agreement {
-  id              String  @id @default(uuid())
-  agreementNumber String  @unique @db.VarChar(50)
+  id              String @id @default(uuid())
+  agreementNumber String @unique @db.VarChar(50)
 
   propertyId String
   property   Property @relation(fields: [propertyId], references: [id])
@@ -342,10 +368,10 @@ model Agreement {
   tenant   User   @relation("AgreementTenant", fields: [tenantId], references: [id])
 
   // Terms
-  startDate           DateTime
-  endDate             DateTime
-  lockInPeriodMonths  Int
-  noticePeriodMonths  Int
+  startDate          DateTime
+  endDate            DateTime
+  lockInPeriodMonths Int
+  noticePeriodMonths Int
 
   // Financial
   monthlyRent              Decimal @db.Decimal(10, 2)
@@ -356,18 +382,17 @@ model Agreement {
   lateFeeGracePeriodDays   Int     @default(3)
   rentEscalationPercentage Decimal @default(0) @db.Decimal(5, 2)
 
-
   // Content
   termsAndConditions Json?
   customClauses      String?
   tenantRemarks      String?
 
   // Signatures
-  ownerSignatureUrl  String?
-  ownerSignedAt      DateTime?
-  tenantSignatureUrl String?
-  tenantSignedAt     DateTime?
-  agreementPdfUrl    String?
+  ownerSignatureUrl    String?
+  ownerSignedAt        DateTime?
+  tenantSignatureUrl   String?
+  tenantSignedAt       DateTime?
+  agreementPdfUrl      String?
   tenantKycDocumentUrl String?
 
   // Status
@@ -378,14 +403,18 @@ model Agreement {
   terminatedBy      User?           @relation("AgreementTerminatedBy", fields: [terminatedById], references: [id])
 
   // Deposit tracking
-  depositPaid          Boolean             @default(false)
-  depositPaidAt        DateTime?
-  depositRefundStatus  DepositRefundStatus?
-  depositRefundAmount  Decimal?            @db.Decimal(10, 2)
-  depositRefundDate    DateTime?
+  depositPaid         Boolean              @default(false)
+  depositPaidAt       DateTime?
+  depositRefundStatus DepositRefundStatus?
+  depositRefundAmount Decimal?             @db.Decimal(10, 2)
+  depositRefundDate   DateTime?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  payments Payment[]
+  disputes Dispute[] @relation("AgreementDisputes")
+  reviews  Review[]  @relation("AgreementReviews")
 
   @@index([agreementNumber])
   @@index([propertyId])
@@ -393,13 +422,57 @@ model Agreement {
   @@index([tenantId])
   @@index([status])
   @@index([startDate, endDate])
+}
 
-  payments Payment[]
+// ─── Chat and Messages ─────────────────────────────────────────────────────────
+
+model Chat {
+  id             String @id @default(uuid())
+  participant1Id String
+  participant2Id String
+  propertyId     String
+
+  participant1 User     @relation("ChatParticipant1", fields: [participant1Id], references: [id])
+  participant2 User     @relation("ChatParticipant2", fields: [participant2Id], references: [id])
+  property     Property @relation(fields: [propertyId], references: [id])
+
+  messages Message[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([participant1Id, participant2Id])
+  @@index([propertyId])
+}
+
+enum MessageStatus {
+  SENT
+  DELIVERED
+  READ
+}
+
+model Message {
+  id       String @id @default(uuid())
+  chatId   String
+  senderId String
+
+  content        String?       @db.Text
+  attachmentUrl  String?
+  attachmentType String? // e.g., 'image/png', 'application/pdf'
+  status         MessageStatus @default(SENT)
+
+  chat   Chat @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  sender User @relation(fields: [senderId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@index([chatId])
+  @@index([senderId])
 }
 
 //--- Payment enums ----------
 
-enum PaymentStatus{
+enum PaymentStatus {
   PENDING
   PAID
   FAILED
@@ -409,7 +482,7 @@ enum PaymentStatus{
   REFUNDED
 }
 
-enum PaymentCategory{
+enum PaymentCategory {
   RENT
   SECURITY_DEPOSIT
   MAINTENANCE
@@ -419,45 +492,44 @@ enum PaymentCategory{
 
 //--- Payment model
 
-model Payment{
-  id             String         @id @default(uuid())
-  transactionId String         @unique @db.VarChar(100)
+model Payment {
+  id            String @id @default(uuid())
+  transactionId String @unique @db.VarChar(100)
 
   agreementId String
   agreement   Agreement @relation(fields: [agreementId], references: [id])
   propertyId  String
-  property    Property @relation(fields: [propertyId], references: [id])
-  
-  payerId     String
-  payer       User    @relation("PayerRelation",fields:[payerId],references:[id])
-  payeeId     String
-  payee       User    @relation("PayeeRelation",fields:[payeeId],references:[id])
-  
-  amount  Decimal   @db.Decimal(10,2)
+  property    Property  @relation(fields: [propertyId], references: [id])
+
+  payerId String
+  payer   User   @relation("PayerRelation", fields: [payerId], references: [id])
+  payeeId String
+  payee   User   @relation("PayeeRelation", fields: [payeeId], references: [id])
+
+  amount   Decimal         @db.Decimal(10, 2)
   category PaymentCategory
-  dueDate DateTime?   @db.Date
-  paidDate  DateTime?
+  dueDate  DateTime?       @db.Date
+  paidDate DateTime?
 
-  paymentGateway String?  @db.VarChar(50)
-  paymentMethod String?   @db.VarChar(50)
-  
-  status PaymentStatus @default(PENDING)
-  lateFeeApplied  Decimal  @db.Decimal(8,2) @default(0)
-  daysLate    Int   @default(0)
+  paymentGateway String? @db.VarChar(50)
+  paymentMethod  String? @db.VarChar(50)
 
-  gatewayOrderId    String? @unique @db.VarChar(100)
-  gatewayPaymentId  String? @unique @db.VarChar(100)
-  failureReason String? @db.Text
+  status         PaymentStatus @default(PENDING)
+  lateFeeApplied Decimal       @default(0) @db.Decimal(8, 2)
+  daysLate       Int           @default(0)
 
-  receiptUrl  String? @db.Text
+  gatewayOrderId   String? @unique @db.VarChar(100)
+  gatewayPaymentId String? @unique @db.VarChar(100)
+  failureReason    String? @db.Text
 
-  isRefunded    Boolean   @default(false)
-  refundAmount  Decimal?  @db.Decimal(10,2)
-  refundDate    DateTime?
-  refundReason  String?   @db.VarChar(255)
+  receiptUrl String? @db.Text
+
+  isRefunded   Boolean   @default(false)
+  refundAmount Decimal?  @db.Decimal(10, 2)
+  refundDate   DateTime?
+  refundReason String?   @db.VarChar(255)
 
   gatewayRefundId String? @db.VarChar(100)
-  
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -469,4 +541,216 @@ model Payment{
   @@index([status])
   @@index([category])
   @@index([dueDate])
+}
+
+model MaintenanceRequest {
+  id            String @id @default(uuid())
+  requestNumber String @unique @db.VarChar(50)
+  propertyId    String
+  tenantId      String
+  ownerId       String
+
+  property Property @relation("PropertyMaintenanceRequests", fields: [propertyId], references: [id])
+  tenant   User     @relation("TenantMaintenanceRequests", fields: [tenantId], references: [id])
+  owner    User     @relation("OwnerMaintenanceRequests", fields: [ownerId], references: [id])
+
+  issueType        String   @db.VarChar(50)
+  issueTitle       String   @db.VarChar(255)
+  issueDescription String   @db.Text
+  urgencyLevel     String   @db.VarChar(20)
+  photos           String[]
+
+  preferredVisitDate      DateTime? @db.Date
+  preferredVisitTimeStart DateTime? @db.Time
+  preferredVisitTimeEnd   DateTime? @db.Time
+  availableAnytime        Boolean   @default(false)
+
+  assignedProviderId  String?
+  serviceProvider     ServiceProvider? @relation("ProviderMaintenanceRequests", fields: [assignedProviderId], references: [id])
+  providerAcceptedAt  DateTime?
+  providerEtaMinutes  Int?
+  providerArrivalTime DateTime?
+
+  status String @default("pending") @db.VarChar(50)
+
+  workStartedAt    DateTime?
+  workCompletedAt  DateTime?
+  completionPhotos String[]
+  workDescription  String?   @db.Text
+  actualCost       Decimal?  @db.Decimal(8, 2)
+  costPaidBy       String?   @db.VarChar(20)
+
+  isVerifiedByTenant       Boolean   @default(false)
+  tenantVerificationStatus String?   @db.VarChar(50)
+  tenantRating             Int?
+  tenantFeedback           String?   @db.Text
+  verifiedAt               DateTime?
+
+  isDisputed    Boolean @default(false)
+  disputeReason String? @db.Text
+
+  submittedAt DateTime  @default(now())
+  updatedAt   DateTime  @default(now()) @updatedAt
+  closedAt    DateTime?
+
+  @@index([requestNumber])
+  @@index([propertyId])
+  @@index([tenantId])
+  @@index([ownerId])
+  @@index([status])
+  @@index([urgencyLevel])
+  @@index([submittedAt])
+}
+
+model Report {
+  id           String @id @default(uuid())
+  reportNumber String @unique @db.VarChar(50)
+  reporterId   String
+
+  reporter User @relation("UserReports", fields: [reporterId], references: [id])
+
+  reportedEntityType String @db.VarChar(50)
+  reportedEntityId   String
+
+  reportCategory String   @db.VarChar(100)
+  reportReason   String   @db.Text
+  evidenceUrls   String[]
+
+  status String @default("pending") @db.VarChar(50)
+
+  reviewedById String?
+  reviewedBy   User?     @relation("AdminReviewedReports", fields: [reviewedById], references: [id])
+  reviewedAt   DateTime?
+  adminNotes   String?   @db.Text
+  actionTaken  String?   @db.VarChar(100)
+  actionReason String?   @db.Text
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@index([reportNumber])
+  @@index([reporterId])
+  @@index([reportedEntityType])
+  @@index([reportedEntityId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model Dispute {
+  id            String @id @default(uuid())
+  disputeNumber String @unique @db.VarChar(50)
+  agreementId   String
+  propertyId    String
+
+  agreement Agreement @relation("AgreementDisputes", fields: [agreementId], references: [id])
+  property  Property  @relation("PropertyDisputes", fields: [propertyId], references: [id])
+
+  raisedById      String
+  raisedAgainstId String
+
+  raisedBy      User @relation("UserRaisedDisputes", fields: [raisedById], references: [id])
+  raisedAgainst User @relation("UserDisputesAgainst", fields: [raisedAgainstId], references: [id])
+
+  disputeCategory       String   @db.VarChar(100)
+  claimantStatement     String   @db.Text
+  claimantEvidenceUrls  String[]
+  claimantAmountClaimed Decimal? @db.Decimal(10, 2)
+
+  respondentStatement     String?  @db.Text
+  respondentEvidenceUrls  String[]
+  respondentCounterAmount Decimal? @db.Decimal(10, 2)
+
+  status String @default("pending") @db.VarChar(50)
+
+  resolvedByAdminId     String?
+  resolvedByAdmin       User?     @relation("AdminResolvedDisputes", fields: [resolvedByAdminId], references: [id])
+  resolvedAt            DateTime?
+  resolutionDecision    String?   @db.Text
+  amountToClaimant      Decimal?  @db.Decimal(10, 2)
+  amountToRespondent    Decimal?  @db.Decimal(10, 2)
+  resolutionDeadline    DateTime? @db.Date
+  isResolutionCompleted Boolean   @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@index([disputeNumber])
+  @@index([agreementId])
+  @@index([propertyId])
+  @@index([raisedById])
+  @@index([raisedAgainstId])
+  @@index([status])
+}
+
+model Review {
+  id          String @id @default(uuid())
+  propertyId  String
+  agreementId String
+  reviewerId  String
+  revieweeId  String
+
+  property  Property  @relation("PropertyReviews", fields: [propertyId], references: [id])
+  agreement Agreement @relation("AgreementReviews", fields: [agreementId], references: [id])
+  reviewer  User      @relation("UserGivenReviews", fields: [reviewerId], references: [id])
+  reviewee  User      @relation("UserReceivedReviews", fields: [revieweeId], references: [id])
+
+  reviewType  String  @db.VarChar(20)
+  rating      Int
+  reviewTitle String? @db.VarChar(255)
+  reviewText  String  @db.Text
+
+  cleanlinessRating   Int?
+  communicationRating Int?
+  locationRating      Int?
+  valueForMoneyRating Int?
+
+  isVerified Boolean @default(false)
+  isFlagged  Boolean @default(false)
+  flagReason String? @db.Text
+  isHidden   Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@index([propertyId])
+  @@index([agreementId])
+  @@index([reviewerId])
+  @@index([revieweeId])
+  @@index([reviewType])
+  @@index([createdAt])
+}
+
+model Subscription {
+  id      String @id @default(uuid())
+  ownerId String
+
+  owner User @relation("OwnerSubscriptions", fields: [ownerId], references: [id])
+
+  subscriptionTier   String @db.VarChar(50)
+  subscriptionStatus String @default("active") @db.VarChar(50)
+
+  startDate DateTime @db.Date
+  endDate   DateTime @db.Date
+  autoRenew Boolean  @default(false)
+
+  billingCycle String?  @db.VarChar(20)
+  amountPaid   Decimal? @db.Decimal(10, 2)
+  paymentId    String?
+
+  propertiesLimit       Int @default(1)
+  featuredListingsLimit Int @default(0)
+
+  canUseAnalytics    Boolean @default(false)
+  canUseVirtualTours Boolean @default(false)
+  prioritySupport    Boolean @default(false)
+
+  cancelledAt        DateTime?
+  cancellationReason String?   @db.Text
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@index([ownerId])
+  @@index([subscriptionStatus])
+  @@index([endDate])
 }

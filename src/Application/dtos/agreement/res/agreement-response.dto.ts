@@ -15,6 +15,7 @@ export interface AgreementResponseDTO {
     ownerId: string;
     tenantId: string;
 
+    property?: { title: string; locationCity: string };
     owner?: AgreementUserDetailsDTO;
     tenant?: AgreementUserDetailsDTO;
 

@@ -15,13 +15,13 @@ export class GetPaymentByIdUseCase implements IGetPaymentByIdUseCase {
         @inject(TokenTypes.IPaymentRepository) private paymentRepository: IPaymentRepository,
     ) {}
 
-    async execute(paymentId: string, userId: string): Promise<PaymentResponseDTO> {
+    async execute(paymentId: string, userId: string, role?: string): Promise<PaymentResponseDTO> {
         const payment = await this.paymentRepository.findById(paymentId);
         if (!payment) {
             throw new PaymentNotFoundError();
         }
 
-        if (payment.payerId !== userId && payment.payeeId !== userId) {
+        if (role !== 'ADMIN' && payment.payerId !== userId && payment.payeeId !== userId) {
             throw new UnauthorizedPaymentAccessError();
         }
 

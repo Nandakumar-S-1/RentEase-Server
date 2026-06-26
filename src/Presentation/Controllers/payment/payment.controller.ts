@@ -87,7 +87,11 @@ export class PaymentController {
             );
         }
 
-        const result = await this._getPaymentByIdUseCase.execute(paymentId, userId);
+        const result = await this._getPaymentByIdUseCase.execute(
+            paymentId,
+            userId,
+            req.user?.role as string,
+        );
 
         return ResponseHandler.success(
             res,

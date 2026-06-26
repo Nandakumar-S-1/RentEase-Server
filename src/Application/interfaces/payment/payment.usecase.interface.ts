@@ -25,5 +25,5 @@ export interface IGetAgreementPaymentsUseCase {
 }
 
 export interface IGetPaymentByIdUseCase {
-    execute(paymentId: string, userId: string): Promise<PaymentResponseDTO>;
+    execute(paymentId: string, userId: string, role?: string): Promise<PaymentResponseDTO>;
 }

@@ -5,7 +5,9 @@ import { IPropertyRepository } from '@core/interfaces/repository/property-reposi
 import { ICreateNotificationUsecase } from '@application/interfaces/notification/notification.usecase.interface';
 import { IStripeService } from '@application/interfaces/services/stripe.service.interface';
 import { PaymentEntity } from '@core/entities/payment.entity';
-import { GenerateNextRentPaymentUseCase } from '@application/usecases/payment/generate-next-rent-payment.usecase';
+import { AgreementStatus } from '@core/types/agreement.types';
+import { PaymentCategory, PaymentStatus } from '@core/types/payment.types';
+
 import { TokenTypes } from '@shared/types/tokens';
 import { inject, injectable } from 'tsyringe';
 import { logger } from '@shared/log/logger';
@@ -15,19 +17,17 @@ import { v4 as uuidv4 } from 'uuid';
 @injectable()
 export class HandleStripeWebhookUseCase implements IHandleStripeWebhookUseCase {
     constructor(
-        @inject(TokenTypes.IStripeService) private stripeService: IStripeService,
-        @inject(TokenTypes.IPaymentRepository) private paymentRepository: IPaymentRepository,
+        @inject(TokenTypes.IStripeService) private _stripeService: IStripeService,
+        @inject(TokenTypes.IPaymentRepository) private _paymentRepository: IPaymentRepository,
         @inject(TokenTypes.IAgreementRepository)
-        private agreementRepository: IAgreementRepository,
-        @inject(TokenTypes.IPropertyRepository) private propertyRepository: IPropertyRepository,
+        private _agreementRepository: IAgreementRepository,
+        @inject(TokenTypes.IPropertyRepository) private _propertyRepository: IPropertyRepository,
         @inject(TokenTypes.ICreateNotificationUseCase)
-        private createNotification: ICreateNotificationUsecase,
-        @inject(GenerateNextRentPaymentUseCase)
-        private generateNextRentPayment: GenerateNextRentPaymentUseCase,
+        private _createNotification: ICreateNotificationUsecase,
     ) {}
 
     async execute(payload: Buffer, signature: string): Promise<void> {
-        const event = this.stripeService.constructWebhookEvent(payload, signature);
+        const event = this._stripeService.constructWebhookEvent(payload, signature);
 
         if (event.type === 'checkout.session.completed') {
             await this.handleCheckoutCompleted(event.data.object as StripeCheckoutSession);
@@ -46,13 +46,13 @@ export class HandleStripeWebhookUseCase implements IHandleStripeWebhookUseCase {
             return;
         }
 
-        const payment = await this.paymentRepository.findById(paymentId);
+        const payment = await this._paymentRepository.findById(paymentId);
         if (!payment) {
             logger.warn({ paymentId }, 'Payment not found for checkout session');
             return;
         }
 
-        if (payment.status === 'PAID') {
+        if (payment.status === PaymentStatus.PAID) {
             return;
         }
 
@@ -67,53 +67,43 @@ export class HandleStripeWebhookUseCase implements IHandleStripeWebhookUseCase {
         }
 
         payment.markPaid('stripe', 'card', gatewayPaymentId, session.id);
-        await this.paymentRepository.update(payment);
+        await this._paymentRepository.update(payment);
 
-        // If this is a RENT payment, generate next month's rent payment
-        if (payment.category === 'RENT') {
-            try {
-                await this.generateNextRentPayment.execute(payment.id);
-            } catch (error) {
-                logger.error(
-                    { err: error, paymentId: payment.id },
-                    'Failed to generate next rent payment',
-                );
-            }
-            // No need to continue with security deposit logic
+        if (payment.category === PaymentCategory.RENT) {
             return;
         }
 
-        if (payment.category !== 'SECURITY_DEPOSIT') {
+        if (payment.category !== PaymentCategory.SECURITY_DEPOSIT) {
             return;
         }
 
-        const agreement = await this.agreementRepository.findById(payment.agreementId);
+        const agreement = await this._agreementRepository.findById(payment.agreementId);
         if (!agreement) {
             return;
         }
 
-        if (agreement.status !== 'PENDING_PAYMENT') {
+        if (agreement.status !== AgreementStatus.PENDING_PAYMENT) {
             return;
         }
 
         agreement.markDepositPaid();
-        agreement.activateAfterDepositPaid();
-        await this.agreementRepository.update(agreement);
+        agreement.readyForTenantSignature();
+        await this._agreementRepository.update(agreement);
 
-        const property = await this.propertyRepository.findById(agreement.propertyId);
+        const property = await this._propertyRepository.findById(agreement.propertyId);
         if (property) {
             property.markAsRented();
-            await this.propertyRepository.update(property);
+            await this._propertyRepository.update(property);
         }
 
         // Create first month's rent payment (idempotent — skip if one already exists)
         const firstRentDueDate = new Date(agreement.startDate);
         firstRentDueDate.setMonth(firstRentDueDate.getMonth() + 1);
 
-        const existingPayments = await this.paymentRepository.findByAgreementId(agreement.id);
+        const existingPayments = await this._paymentRepository.findByAgreementId(agreement.id);
         const firstRentAlreadyExists = existingPayments.some(
             (p) =>
-                p.category === 'RENT' &&
+                p.category === PaymentCategory.RENT &&
                 p.dueDate &&
                 p.dueDate.getTime() === firstRentDueDate.getTime(),
         );
@@ -134,12 +124,12 @@ export class HandleStripeWebhookUseCase implements IHandleStripeWebhookUseCase {
             payerId: agreement.tenantId,
             payeeId: agreement.ownerId,
             amount: agreement.monthlyRent,
-            category: 'RENT',
+            category: PaymentCategory.RENT,
             dueDate: firstRentDueDate,
             paidDate: undefined,
             paymentGateway: undefined,
             paymentMethod: undefined,
-            status: 'PENDING',
+            status: PaymentStatus.PENDING,
             lateFeeApplied: 0,
             daysLate: 0,
             gatewayOrderId: undefined,
@@ -155,21 +145,21 @@ export class HandleStripeWebhookUseCase implements IHandleStripeWebhookUseCase {
             updatedAt: new Date(),
         });
 
-        const createdRentPayment = await this.paymentRepository.create(firstRentPayment);
+        const createdRentPayment = await this._paymentRepository.create(firstRentPayment);
 
         try {
-            await this.createNotification.execute({
+            await this._createNotification.execute({
                 userId: agreement.tenantId,
                 notificationType: NotificationType.AGREEMENT_ACTIVATED,
-                title: 'Agreement Activated',
-                message: `Your rental agreement (No. ${agreement.agreementNumber}) is now active after deposit payment.`,
+                title: 'Deposit Received - Please Sign',
+                message: `Your deposit for agreement (No. ${agreement.agreementNumber}) was received. Please sign the agreement and upload KYC to activate it.`,
                 actionUrl: `/agreements/${agreement.id}`,
                 relatedEntityType: 'Agreement',
                 relatedEntityId: agreement.id,
                 notificationData: { agreementNumber: agreement.agreementNumber },
             });
 
-            await this.createNotification.execute({
+            await this._createNotification.execute({
                 userId: agreement.ownerId,
                 notificationType: NotificationType.PAYMENT_RECEIVED,
                 title: 'Deposit Received',
@@ -183,7 +173,7 @@ export class HandleStripeWebhookUseCase implements IHandleStripeWebhookUseCase {
                 },
             });
 
-            await this.createNotification.execute({
+            await this._createNotification.execute({
                 userId: agreement.tenantId,
                 notificationType: NotificationType.PAYMENT_DUE,
                 title: 'First Rent Payment Due',

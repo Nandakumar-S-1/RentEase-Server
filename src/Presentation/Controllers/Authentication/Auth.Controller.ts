@@ -92,7 +92,7 @@ export class AuthController {
     googleAuth = async (req: Request, res: Response): Promise<Response> => {
         logger.info('Auth request for google auth');
         const { idToken, role } = req.body;
-        const dto:GoogleAuthRequestDTO={idToken,role}
+        const dto: GoogleAuthRequestDTO = { idToken, role };
 
         const result = await this._googleAuthUseCase.execute(dto);
         const userData = UserMapper.toResponseDTO(result.user);

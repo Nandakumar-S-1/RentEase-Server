@@ -12,6 +12,14 @@ export class AgreementEntity {
         private readonly _ownerId: string,
         private readonly _tenantId: string,
 
+        private readonly _property: { title: string; locationCity: string } | undefined,
+        private readonly _owner:
+            | { fullName: string; email: string; phone?: string; avatarUrl?: string }
+            | undefined,
+        private readonly _tenant:
+            | { fullName: string; email: string; phone?: string; avatarUrl?: string }
+            | undefined,
+
         private readonly _startDate: Date,
         private readonly _endDate: Date,
         private _lockInPeriodMonths: number,
@@ -58,6 +66,10 @@ export class AgreementEntity {
             data.ownerId,
             data.tenantId,
 
+            data.property,
+            data.owner,
+            data.tenant,
+
             data.startDate,
             data.endDate,
             data.lockInPeriodMonths,
@@ -82,7 +94,7 @@ export class AgreementEntity {
             data.agreementPdfUrl,
             data.tenantKycDocumentUrl,
 
-            data.status ?? 'DRAFT',
+            data.status ?? AgreementStatus.DRAFT,
             data.terminationReason,
             data.terminatedAt,
             data.terminatedById,
@@ -101,26 +113,31 @@ export class AgreementEntity {
     signOwner(signatureUrl: string): void {
         this._ownerSignatureUrl = signatureUrl;
         this._ownerSignedAt = new Date();
-        this._status = 'PENDING_TENANT_SIGNATURE';
+        this._status = AgreementStatus.PENDING_PAYMENT;
         this._updatedAt = new Date();
     }
 
     signTenant(signatureUrl: string): void {
         this._tenantSignatureUrl = signatureUrl;
         this._tenantSignedAt = new Date();
-        this._status = 'PENDING_PAYMENT';
+        this._status = AgreementStatus.ACTIVE;
         this._updatedAt = new Date();
     }
 
     activateAfterDepositPaid(): void {
-        this._status = 'ACTIVE';
+        this._status = AgreementStatus.ACTIVE;
+        this._updatedAt = new Date();
+    }
+
+    readyForTenantSignature(): void {
+        this._status = AgreementStatus.PENDING_TENANT_SIGNATURE;
         this._updatedAt = new Date();
     }
 
     revertTenantSignature(): void {
         this._tenantSignatureUrl = undefined;
         this._tenantSignedAt = undefined;
-        this._status = 'PENDING_TENANT_SIGNATURE';
+        this._status = AgreementStatus.PENDING_TENANT_SIGNATURE;
         this._updatedAt = new Date();
     }
 
@@ -140,7 +157,7 @@ export class AgreementEntity {
     }
 
     terminate(reason: string, terminatedById: string): void {
-        this._status = 'TERMINATED';
+        this._status = AgreementStatus.TERMINATED;
         this._terminationReason = reason;
         this._terminatedById = terminatedById;
         this._terminatedAt = new Date();
@@ -161,7 +178,7 @@ export class AgreementEntity {
     }
 
     markExpired(): void {
-        this._status = 'EXPIRED';
+        this._status = AgreementStatus.EXPIRED;
         this._updatedAt = new Date();
     }
 
@@ -179,6 +196,16 @@ export class AgreementEntity {
     }
     get tenantId() {
         return this._tenantId;
+    }
+
+    get property() {
+        return this._property;
+    }
+    get owner() {
+        return this._owner;
+    }
+    get tenant() {
+        return this._tenant;
     }
 
     get startDate() {

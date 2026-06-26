@@ -15,7 +15,10 @@ export class AgreementRepository implements IAgreementRepository {
     }
 
     async findById(id: string): Promise<AgreementEntity | null> {
-        const res = await prisma.agreement.findUnique({ where: { id } });
+        const res = await prisma.agreement.findUnique({
+            where: { id },
+            include: { property: true, owner: true, tenant: true },
+        });
         return res ? AgreementPersistenceMapper.toEntity(res) : null;
     }
 
@@ -26,11 +29,20 @@ export class AgreementRepository implements IAgreementRepository {
         }
         const agreements = await prisma.agreement.findMany({
             where,
+            include: { property: true, owner: true, tenant: true },
             orderBy: { createdAt: 'desc' },
         });
         return agreements.map((a) => AgreementPersistenceMapper.toEntity(a));
     }
 
+    async findByStatus(status: AgreementStatus): Promise<AgreementEntity[]> {
+        const agreements = await prisma.agreement.findMany({
+            where: { status },
+            include: { property: true, owner: true, tenant: true },
+            orderBy: { createdAt: 'desc' },
+        });
+        return agreements.map((a) => AgreementPersistenceMapper.toEntity(a));
+    }
     async findByTenantId(tenantId: string, status?: AgreementStatus): Promise<AgreementEntity[]> {
         const where: Prisma.AgreementWhereInput = { tenantId };
         if (status) {
@@ -38,6 +50,7 @@ export class AgreementRepository implements IAgreementRepository {
         }
         const agreements = await prisma.agreement.findMany({
             where,
+            include: { property: true, owner: true, tenant: true },
             orderBy: { createdAt: 'desc' },
         });
         return agreements.map((a) => AgreementPersistenceMapper.toEntity(a));
@@ -53,6 +66,7 @@ export class AgreementRepository implements IAgreementRepository {
 
         const agreements = await prisma.agreement.findMany({
             where,
+            include: { property: true, owner: true, tenant: true },
             orderBy: { createdAt: 'desc' },
         });
         return agreements.map((a) => AgreementPersistenceMapper.toEntity(a));

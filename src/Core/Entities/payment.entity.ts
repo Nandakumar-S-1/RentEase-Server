@@ -8,6 +8,14 @@ export class PaymentEntity {
         private readonly _propertyId: string,
         private readonly _payerId: string,
         private readonly _payeeId: string,
+        private readonly _property: { title: string; locationCity: string } | undefined,
+        private readonly _payer:
+            | { fullName: string; email: string; phone?: string; avatarUrl?: string }
+            | undefined,
+        private readonly _payee:
+            | { fullName: string; email: string; phone?: string; avatarUrl?: string }
+            | undefined,
+        private readonly _agreement: { agreementNumber: string } | undefined,
         private _amount: number,
         private _category: PaymentCategory,
         private _dueDate: Date | undefined,
@@ -38,13 +46,17 @@ export class PaymentEntity {
             data.propertyId,
             data.payerId,
             data.payeeId,
+            data.property,
+            data.payer,
+            data.payee,
+            data.agreement,
             data.amount,
             data.category,
             data.dueDate,
             data.paidDate,
             data.paymentGateway,
             data.paymentMethod,
-            data.status ?? 'PENDING',
+            data.status ?? PaymentStatus.PENDING,
             data.lateFeeApplied ?? 0,
             data.daysLate ?? 0,
             data.gatewayOrderId,
@@ -68,7 +80,7 @@ export class PaymentEntity {
         gatewayOrderId?: string,
         receiptUrl?: string,
     ): void {
-        this._status = 'PAID';
+        this._status = PaymentStatus.PAID;
         this._paymentGateway = paymentGateway;
         this._paymentMethod = paymentMethod;
         this._gatewayPaymentId = gatewayPaymentId;
@@ -79,7 +91,7 @@ export class PaymentEntity {
     }
 
     markFailed(reason: string, gatewayPaymentId?: string): void {
-        this._status = 'FAILED';
+        this._status = PaymentStatus.FAILED;
         this._failureReason = reason;
         if (gatewayPaymentId) this._gatewayPaymentId = gatewayPaymentId;
         this._updatedAt = new Date();
@@ -98,7 +110,7 @@ export class PaymentEntity {
         this._refundReason = reason;
         this._gatewayRefundId = refundId;
         this._refundDate = new Date();
-        this._status = 'REFUNDED';
+        this._status = PaymentStatus.REFUNDED;
         this._updatedAt = new Date();
     }
 
@@ -135,6 +147,18 @@ export class PaymentEntity {
     }
     get payeeId() {
         return this._payeeId;
+    }
+    get property() {
+        return this._property;
+    }
+    get payer() {
+        return this._payer;
+    }
+    get payee() {
+        return this._payee;
+    }
+    get agreement() {
+        return this._agreement;
     }
     get amount() {
         return this._amount;

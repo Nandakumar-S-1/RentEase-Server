@@ -17,6 +17,7 @@ export interface IGetPropertyByIdUseCase {
 
 export interface GetMyPropertiesDTO {
     ownerId: string;
+    role?: string;
     status?: PropertyStatus;
     page: number;
     limit: number;

@@ -1,5 +1,6 @@
 import { CreateAgreementDTO } from '@application/dtos/agreement/agreement.dto';
 import { AgreementEntity } from '@core/entities/agreement.entity';
+import { AgreementStatus } from '@core/types/agreement.types';
 
 export class AgreementMapper {
     static toEntity(dto: CreateAgreementDTO): AgreementEntity {
@@ -29,7 +30,7 @@ export class AgreementMapper {
 
             termsAndConditions: dto.termsAndConditions ?? [],
             customClauses: dto.customClauses,
-            status: 'DRAFT',
+            status: AgreementStatus.DRAFT,
             depositPaid: false,
             createdAt: now,
             updatedAt: now,

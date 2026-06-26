@@ -12,6 +12,8 @@ import { OtpService } from 'infrastructure/services/otp.service';
 import { S3Service } from 'infrastructure/services/s3.service';
 import { ISocketService } from '@application/interfaces/services/socket.service.interface';
 import { SocketService } from 'infrastructure/services/socket.service';
+import { IPdfService } from '@application/interfaces/services/pdf.service.interface';
+import { PdfService } from 'infrastructure/services/pdf.service';
 
 import { container } from 'tsyringe';
 import { TokenTypes } from 'shared/types/tokens';
@@ -55,6 +57,9 @@ export class ServiceModule {
         });
         container.register<IStripeService>(TokenTypes.IStripeService, {
             useClass: StripeService,
+        });
+        container.register<IPdfService>(TokenTypes.IPdfService, {
+            useClass: PdfService,
         });
     }
 }

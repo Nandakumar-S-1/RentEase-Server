@@ -4,16 +4,42 @@ import {
     AgreementStatus,
     DepositRefundStatus,
 } from '@core/types/agreement.types';
-import { Agreement, Prisma } from '@prisma/client';
+import { Agreement, Prisma, Property, User } from '@prisma/client';
+
+export type AgreementWithRelations = Agreement & {
+    property?: Property | null;
+    owner?: User | null;
+    tenant?: User | null;
+};
 
 export class AgreementPersistenceMapper {
-    static toEntity(raw: Agreement): AgreementEntity {
+    static toEntity(raw: AgreementWithRelations): AgreementEntity {
         const data: AgreementTypeData = {
             id: raw.id,
             agreementNumber: raw.agreementNumber,
             propertyId: raw.propertyId,
             ownerId: raw.ownerId,
             tenantId: raw.tenantId,
+
+            property: raw.property
+                ? { title: raw.property.title, locationCity: raw.property.locationCity }
+                : undefined,
+            owner: raw.owner
+                ? {
+                      fullName: raw.owner.fullName,
+                      email: raw.owner.email,
+                      phone: raw.owner.phone || undefined,
+                      avatarUrl: raw.owner.avatarUrl || undefined,
+                  }
+                : undefined,
+            tenant: raw.tenant
+                ? {
+                      fullName: raw.tenant.fullName,
+                      email: raw.tenant.email,
+                      phone: raw.tenant.phone || undefined,
+                      avatarUrl: raw.tenant.avatarUrl || undefined,
+                  }
+                : undefined,
 
             startDate: raw.startDate,
             endDate: raw.endDate,

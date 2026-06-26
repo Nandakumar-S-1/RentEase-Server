@@ -20,6 +20,10 @@ import { INotificationRepository } from '@core/interfaces/repository/notificatio
 import { NotificationRepository } from '@infrastructure/repositories/notification.repository';
 import { IPaymentRepository } from '@core/interfaces/repository/payment-repository.interface';
 import { PaymentRepository } from '@infrastructure/repositories/payment.repository';
+import { IChatRepository } from '@core/interfaces/repository/chat-repository.interface';
+import { ChatRepository } from '@infrastructure/repositories/chat.repository';
+import { IMaintenanceRequestRepository } from '@core/interfaces/repository/maintenance-request.repository.interface';
+import { MaintenanceRequestRepositoryImpl } from '@infrastructure/database/repositories/maintenance-request.repository.impl';
 
 export class RepositoryModule {
     //this is like when a call for Iuserrepo token ,it will give an instance of UserRepository class
@@ -56,5 +60,14 @@ export class RepositoryModule {
         container.register<IPaymentRepository>(TokenTypes.IPaymentRepository, {
             useClass: PaymentRepository,
         });
+        container.register<IChatRepository>(TokenTypes.IChatRepository, {
+            useClass: ChatRepository,
+        });
+        container.register<IMaintenanceRequestRepository>(
+            TokenTypes.IMaintenanceRequestRepository,
+            {
+                useClass: MaintenanceRequestRepositoryImpl,
+            },
+        );
     }
 }

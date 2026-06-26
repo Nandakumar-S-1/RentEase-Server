@@ -22,7 +22,7 @@ export class NotificationController {
         const page = Number(req.query.page) || 1;
         const limit = Number(req.query.limit) || 20;
 
-        const dto:IGetUserNotificationRequestDTO={userId,page,limit}
+        const dto: IGetUserNotificationRequestDTO = { userId, page, limit };
         const notifications = await this._getUserNotificationsUseCase.execute(dto);
 
         const unreadCount = await this._notificationRepository.getUnreadCount(userId);

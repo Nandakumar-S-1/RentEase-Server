@@ -11,7 +11,8 @@ import { WishlistRoutes } from './property/wishlist.routes';
 import { AgreementRoutes } from './agreement.routes';
 import { NotificationRoutes } from './notification/notification.routes';
 import { PaymentRoutes } from './payment.routes';
-
+import { ChatRoutes } from './chat/chat.routes';
+import { MaintenanceRoutes } from './maintenance/maintenance.routes';
 const router = Router();
 const userRoutes = container.resolve(UserRoutes);
 const adminRoutes = container.resolve(AdminRoutes);
@@ -23,7 +24,8 @@ const wishlistRoutes = container.resolve(WishlistRoutes);
 const agreementRoutes = container.resolve(AgreementRoutes);
 const notificationRoutes = container.resolve(NotificationRoutes);
 const paymentRoutes = container.resolve(PaymentRoutes);
-
+const chatRoutes = container.resolve(ChatRoutes);
+const maintenanceRoutes = container.resolve(MaintenanceRoutes);
 router.use(API_PREFIXES.AUTH, userRoutes.router);
 router.use(API_PREFIXES.ADMIN, adminRoutes.router);
 router.use(API_PREFIXES.OWNER, ownerRoutes.router);
@@ -34,4 +36,6 @@ router.use(API_PREFIXES.WISHLIST, wishlistRoutes.router);
 router.use(API_PREFIXES.AGREEMENT, agreementRoutes.router);
 router.use(API_PREFIXES.NOTIFICATION, notificationRoutes.router);
 router.use(API_PREFIXES.PAYMENT, paymentRoutes.router);
+router.use(API_PREFIXES.CHAT, chatRoutes.router);
+router.use(API_PREFIXES.MAINTENANCE, maintenanceRoutes.router);
 export default router;

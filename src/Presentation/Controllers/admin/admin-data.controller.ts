@@ -42,7 +42,7 @@ export class AdminDataController {
         const status = req.query.status as string | undefined;
         const search = req.query.search as string | undefined;
 
-        const dto:GetAllAgreementsInputDTO={page,limit,status,search}
+        const dto: GetAllAgreementsInputDTO = { page, limit, status, search };
         const result = await this._getAllAgreementsUseCase.execute(dto);
 
         res.status(Http_StatusCodes.OK).json({
@@ -57,7 +57,7 @@ export class AdminDataController {
         const status = req.query.status as string | undefined;
         const category = req.query.category as string | undefined;
 
-        const dto: GetAllPaymentsInputDTO = { page, limit, status, category }
+        const dto: GetAllPaymentsInputDTO = { page, limit, status, category };
 
         const result = await this._getAllPaymentsUseCase.execute(dto);
 
@@ -71,7 +71,7 @@ export class AdminDataController {
         const userId = req.params.id as string;
         const page = parseInt(req.query.page as string) || 1;
         const limit = parseInt(req.query.limit as string) || 20;
-        
+
         const dto: IGetUserNotificationRequestDTO = {
             userId,
             page,
@@ -96,9 +96,9 @@ export class AdminDataController {
         const userId = req.params.id as string;
         const page = parseInt(req.query.page as string) || 1;
         const limit = parseInt(req.query.limit as string) || 10;
-        const role = (req.user?.role ?? '') as string
+        const role = (req.user?.role ?? '') as string;
 
-        const dto:GetUserAgreementsInputDTO={userId,page,limit,role}
+        const dto: GetUserAgreementsInputDTO = { userId, page, limit, role };
         const result = await this._getUserAgreementsUseCase.execute(dto);
 
         res.status(Http_StatusCodes.OK).json({
@@ -112,7 +112,7 @@ export class AdminDataController {
         const page = parseInt(req.query.page as string) || 1;
         const limit = parseInt(req.query.limit as string) || 10;
 
-        const dto:GetUserPaymentsInputDTO={userId,page,limit}
+        const dto: GetUserPaymentsInputDTO = { userId, page, limit };
         const result = await this._getUserPaymentsUseCase.execute(dto);
 
         res.status(Http_StatusCodes.OK).json({

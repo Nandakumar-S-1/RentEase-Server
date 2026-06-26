@@ -1,9 +1,16 @@
 import { PaymentEntity } from '@core/entities/payment.entity';
 import { PaymentCategory, PaymentStatus, PaymentTypeData } from '@core/types/payment.types';
-import { Payment, Prisma } from '@prisma/client';
+import { Payment, Prisma, Property, User, Agreement } from '@prisma/client';
+
+export type PaymentWithRelations = Payment & {
+    property?: Property | null;
+    payer?: User | null;
+    payee?: User | null;
+    agreement?: Agreement | null;
+};
 
 export class PaymentPersistenceMapper {
-    static toEntity(raw: Payment): PaymentEntity {
+    static toEntity(raw: PaymentWithRelations): PaymentEntity {
         const data: PaymentTypeData = {
             id: raw.id,
             transactionId: raw.transactionId ?? undefined,
@@ -11,6 +18,29 @@ export class PaymentPersistenceMapper {
             propertyId: raw.propertyId,
             payerId: raw.payerId,
             payeeId: raw.payeeId,
+
+            property: raw.property
+                ? { title: raw.property.title, locationCity: raw.property.locationCity }
+                : undefined,
+            payer: raw.payer
+                ? {
+                      fullName: raw.payer.fullName,
+                      email: raw.payer.email,
+                      phone: raw.payer.phone || undefined,
+                      avatarUrl: raw.payer.avatarUrl || undefined,
+                  }
+                : undefined,
+            payee: raw.payee
+                ? {
+                      fullName: raw.payee.fullName,
+                      email: raw.payee.email,
+                      phone: raw.payee.phone || undefined,
+                      avatarUrl: raw.payee.avatarUrl || undefined,
+                  }
+                : undefined,
+            agreement: raw.agreement
+                ? { agreementNumber: raw.agreement.agreementNumber }
+                : undefined,
 
             amount: Number(raw.amount),
             category: raw.category as PaymentCategory,

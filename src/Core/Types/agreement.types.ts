@@ -1,12 +1,18 @@
-export type AgreementStatus =
-    | 'DRAFT'
-    | 'PENDING_TENANT_SIGNATURE'
-    | 'PENDING_PAYMENT'
-    | 'ACTIVE'
-    | 'EXPIRED'
-    | 'TERMINATED';
+export enum AgreementStatus {
+    DRAFT = 'DRAFT',
+    PENDING_TENANT_SIGNATURE = 'PENDING_TENANT_SIGNATURE',
+    PENDING_PAYMENT = 'PENDING_PAYMENT',
+    ACTIVE = 'ACTIVE',
+    EXPIRED = 'EXPIRED',
+    TERMINATED = 'TERMINATED',
+}
 
-export type DepositRefundStatus = 'PENDING' | 'PARTIAL' | 'FULL' | 'DISPUTED';
+export enum DepositRefundStatus {
+    PENDING = 'PENDING',
+    PARTIAL = 'PARTIAL',
+    FULL = 'FULL',
+    DISPUTED = 'DISPUTED',
+}
 
 export interface AgreementTypeData {
     id: string;
@@ -14,6 +20,10 @@ export interface AgreementTypeData {
     propertyId: string;
     ownerId: string;
     tenantId: string;
+
+    property?: { title: string; locationCity: string };
+    owner?: { fullName: string; email: string; phone?: string; avatarUrl?: string };
+    tenant?: { fullName: string; email: string; phone?: string; avatarUrl?: string };
 
     // Terms
     startDate: Date;

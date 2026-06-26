@@ -25,4 +25,16 @@ export class S3Service implements IS3Service {
         });
         return uploadUrl;
     }
+
+    async uploadFile(key: string, buffer: Buffer, contentType: string): Promise<string> {
+        await s3b.send(
+            new PutObjectCommand({
+                Bucket: process.env.AWS_BUCKET_NAME || 'rentease-bucket',
+                Key: key,
+                Body: buffer,
+                ContentType: contentType,
+            }),
+        );
+        return `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;
+    }
 }

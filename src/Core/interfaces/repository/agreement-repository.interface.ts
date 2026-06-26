@@ -10,6 +10,7 @@ export interface IAgreementRepository extends IBaseRepository<
     findById(id: string): Promise<AgreementEntity | null>;
     findByOwnerId(ownerId: string, status?: AgreementStatus): Promise<AgreementEntity[]>;
     findByTenantId(tenantId: string, status?: AgreementStatus): Promise<AgreementEntity[]>;
+    findByStatus(status: AgreementStatus): Promise<AgreementEntity[]>;
     findAll(filters?: {
         status?: AgreementStatus;
         propertyId?: string;

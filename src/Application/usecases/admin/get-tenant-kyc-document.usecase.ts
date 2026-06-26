@@ -18,9 +18,7 @@ export class GetTenantKycDocumentUseCase {
     async execute(tenantId: string): Promise<TenantKycDocumentDTO | null> {
         const agreements = await this._agreementRepository.findByTenantId(tenantId);
         if (!agreements.length) return null;
-        const latest = agreements.sort(
-            (a, b) => b.createdAt.getTime() - a.createdAt.getTime(),
-        )[0];
+        const latest = agreements.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())[0];
 
         return {
             documentUrl: latest.tenantKycDocumentUrl ?? null,

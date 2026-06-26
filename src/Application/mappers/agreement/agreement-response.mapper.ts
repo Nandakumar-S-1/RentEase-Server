@@ -10,6 +10,26 @@ export class AgreementResponseMapper {
             ownerId: entity.ownerId,
             tenantId: entity.tenantId,
 
+            property: entity.property,
+            owner: entity.owner
+                ? {
+                      id: entity.ownerId,
+                      fullname: entity.owner.fullName,
+                      email: entity.owner.email,
+                      phone: entity.owner.phone,
+                      avatarUrl: entity.owner.avatarUrl,
+                  }
+                : undefined,
+            tenant: entity.tenant
+                ? {
+                      id: entity.tenantId,
+                      fullname: entity.tenant.fullName,
+                      email: entity.tenant.email,
+                      phone: entity.tenant.phone,
+                      avatarUrl: entity.tenant.avatarUrl,
+                  }
+                : undefined,
+
             startDate: entity.startDate,
             endDate: entity.endDate,
             lockInPeriodMonths: entity.lockInPeriodMonths,

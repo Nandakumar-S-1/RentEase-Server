@@ -79,28 +79,34 @@ export class UpdatePropertyUseCase implements IUpdatePropertyUseCase {
 
         const updatedProperty = await this._propertyRepo.update(property);
 
-        try {
-            const allUsers = await this._userRepository.findAll();
-            const admins = allUsers.filter((u) => u.role === UserRole.ADMIN);
-            for (const admin of admins) {
-                await this._createNotification.execute({
-                    userId: admin.id,
-                    notificationType: NotificationType.PROPERTY_SUBMITTED,
-                    title: 'Property Update Pending Approval',
-                    message: `Property listing "${updatedProperty.title}" has been updated and is pending verification.`,
-                    actionUrl: `/admin/properties/${updatedProperty.id}`,
-                    relatedEntityType: 'Property',
-                    relatedEntityId: updatedProperty.id,
-                    notificationData: {
-                        propertyId: updatedProperty.id,
-                        title: updatedProperty.title,
-                        ownerId: updatedProperty.ownerId,
-                    },
-                });
+        // Send admin notifications asynchronously to avoid latency
+        Promise.resolve().then(async () => {
+            try {
+                const allUsers = await this._userRepository.findAll();
+                const admins = allUsers.filter((u) => u.role === UserRole.ADMIN);
+                for (const admin of admins) {
+                    await this._createNotification.execute({
+                        userId: admin.id,
+                        notificationType: NotificationType.PROPERTY_SUBMITTED,
+                        title: 'Property Update Pending Approval',
+                        message: `Property listing "${updatedProperty.title}" has been updated and is pending verification.`,
+                        actionUrl: `/admin/properties/${updatedProperty.id}`,
+                        relatedEntityType: 'Property',
+                        relatedEntityId: updatedProperty.id,
+                        notificationData: {
+                            propertyId: updatedProperty.id,
+                            title: updatedProperty.title,
+                            ownerId: updatedProperty.ownerId,
+                        },
+                    });
+                }
+            } catch (error) {
+                logger.error(
+                    { err: error },
+                    'Failed to send admin notifications for property update',
+                );
             }
-        } catch (error) {
-            logger.error({ err: error }, 'Failed to send admin notifications for property update');
-        }
+        });
 
         return PropertyResponseMapper.toGeneralResponse(updatedProperty);
     }

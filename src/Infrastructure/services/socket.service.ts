@@ -27,6 +27,24 @@ export class SocketService implements ISocketService {
                 logger.warn({ socketId: socket.id }, 'Socket connected without userId');
             }
 
+            socket.on('join_chat', (chatId: string) => {
+                socket.join(chatId);
+                logger.info({ userId, chatId }, 'User joined chat room');
+            });
+
+            socket.on('leave_chat', (chatId: string) => {
+                socket.leave(chatId);
+                logger.info({ userId, chatId }, 'User left chat room');
+            });
+
+            socket.on('typing', (chatId: string) => {
+                socket.to(chatId).emit('typing', { chatId, userId });
+            });
+
+            socket.on('stop_typing', (chatId: string) => {
+                socket.to(chatId).emit('stop_typing', { chatId, userId });
+            });
+
             socket.on('disconnect', () => {
                 if (userId) {
                     this.removeUserSocket(userId, socket.id);
@@ -70,5 +88,19 @@ export class SocketService implements ISocketService {
         } else {
             logger.info({ userId, event }, 'User not connected, socket event skipped');
         }
+    }
+
+    emitToRoom(room: string, event: string, data: unknown): void {
+        if (!this._io) {
+            logger.error('SocketService not initialized before emitToRoom');
+            return;
+        }
+        this._io.to(room).emit(event, data);
+        logger.info({ room, event }, 'Emitted socket event to room');
+    }
+
+    isUserOnline(userId: string): boolean {
+        const sockets = this._userSocketMap.get(userId);
+        return !!sockets && sockets.length > 0;
     }
 }

@@ -1,13 +1,20 @@
-export type PaymentStatus =
-    | 'PENDING'
-    | 'PAID'
-    | 'FAILED'
-    | 'PARTIALLY_PAID'
-    | 'OVERDUE'
-    | 'CANCELLED'
-    | 'REFUNDED';
+export enum PaymentStatus {
+    PENDING = 'PENDING',
+    PAID = 'PAID',
+    FAILED = 'FAILED',
+    PARTIALLY_PAID = 'PARTIALLY_PAID',
+    OVERDUE = 'OVERDUE',
+    CANCELLED = 'CANCELLED',
+    REFUNDED = 'REFUNDED',
+}
 
-export type PaymentCategory = 'RENT' | 'SECURITY_DEPOSIT' | 'MAINTENANCE' | 'LATE_FEE' | 'OTHER';
+export enum PaymentCategory {
+    RENT = 'RENT',
+    SECURITY_DEPOSIT = 'SECURITY_DEPOSIT',
+    MAINTENANCE = 'MAINTENANCE',
+    LATE_FEE = 'LATE_FEE',
+    OTHER = 'OTHER',
+}
 
 export interface PaymentTypeData {
     id: string;
@@ -17,6 +24,11 @@ export interface PaymentTypeData {
     propertyId: string;
     payerId: string;
     payeeId: string;
+
+    property?: { title: string; locationCity: string };
+    payer?: { fullName: string; email: string; phone?: string; avatarUrl?: string };
+    payee?: { fullName: string; email: string; phone?: string; avatarUrl?: string };
+    agreement?: { agreementNumber: string };
 
     amount: number;
     category: PaymentCategory;

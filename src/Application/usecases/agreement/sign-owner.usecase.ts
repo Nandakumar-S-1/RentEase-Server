@@ -2,6 +2,7 @@ import { ISignOwnerUseCase } from '@application/interfaces/agreement/agreement.u
 import { SignAgreementDTO } from '@application/dtos/agreement/agreement.dto';
 import { IAgreementRepository } from '@core/interfaces/repository/agreement-repository.interface';
 import { ICreateNotificationUsecase } from '@application/interfaces/notification/notification.usecase.interface';
+import { ICreateActivationPaymentUseCase } from '@application/interfaces/payment/payment.usecase.interface';
 import { TokenTypes } from '@shared/types/tokens';
 import { NotificationType } from '@shared/enums/notification-type.enum';
 import { inject, injectable } from 'tsyringe';
@@ -18,6 +19,8 @@ export class SignOwnerUseCase implements ISignOwnerUseCase {
         @inject(TokenTypes.IAgreementRepository) private agreementRepository: IAgreementRepository,
         @inject(TokenTypes.ICreateNotificationUseCase)
         private createNotification: ICreateNotificationUsecase,
+        @inject(TokenTypes.ICreateActivationPaymentUseCase)
+        private createActivationPayment: ICreateActivationPaymentUseCase,
     ) {}
 
     async execute(id: string, dto: SignAgreementDTO): Promise<void> {
@@ -35,16 +38,21 @@ export class SignOwnerUseCase implements ISignOwnerUseCase {
         agreement.signOwner(dto.signatureUrl);
         await this.agreementRepository.update(agreement);
 
+        const payment = await this.createActivationPayment.execute(id);
+
         try {
             await this.createNotification.execute({
                 userId: agreement.tenantId,
-                notificationType: NotificationType.AGREEMENT_CREATED,
-                title: 'Agreement Signature Pending',
-                message: `The landlord has signed the rental agreement (No. ${agreement.agreementNumber}). It is now ready for your signature.`,
-                actionUrl: `/agreements/${agreement.id}`,
-                relatedEntityType: 'Agreement',
-                relatedEntityId: agreement.id,
-                notificationData: { agreementNumber: agreement.agreementNumber },
+                notificationType: NotificationType.PAYMENT_PENDING,
+                title: 'Deposit Payment Required',
+                message: `The landlord has signed the rental agreement (No. ${agreement.agreementNumber}). Please pay the security deposit to proceed.`,
+                actionUrl: `/payments/${payment.id}`,
+                relatedEntityType: 'Payment',
+                relatedEntityId: payment.id,
+                notificationData: {
+                    agreementNumber: agreement.agreementNumber,
+                    amount: payment.amount,
+                },
             });
         } catch (error) {
             logger.error({ err: error }, 'Failed to trigger notification for landlord signing');

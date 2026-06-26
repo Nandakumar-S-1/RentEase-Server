@@ -62,10 +62,13 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
         req.user = user;
 
         next();
-    } catch {
-        return res.status(401).json({
-            success: false,
-            message: 'Unauthorized',
-        });
+    } catch (error: unknown) {
+        if (error instanceof Error && (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError')) {
+            return res.status(401).json({
+                success: false,
+                message: 'Unauthorized',
+            });
+        }
+        next(error);
     }
 };

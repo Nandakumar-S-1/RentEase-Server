@@ -2,6 +2,7 @@ import { ApiResponse } from 'application/dtos/api-response.dto';
 import { IUserManagement } from 'application/interfaces/admin/user-management.interface';
 import { Http_StatusCodes } from 'shared/enums/http-status-codes.enum';
 import { TokenTypes } from 'shared/types/tokens';
+import { UserRole } from '@shared/enums/user-role.enum';
 import { Request, Response } from 'express';
 import { inject, injectable } from 'tsyringe';
 import type { IGetAllUsersDTO } from 'application/dtos/admin/response/get-all-users-response.dto';
@@ -37,8 +38,11 @@ export class UserManagementController {
         const limit = parseInt(req.query.limit as string) || 10;
         const status = req.query.status as PropertyStatus;
 
+        const user = await this._usecase.getUserById(id);
+
         const result = await this._getPropertyUseCase.execute({
             ownerId: id,
+            role: user.role,
             page,
             limit,
             status,
@@ -56,7 +60,7 @@ export class UserManagementController {
     async getAllUsers(req: Request, res: Response): Promise<Response> {
         const page = parseInt(req.query.page as string) || 1;
         const limit = parseInt(req.query.limit as string) || 9;
-        const role = req.query.role as 'TENANT' | 'OWNER' | undefined;
+        const role = req.query.role as UserRole.TENANT | UserRole.OWNER | undefined;
 
         const result = await this._usecase.getUsers({ page, limit, role });
         const response: ApiResponse<GetUsersResponseData> = {

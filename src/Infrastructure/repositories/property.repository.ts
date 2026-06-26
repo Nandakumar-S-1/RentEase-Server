@@ -58,6 +58,41 @@ export class PropertyRepository implements IPropertyRepository {
             },
         });
     }
+
+    async findByTenantId(tenantId: string, options?: QueryOptions): Promise<PropertyEntity[]> {
+        const rentedProperties = await prisma.property.findMany({
+            where: {
+                agreements: {
+                    some: {
+                        tenantId: tenantId,
+                    },
+                },
+                ...(options?.status && { status: options.status as PropertyVerificationStatus }),
+            },
+            skip: options?.skip,
+            take: options?.take,
+            orderBy: {
+                createdAt: 'desc',
+            },
+            include: { details: true },
+        });
+        return rentedProperties.map((p) =>
+            PropertyPersistenceMapper.toEntity(p as Property & { details: PropertyDetails | null }),
+        );
+    }
+
+    async countByTenantId(tenantId: string, status?: string): Promise<number> {
+        return await prisma.property.count({
+            where: {
+                agreements: {
+                    some: {
+                        tenantId: tenantId,
+                    },
+                },
+                ...(status && { status: status as PropertyVerificationStatus }),
+            },
+        });
+    }
     async findPending(options?: Omit<QueryOptions, 'status'>): Promise<PropertyEntity[]> {
         const pendingProperties = await prisma.property.findMany({
             where: {

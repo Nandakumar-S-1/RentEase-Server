@@ -17,14 +17,16 @@ import {
     InvalidTenantRoleError,
     OwnerIdRequiredError,
 } from '@shared/errors/agreement-errors';
+import { UserRole } from '@shared/enums/user-role.enum';
+import { AgreementStatus } from '@core/types/agreement.types';
 
 @injectable()
 export class CreateAgreementUseCase implements ICreateAgreementUseCase {
     constructor(
-        @inject(TokenTypes.IAgreementRepository) private agreementRepository: IAgreementRepository,
-        @inject(TokenTypes.IUserRepository) private userRepository: IUserRepository,
+        @inject(TokenTypes.IAgreementRepository) private _agreementRepository: IAgreementRepository,
+        @inject(TokenTypes.IUserRepository) private _userRepository: IUserRepository,
         @inject(TokenTypes.ICreateNotificationUseCase)
-        private createNotification: ICreateNotificationUsecase,
+        private _createNotification: ICreateNotificationUsecase,
     ) {}
 
     async execute(dto: CreateAgreementDTO): Promise<AgreementResponseDTO> {
@@ -34,11 +36,11 @@ export class CreateAgreementUseCase implements ICreateAgreementUseCase {
             throw new TenantEmailRequiredError();
         }
 
-        const tenant = await this.userRepository.findByEmail(dto.tenantEmail);
+        const tenant = await this._userRepository.findByEmail(dto.tenantEmail);
         if (!tenant) {
             throw new TenantUserNotFoundError();
         }
-        if (tenant.role !== 'TENANT') {
+        if (tenant.role !== UserRole.TENANT) {
             throw new InvalidTenantRoleError();
         }
 
@@ -71,17 +73,17 @@ export class CreateAgreementUseCase implements ICreateAgreementUseCase {
             termsAndConditions: dto.termsAndConditions ?? [],
             customClauses: dto.customClauses,
 
-            status: 'DRAFT',
+            status: AgreementStatus.DRAFT,
             depositPaid: false,
 
             createdAt: new Date(),
             updatedAt: new Date(),
         });
 
-        const created = await this.agreementRepository.create(newAgreement);
+        const created = await this._agreementRepository.create(newAgreement);
 
         try {
-            await this.createNotification.execute({
+            await this._createNotification.execute({
                 userId: tenant.id,
                 notificationType: NotificationType.AGREEMENT_CREATED,
                 title: 'Rental Agreement Created',

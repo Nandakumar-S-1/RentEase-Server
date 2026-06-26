@@ -71,6 +71,8 @@ export const API_PREFIXES = {
     AGREEMENT: '/agreements',
     NOTIFICATION: '/notifications',
     PAYMENT: '/payments',
+    CHAT: '/chat',
+    MAINTENANCE: '/maintenance',
 } as const;
 
 export const PROPERTY_ROUTES = {
@@ -121,4 +123,19 @@ export const PAYMENT_ROUTES = {
     CHECKOUT: '/:id/checkout',
     GET_BY_ID: '/:id',
     BY_AGREEMENT: '/agreement/:agreementId',
+} as const;
+
+export const MAINTENANCE_ROUTES = {
+    CREATE: '/',
+    GET: '/',
+    ASSIGN_PROVIDER: '/:id/assign',
+    UPDATE_STATUS: '/:id/status',
+} as const;
+
+export const CHAT_ROUTES = {
+    INITIATE: '/initiate',
+    GET_MY: '/my-chats',
+    GET_MESSAGES: '/:chatId/messages',
+    SEND_MESSAGE: '/messages',
+    UPLOAD_PHOTO_URLS: '/upload-photo-urls',
 } as const;

@@ -15,30 +15,39 @@ export class PaymentRepository implements IPaymentRepository {
     async findById(id: string): Promise<PaymentEntity | null> {
         const res = await prisma.payment.findUnique({
             where: { id },
+            include: { payer: true, payee: true, property: true, agreement: true },
         });
         return res ? PaymentPersistenceMapper.toEntity(res) : null;
     }
 
     async findAll(): Promise<PaymentEntity[]> {
         const payments = await prisma.payment.findMany({
+            include: { payer: true, payee: true, property: true, agreement: true },
             orderBy: { createdAt: 'desc' },
         });
         return payments.map((p) => PaymentPersistenceMapper.toEntity(p));
     }
 
     async findByGatewayPaymentId(gatewayPaymentId: string): Promise<PaymentEntity | null> {
-        const res = await prisma.payment.findUnique({ where: { gatewayPaymentId } });
+        const res = await prisma.payment.findUnique({
+            where: { gatewayPaymentId },
+            include: { payer: true, payee: true, property: true, agreement: true },
+        });
         return res ? PaymentPersistenceMapper.toEntity(res) : null;
     }
 
     async findByGatewayOrderId(gatewayOrderId: string): Promise<PaymentEntity | null> {
-        const res = await prisma.payment.findFirst({ where: { gatewayOrderId } });
+        const res = await prisma.payment.findFirst({
+            where: { gatewayOrderId },
+            include: { payer: true, payee: true, property: true, agreement: true },
+        });
         return res ? PaymentPersistenceMapper.toEntity(res) : null;
     }
 
     async findByAgreementId(agreementId: string): Promise<PaymentEntity[]> {
         const payments = await prisma.payment.findMany({
             where: { agreementId },
+            include: { payer: true, payee: true, property: true, agreement: true },
             orderBy: { createdAt: 'desc' },
         });
         return payments.map((p) => PaymentPersistenceMapper.toEntity(p));
@@ -47,6 +56,7 @@ export class PaymentRepository implements IPaymentRepository {
     async findByPayerId(payerId: string): Promise<PaymentEntity[]> {
         const payments = await prisma.payment.findMany({
             where: { payerId },
+            include: { payer: true, payee: true, property: true, agreement: true },
             orderBy: { createdAt: 'desc' },
         });
         return payments.map((p) => PaymentPersistenceMapper.toEntity(p));
@@ -55,6 +65,7 @@ export class PaymentRepository implements IPaymentRepository {
     async findByPayeeId(payeeId: string): Promise<PaymentEntity[]> {
         const payments = await prisma.payment.findMany({
             where: { payeeId },
+            include: { payer: true, payee: true, property: true, agreement: true },
             orderBy: { createdAt: 'desc' },
         });
         return payments.map((p) => PaymentPersistenceMapper.toEntity(p));

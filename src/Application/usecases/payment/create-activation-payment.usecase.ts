@@ -1,5 +1,6 @@
 import { ICreateActivationPaymentUseCase } from '@application/interfaces/payment/payment.usecase.interface';
 import { PaymentResponseDTO } from '@application/dtos/payment/res/payment-response.dto';
+import { PaymentCategory, PaymentStatus } from '@core/types/payment.types';
 import { PaymentResponseMapper } from '@application/mappers/payment/payment-response.mapper';
 import { IAgreementRepository } from '@core/interfaces/repository/agreement-repository.interface';
 import { IPaymentRepository } from '@core/interfaces/repository/payment-repository.interface';
@@ -42,8 +43,8 @@ export class CreateActivationPaymentUseCase implements ICreateActivationPaymentU
             payerId: agreement.tenantId,
             payeeId: agreement.ownerId,
             amount: agreement.depositAmount,
-            category: 'SECURITY_DEPOSIT',
-            status: 'PENDING',
+            category: PaymentCategory.SECURITY_DEPOSIT,
+            status: PaymentStatus.PENDING,
             lateFeeApplied: 0,
             daysLate: 0,
             isRefunded: false,

@@ -90,6 +90,18 @@ import {
     IGetAgreementPaymentsUseCase,
     IGetPaymentByIdUseCase,
 } from '@application/interfaces/payment/payment.usecase.interface';
+import { CreateMaintenanceRequestUseCase } from '@application/usecases/maintenance/create-maintenance-request.usecase';
+import { GetMaintenanceRequestsUseCase } from '@application/usecases/maintenance/get-maintenance-requests.usecase';
+import {
+    AssignServiceProviderUseCase,
+    UpdateMaintenanceStatusUseCase,
+} from '@application/usecases/maintenance/manage-maintenance.usecase';
+import {
+    ICreateMaintenanceRequestUseCase,
+    IGetMaintenanceRequestsUseCase,
+    IAssignServiceProviderUseCase,
+    IUpdateMaintenanceStatusUseCase,
+} from '@application/interfaces/maintenance/maintenance.usecase.interface';
 
 export class UseCaseModule {
     static registerModules(): void {
@@ -216,5 +228,29 @@ export class UseCaseModule {
         container.register<GetTenantKycDocumentUseCase>(TokenTypes.IGetTenantKycDocumentUseCase, {
             useClass: GetTenantKycDocumentUseCase,
         });
+        container.register<ICreateMaintenanceRequestUseCase>(
+            TokenTypes.ICreateMaintenanceRequestUseCase,
+            {
+                useClass: CreateMaintenanceRequestUseCase,
+            },
+        );
+        container.register<IGetMaintenanceRequestsUseCase>(
+            TokenTypes.IGetMaintenanceRequestsUseCase,
+            {
+                useClass: GetMaintenanceRequestsUseCase,
+            },
+        );
+        container.register<IAssignServiceProviderUseCase>(
+            TokenTypes.IAssignServiceProviderUseCase,
+            {
+                useClass: AssignServiceProviderUseCase,
+            },
+        );
+        container.register<IUpdateMaintenanceStatusUseCase>(
+            TokenTypes.IUpdateMaintenanceStatusUseCase,
+            {
+                useClass: UpdateMaintenanceStatusUseCase,
+            },
+        );
     }
 }
