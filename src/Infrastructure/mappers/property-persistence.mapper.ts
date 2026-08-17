@@ -5,7 +5,7 @@ import { User, Property, PropertyDetails, PropertyVerificationStatus } from '@pr
 import { PropertyStatus, PropertyType } from '@shared/enums/property-type-status.enum';
 
 type PrismaPropertyWithDetails = Property & {
-    details?: PropertyDetails | null;
+    details?: (PropertyDetails & { amenities?: any[] }) | null;
     owner?: User | null;
 };
 export class PropertyPersistenceMapper {
@@ -55,18 +55,7 @@ export class PropertyPersistenceMapper {
                 ? {
                       id: raw.details.id,
                       propertyId: raw.details.propertyId,
-                      bhk: raw.details.bhk ?? undefined,
-                      bathrooms: raw.details.bathrooms ?? undefined,
-                      floorNumber: raw.details.floorNumber ?? undefined,
-                      totalFloors: raw.details.totalFloors ?? undefined,
-                      propertyAge: raw.details.propertyAge ?? undefined,
-                      facingDirection: raw.details.facingDirection ?? undefined,
-                      furnishingStatus: raw.details.furnishingStatus ?? undefined,
-                      landType: raw.details.landType ?? undefined,
-                      isCornerPlot: raw.details.isCornerPlot ?? undefined,
-                      roadWidthFeet: raw.details.roadWidthFeet ?? undefined,
-                      shopType: raw.details.shoptype ?? undefined,
-                      hasParking: raw.details.hasParking ?? undefined,
+                      specificDetails: raw.details.specificDetails ? (raw.details.specificDetails as Record<string, any>) : undefined,
                       amenities: raw.details.amenities ?? [],
                       preferredTenantType: raw.details.preferredTenantType
                           ? (raw.details.preferredTenantType as string[])
@@ -170,19 +159,7 @@ export class PropertyPersistenceMapper {
 
     private static _mapDetails(details: PropertyDetailsEntity) {
         return {
-            bhk: details.bhk ?? undefined,
-            bathrooms: details.bathrooms ?? undefined,
-            floorNumber: details.floorNumber ?? undefined,
-            totalFloors: details.totalFloors ?? undefined,
-            propertyAge: details.propertyAge ?? undefined,
-            facingDirection: details.facingDirection ?? undefined,
-            furnishingStatus: details.furnishingStatus ?? undefined,
-            amenities: details.amenities ?? [],
-            landType: details.landType ?? undefined,
-            isCornerPlot: details.isCornerPlot ?? undefined,
-            roadWidthFeet: details.roadWidthFeet ?? undefined,
-            shoptype: details.shopType ?? undefined,
-            hasParking: details.hasParking ?? undefined,
+            specificDetails: details.specificDetails ? JSON.parse(JSON.stringify(details.specificDetails)) : undefined,
             petsAllowed: details.petsAllowed ?? false,
             smokingAllowed: details.smokingAllowed ?? false,
             maximumOccupants: details.maximumOccupants ?? undefined,

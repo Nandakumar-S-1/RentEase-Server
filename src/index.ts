@@ -26,9 +26,9 @@ async function serverStart() {
         socketService.initialize(httpServer);
 
         httpServer.listen(PORT, () => {
-            logger.info(`🚀 Server running on port http://localhost:${PORT}`);
+            logger.info(`Server running on port http://localhost:${PORT}`);
             paymentScheduler.start();
-            logger.info('✅ Payment scheduler initialized');
+            logger.info('Payment scheduler initialized');
         });
     } catch (error) {
         logger.error({ err: error }, 'server startup has failed');

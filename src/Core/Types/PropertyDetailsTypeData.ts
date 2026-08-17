@@ -2,29 +2,13 @@ export type PropertyDetailsTypeData = {
     id: string;
     propertyId: string;
 
-    // house,flat,PG
-    bhk?: number | null;
-    bathrooms?: number | null;
-    floorNumber?: string | null;
-    totalFloors?: number | null;
-    propertyAge?: string | null;
-    facingDirection?: string | null;
-    furnishingStatus?: string | null;
-
-    //land
-    landType?: string | null; // residential, commercial, farmland
-    isCornerPlot?: boolean | null;
-    roadWidthFeet?: number | null;
-
-    // shop
-    shopType?: string | null; // retail, office
-    hasParking?: boolean | null;
+    specificDetails?: Record<string, any> | null;
 
     preferredTenantType?: string[] | null;
     petsAllowed?: boolean | null;
     smokingAllowed?: boolean | null;
     maximumOccupants?: number | null;
-    amenities: string[];
+    amenities?: any[];
 
     createdAt?: Date;
     updatedAt?: Date;

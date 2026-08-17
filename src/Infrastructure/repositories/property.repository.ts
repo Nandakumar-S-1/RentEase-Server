@@ -215,7 +215,10 @@ export class PropertyRepository implements IPropertyRepository {
 
             if (bhk !== undefined) {
                 where.details = {
-                    bhk: Number(bhk),
+                    specificDetails: {
+                        path: ['bhk'],
+                        equals: Number(bhk),
+                    },
                 };
             }
         }

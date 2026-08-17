@@ -17,19 +17,52 @@ export class PdfService implements IPdfService {
                 const textGray = '#6B7280';
                 const darkText = '#111827';
 
-                const pageWidth = doc.page.width - 120; // account for margins
+                const pageWidth = doc.page.width - 120;
 
-                // ── Header bar ──────────────────────────────────────────────
-                doc.rect(0, 0, doc.page.width, 80).fill(primaryColor);
-                doc.fillColor('#FFFFFF')
-                    .fontSize(22)
+                // ── Mock Indian Stamp Paper Header ────────────────────────────
+                doc.rect(40, 40, doc.page.width - 80, 150).stroke('#6B7280');
+                doc.rect(45, 45, doc.page.width - 90, 140).stroke('#6B7280');
+
+                doc.fillColor('#111827')
+                    .fontSize(16)
                     .font('Helvetica-Bold')
-                    .text('RENTAL AGREEMENT', 60, 25, { align: 'center' });
-                doc.fontSize(10)
+                    .text('INDIA NON JUDICIAL', 0, 55, { align: 'center' });
+                
+                doc.fontSize(12)
                     .font('Helvetica')
-                    .text('RentEase Platform', 60, 52, { align: 'center' });
+                    .text('Government of India', { align: 'center' });
+                
+                doc.moveDown(0.5);
+                doc.fontSize(14)
+                    .font('Helvetica-Bold')
+                    .text('e-Stamp', { align: 'center' });
 
-                doc.moveDown(3);
+                const stampY = doc.y + 10;
+                doc.fontSize(10)
+                    .font('Helvetica-Bold')
+                    .text('Certificate No.', 60, stampY)
+                    .font('Helvetica')
+                    .text(`: IN-${Math.random().toString(36).substring(2, 10).toUpperCase()}`, 180, stampY);
+                
+                doc.font('Helvetica-Bold')
+                    .text('Certificate Issued Date', 60, stampY + 15)
+                    .font('Helvetica')
+                    .text(`: ${new Date().toLocaleDateString('en-IN')}`, 180, stampY + 15);
+                
+                doc.font('Helvetica-Bold')
+                    .text('Stamp Duty Amount', 60, stampY + 30)
+                    .font('Helvetica')
+                    .text(': Rs. 20 (Rupees Twenty Only)', 180, stampY + 30);
+
+                doc.y = stampY + 60;
+                doc.moveDown(2);
+
+                doc.fillColor(primaryColor)
+                    .fontSize(18)
+                    .font('Helvetica-Bold')
+                    .text('RENTAL AGREEMENT', 60, doc.y, { align: 'center' });
+                
+                doc.moveDown(2);
 
                 // ── Agreement meta row ───────────────────────────────────────
                 doc.fillColor(darkText)

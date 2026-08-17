@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  server:
+    build: .
+    container_name: rentease_server
+    restart: always
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=production
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:alpine
+    container_name: rentease_redis
+    restart: always
+    ports:
+      - "6379:6379"
+
+#build . = location of dockerfile for docker to understand.
+#ports : connects the specified ports inside containder to aws ec2 instance.
+#container_name : gives a name to the container
+#restart : makes sure container restarts automatically when crah of app or reboots aws 
+#env_file : adds environment variables from .env file to container

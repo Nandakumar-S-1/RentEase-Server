@@ -85,6 +85,7 @@ model User {
   reviewsReceived Review[] @relation("UserReceivedReviews")
 
   subscriptions Subscription[] @relation("OwnerSubscriptions")
+  ownerRequests OwnerRequest[] @relation("OwnerRequests")
 
   @@index([email])
   @@index([phone])
@@ -238,26 +239,13 @@ model PropertyDetails {
   propertyId String   @unique
   property   Property @relation(fields: [propertyId], references: [id])
 
-  bhk              Int?
-  bathrooms        Int?
-  floorNumber      String?
-  totalFloors      Int?
-  propertyAge      String?
-  facingDirection  String?
-  furnishingStatus String?
-
-  landType      String?
-  isCornerPlot  Boolean?
-  roadWidthFeet Int?
-
-  shoptype   String?
-  hasParking Boolean?
+  specificDetails Json?
 
   preferredTenantType Json?
   petsAllowed         Boolean  @default(false)
   smokingAllowed      Boolean  @default(false)
   maximumOccupants    Int?
-  amenities           String[]
+  amenities           Amenity[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -753,4 +741,31 @@ model Subscription {
   @@index([ownerId])
   @@index([subscriptionStatus])
   @@index([endDate])
+}
+
+model Amenity {
+  id          String   @id @default(uuid())
+  name        String   @unique @db.VarChar(100)
+  iconUrl     String?
+  description String?  @db.VarChar(255)
+  isApproved  Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  properties  PropertyDetails[]
+}
+
+model OwnerRequest {
+  id          String   @id @default(uuid())
+  ownerId     String
+  owner       User     @relation("OwnerRequests", fields: [ownerId], references: [id])
+  requestType String   @db.VarChar(50) // e.g., "NEW_AMENITY", "PROPERTY_TYPE", "OTHER"
+  content     String   @db.Text
+  status      String   @default("PENDING") @db.VarChar(20) // "PENDING", "APPROVED", "REJECTED"
+  adminNotes  String?  @db.Text
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([ownerId])
+  @@index([status])
 }

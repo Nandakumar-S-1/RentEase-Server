@@ -19,28 +19,16 @@ export interface CreatePropertyDTO {
     longitude?: number | null;
     nearbyLandmarks?: string | null;
 
-    bhk?: number | null;
-    bathrooms?: number | null;
-    floorNumber?: string | null;
-    totalFloors?: number | null;
-    propertyAge?: string | null;
-    facingDirection?: string | null;
-    furnishingStatus?: string | null;
-
     maintenanceCharges?: number;
     maintenanceIncluded?: boolean;
 
-    amenities?: string[];
+    specificDetails?: Record<string, any>;
+    amenities?: string[]; // Assuming frontend still sends an array of UUIDs or strings
     preferredTenantType?: string[];
 
     petsAllowed?: boolean;
     smokingAllowed?: boolean;
     maximumOccupants?: number | null;
-    landType?: string | null;
-    isCornerPlot?: boolean | null;
-    roadWidthFeet?: number | null;
-    shopType?: string | null;
-    hasParking?: boolean | null;
 }
 
 export interface UploadPropertyPhotosDTO {

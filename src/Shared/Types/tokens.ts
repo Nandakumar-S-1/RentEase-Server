@@ -72,4 +72,9 @@ export const TokenTypes = {
     IGetMyChatsUseCase: 'IGetMyChatsUseCase',
     IInitiateChatUseCase: 'IInitiateChatUseCase',
     ISendMessageUseCase: 'ISendMessageUseCase',
+    ICreateAmenityUseCase: 'ICreateAmenityUseCase',
+    IUpdateAmenityUseCase: 'IUpdateAmenityUseCase',
+    IDeleteAmenityUseCase: 'IDeleteAmenityUseCase',
+    IGetAmenitiesUseCase: 'IGetAmenitiesUseCase',
+    IAmenityRepository: 'IAmenityRepository',
 };

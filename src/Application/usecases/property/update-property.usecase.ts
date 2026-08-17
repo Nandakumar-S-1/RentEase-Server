@@ -36,41 +36,19 @@ export class UpdatePropertyUseCase implements IUpdatePropertyUseCase {
         const updateData: Partial<PropertyTypeData> = {
             ...dto,
             propertyType: dto.propertyType as PropertyType | undefined,
-            ...((dto.bhk !== undefined ||
-                dto.bathrooms !== undefined ||
-                dto.floorNumber !== undefined ||
-                dto.totalFloors !== undefined ||
-                dto.propertyAge !== undefined ||
-                dto.facingDirection !== undefined ||
-                dto.furnishingStatus !== undefined ||
+            ...((dto.specificDetails !== undefined ||
                 dto.amenities !== undefined ||
                 dto.preferredTenantType !== undefined ||
                 dto.petsAllowed !== undefined ||
                 dto.smokingAllowed !== undefined ||
-                dto.maximumOccupants !== undefined ||
-                dto.landType !== undefined ||
-                dto.isCornerPlot !== undefined ||
-                dto.roadWidthFeet !== undefined ||
-                dto.shopType !== undefined ||
-                dto.hasParking !== undefined) && {
+                dto.maximumOccupants !== undefined) && {
                 details: {
-                    bhk: dto.bhk,
-                    bathrooms: dto.bathrooms,
-                    floorNumber: dto.floorNumber,
-                    totalFloors: dto.totalFloors,
-                    propertyAge: dto.propertyAge,
-                    facingDirection: dto.facingDirection,
-                    furnishingStatus: dto.furnishingStatus,
+                    specificDetails: dto.specificDetails,
                     amenities: dto.amenities,
                     preferredTenantType: dto.preferredTenantType,
                     petsAllowed: dto.petsAllowed,
                     smokingAllowed: dto.smokingAllowed,
                     maximumOccupants: dto.maximumOccupants,
-                    landType: dto.landType,
-                    isCornerPlot: dto.isCornerPlot,
-                    roadWidthFeet: dto.roadWidthFeet,
-                    shopType: dto.shopType,
-                    hasParking: dto.hasParking,
                 } as PropertyDetailsTypeData,
             }),
         };

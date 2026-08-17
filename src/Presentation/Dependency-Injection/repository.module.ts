@@ -23,7 +23,7 @@ import { PaymentRepository } from '@infrastructure/repositories/payment.reposito
 import { IChatRepository } from '@core/interfaces/repository/chat-repository.interface';
 import { ChatRepository } from '@infrastructure/repositories/chat.repository';
 import { IMaintenanceRequestRepository } from '@core/interfaces/repository/maintenance-request.repository.interface';
-import { MaintenanceRequestRepositoryImpl } from '@infrastructure/database/repositories/maintenance-request.repository.impl';
+import { MaintenanceRequestRepositoryImpl } from '@infrastructure/repositories/maintenance-request.repository';
 
 export class RepositoryModule {
     //this is like when a call for Iuserrepo token ,it will give an instance of UserRepository class
