@@ -5,9 +5,7 @@ import { GetMyChatsUseCase } from '@application/usecases/chat/get-my-chats.useca
 import { GetChatMessagesUseCase } from '@application/usecases/chat/get-chat-messages.usecase';
 import { SendMessageUseCase } from '@application/usecases/chat/send-message.usecase';
 import { Http_StatusCodes } from '@shared/enums/http-status-codes.enum';
-import { IS3Service } from '@application/interfaces/services/s3.service.interface';
-import { TokenTypes } from '@shared/types/tokens';
-import crypto from 'crypto';
+import { uploadToCloudinary } from '@shared/uploads/cloudinary.service';
 
 @injectable()
 export class ChatController {
@@ -16,7 +14,6 @@ export class ChatController {
         @inject(GetMyChatsUseCase) private getMyChatsUseCase: GetMyChatsUseCase,
         @inject(GetChatMessagesUseCase) private getChatMessagesUseCase: GetChatMessagesUseCase,
         @inject(SendMessageUseCase) private sendMessageUseCase: SendMessageUseCase,
-        @inject(TokenTypes.IS3Service) private _s3Service: IS3Service,
     ) {}
 
     initiateChat = async (req: Request, res: Response) => {
@@ -103,46 +100,26 @@ export class ChatController {
         }
     };
 
+    /**
+     * POST /chat/upload-photo-urls
+     * multipart/form-data, field: "file"
+     * Uploads to Cloudinary, returns { fileUrl: string }
+     */
     uploadChatPhotoUrls = async (req: Request, res: Response) => {
         try {
-            const userId = req.user!.id;
-            const { files } = req.body as {
-                files?: Array<{ fileName: string; contentType: string }>;
-            };
-
-            if (!Array.isArray(files) || files.length === 0) {
+            if (!req.file) {
                 return res
                     .status(Http_StatusCodes.BAD_REQUEST)
-                    .json({ success: false, message: 'Files required' });
+                    .json({ success: false, message: 'File required' });
             }
 
-            const awsBucket = process.env.AWS_BUCKET_NAME;
-            const awsRegion = process.env.AWS_REGION;
-            if (!awsBucket || !awsRegion) {
-                return res
-                    .status(Http_StatusCodes.INTERNAL_SERVER_ERROR)
-                    .json({ success: false, message: 'S3 Config Error' });
-            }
-
-            const uploads = await Promise.all(
-                files.map(async (file, index) => {
-                    const safeFileName = (file.fileName || `chat-file-${index}`).replace(
-                        /[^a-zA-Z0-9._-]/g,
-                        '',
-                    );
-
-                    const key = `rentease/chat/${userId}/${crypto.randomUUID()}-${safeFileName}`;
-                    const uploadUrl = await this._s3Service.getUrl(
-                        key,
-                        file.contentType || 'application/octet-stream',
-                    );
-
-                    const publicUrl = `https://${awsBucket}.s3.${awsRegion}.amazonaws.com/${key}`;
-                    return { key, uploadUrl, publicUrl };
-                }),
+            const fileUrl = await uploadToCloudinary(
+                req.file.buffer,
+                req.file.mimetype,
+                'rentease/chat',
             );
 
-            return res.status(Http_StatusCodes.OK).json({ success: true, uploads });
+            return res.status(Http_StatusCodes.OK).json({ success: true, fileUrl });
         } catch (error: unknown) {
             const errorMessage =
                 error instanceof Error ? error.message : 'An unexpected error occurred';

@@ -4,6 +4,7 @@ import { AgreementController } from '../controllers/agreement/agreement.controll
 import { authMiddleware } from '@presentation/middlewares/auth.middleware';
 import { asyncHandlerFunction } from '@presentation/utils/async-handler';
 import { AGREEMENT_ROUTES } from '@shared/constants/routes';
+import { upload } from '@shared/uploads/cloudinary.upload';
 
 @injectable()
 export class AgreementRoutes extends BaseRoute {
@@ -19,6 +20,7 @@ export class AgreementRoutes extends BaseRoute {
             AGREEMENT_ROUTES.CREATE,
             asyncHandlerFunction(this._controller.createAgreement.bind(this._controller)),
         );
+
         this.router.get(
             AGREEMENT_ROUTES.GET_MY,
             asyncHandlerFunction(this._controller.getMyAgreements.bind(this._controller)),
@@ -44,14 +46,18 @@ export class AgreementRoutes extends BaseRoute {
             asyncHandlerFunction(this._controller.generatePdf.bind(this._controller)),
         );
 
+        // KYC: multipart/form-data, field: "document"
         this.router.post(
             AGREEMENT_ROUTES.UPLOAD_KYC,
+            upload.single('document'),
             asyncHandlerFunction(this._controller.uploadKyc.bind(this._controller)),
         );
 
+        // Signature / generic file upload: multipart/form-data, field: "file"
         this.router.post(
-            AGREEMENT_ROUTES.UPLOAD_URLS,
-            asyncHandlerFunction(this._controller.getUploadUrls.bind(this._controller)),
+            AGREEMENT_ROUTES.UPLOAD_FILE,
+            upload.single('file'),
+            asyncHandlerFunction(this._controller.uploadFile.bind(this._controller)),
         );
     }
 }

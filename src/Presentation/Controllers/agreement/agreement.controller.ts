@@ -13,9 +13,7 @@ import { CreateAgreementDTO, SignAgreementDTO } from '@application/dtos/agreemen
 import { AgreementStatus } from '@core/types/agreement.types';
 import { UserRole } from '@shared/enums/user-role.enum';
 import { logger } from '@shared/log/logger';
-import { IS3Service } from '@application/interfaces/services/s3.service.interface';
 import { TokenTypes } from '@shared/types/tokens';
-import crypto from 'crypto';
 import { ResponseHandler } from '@presentation/utils/response-handler';
 import {
     Agreement_Response_Messages,
@@ -23,13 +21,15 @@ import {
 } from '@shared/types/messages/Response.messages';
 import { Http_StatusCodes } from '@shared/enums/http-status-codes.enum';
 import { BadRequestError } from '@shared/errors/common-errors';
+import { uploadToCloudinary } from '@shared/uploads/cloudinary.service';
 
 @injectable()
 export class AgreementController {
     constructor(
         @inject(TokenTypes.ICreateAgreementUseCase)
         private readonly _createAgreementUseCase: ICreateAgreementUseCase,
-        @inject(TokenTypes.ISignOwnerUseCase) private readonly _signOwnerUseCase: ISignOwnerUseCase,
+        @inject(TokenTypes.ISignOwnerUseCase)
+        private readonly _signOwnerUseCase: ISignOwnerUseCase,
         @inject(TokenTypes.ISignTenantUseCase)
         private readonly _signTenantUseCase: ISignTenantUseCase,
         @inject(TokenTypes.IGeneratePdfUseCase)
@@ -40,7 +40,6 @@ export class AgreementController {
         private readonly _getAgreementUseCase: IGetAgreementUseCase,
         @inject(TokenTypes.IGetMyAgreementsUseCase)
         private readonly _getMyAgreementsUseCase: IGetMyAgreementsUseCase,
-        @inject(TokenTypes.IS3Service) private readonly _s3Service: IS3Service,
     ) {}
 
     createAgreement = async (req: Request, res: Response): Promise<Response> => {
@@ -102,14 +101,23 @@ export class AgreementController {
         );
     };
 
+    /**
+     * POST /agreements/:id/kyc  — multipart/form-data, field name: "document"
+     * Uploads the file directly to Cloudinary and saves the URL on the agreement.
+     */
     uploadKyc = async (req: Request, res: Response): Promise<Response> => {
         const id = req.params.id as string;
-        const { kycUrl } = req.body;
         logger.info({ agreementId: id }, 'Upload KYC requested');
 
-        if (!kycUrl) {
-            throw new BadRequestError('kycUrl is required');
+        if (!req.file) {
+            throw new BadRequestError('KYC document file is required');
         }
+
+        const kycUrl = await uploadToCloudinary(
+            req.file.buffer,
+            req.file.mimetype,
+            'rentease/agreements/kyc',
+        );
 
         const result = await this._uploadTenantKycUseCase.execute(id, kycUrl);
 
@@ -121,47 +129,28 @@ export class AgreementController {
         );
     };
 
-    getUploadUrls = async (req: Request, res: Response): Promise<Response> => {
+    /**
+     * POST /agreements/:id/upload-file  — multipart/form-data, field name: "file"
+     * Generic single-file upload (used for signature images).
+     * Returns the Cloudinary URL so the client can pass it to signOwner / signTenant.
+     */
+    uploadFile = async (req: Request, res: Response): Promise<Response> => {
         const id = req.params.id as string;
-        logger.info({ agreementId: id }, 'Get upload URLs requested');
+        logger.info({ agreementId: id }, 'Agreement file upload requested');
 
-        const { files } = req.body as {
-            files?: Array<{ fileName: string; contentType: string }>;
-        };
-
-        if (!Array.isArray(files) || files.length === 0) {
-            throw new BadRequestError('Files are required');
+        if (!req.file) {
+            throw new BadRequestError('File is required');
         }
 
-        const awsBucket = process.env.AWS_BUCKET_NAME;
-        const awsRegion = process.env.AWS_REGION;
-
-        if (!awsBucket || !awsRegion) {
-            logger.error('S3 config error: AWS_BUCKET_NAME or AWS_REGION missing');
-            throw new Error('Storage service configuration error');
-        }
-
-        const uploads = await Promise.all(
-            files.map(async (file, index) => {
-                const safeFileName = (file.fileName || `kyc-${index}`).replace(
-                    /[^a-zA-Z0-9._-]/g,
-                    '',
-                );
-
-                const key = `rentease/agreements/${id}/${crypto.randomUUID()}-${index}-${safeFileName}`;
-                const uploadUrl = await this._s3Service.getUrl(
-                    key,
-                    file.contentType || 'application/pdf',
-                );
-
-                const publicUrl = `https://${awsBucket}.s3.${awsRegion}.amazonaws.com/${key}`;
-                return { key, uploadUrl, publicUrl };
-            }),
+        const fileUrl = await uploadToCloudinary(
+            req.file.buffer,
+            req.file.mimetype,
+            'rentease/agreements/signatures',
         );
 
         return ResponseHandler.success(
             res,
-            { uploads },
+            { fileUrl },
             Agreement_Response_Messages.UPLOAD_URLS_GENERATED,
             Http_StatusCodes.OK,
         );

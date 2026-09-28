@@ -4,14 +4,13 @@ import { IUserRepository } from '@core/interfaces/repository/user-repository.int
 import { IPropertyRepository } from '@core/interfaces/repository/property-repository.interface';
 import { inject, injectable } from 'tsyringe';
 import { logger } from '@shared/log/logger';
-import { IS3Service } from '@application/interfaces/services/s3.service.interface';
 import { IPdfService, PdfParties } from '@application/interfaces/services/pdf.service.interface';
-import crypto from 'crypto';
 import { TokenTypes } from '@shared/types/tokens';
 import {
     AgreementNotFoundError,
     AgreementSignatureRequiredError,
 } from '@shared/errors/agreement-errors';
+import { uploadToCloudinary } from '@shared/uploads/cloudinary.service';
 
 @injectable()
 export class GenerateAgreementPdfUseCase implements IGeneratePdfUseCase {
@@ -20,7 +19,6 @@ export class GenerateAgreementPdfUseCase implements IGeneratePdfUseCase {
         @inject(TokenTypes.IUserRepository) private _userRepository: IUserRepository,
         @inject(TokenTypes.IPropertyRepository) private _propertyRepository: IPropertyRepository,
         @inject(TokenTypes.IPdfService) private _pdfService: IPdfService,
-        @inject(TokenTypes.IS3Service) private _s3Service: IS3Service,
     ) {}
 
     async execute(id: string): Promise<string> {
@@ -60,12 +58,14 @@ export class GenerateAgreementPdfUseCase implements IGeneratePdfUseCase {
         };
 
         const pdfBuffer = await this._pdfService.generateRentalAgreement(agreement, parties);
-        const fileKey = `agreements/${agreement.agreementNumber}-${crypto.randomUUID()}.pdf`;
 
-        const pdfUrl = await this._s3Service.uploadFile(fileKey, pdfBuffer, 'application/pdf');
+        // Upload PDF buffer directly to Cloudinary (resource_type: 'raw' for PDFs)
+        const pdfUrl = await uploadToCloudinary(pdfBuffer, 'application/pdf', 'rentease/agreements/pdfs');
 
         agreement.setPdfUrl(pdfUrl);
         await this._agreementRepository.update(agreement);
+
+        logger.info({ agreementId: id, pdfUrl }, 'Agreement PDF uploaded to Cloudinary');
 
         return pdfUrl;
     }

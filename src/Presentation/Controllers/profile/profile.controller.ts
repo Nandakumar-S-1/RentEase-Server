@@ -66,7 +66,7 @@ export class ProfileController {
             );
         }
 
-        const avatarUrl = await uploadToCloudinary(req.file.buffer, req.file.mimetype);
+        const avatarUrl = await uploadToCloudinary(req.file.buffer, req.file.mimetype, 'rentease/avatars');
 
         const result = await this._updateProfile.execute({
             userId,

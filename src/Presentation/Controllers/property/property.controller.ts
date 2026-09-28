@@ -13,12 +13,12 @@ import {
     IGetAllPropertiesUseCase,
     IRelistPropertyUseCase,
 } from '@application/interfaces/property/property.usecase.interface';
-import { IS3Service } from '@application/interfaces/services/s3.service.interface';
 import { IModerationService } from '@application/interfaces/services/moderation.service.interface';
 import { PropertyStatus } from '@shared/enums/property-type-status.enum';
 import { ResponseHandler } from '../../utils/response-handler';
 import { Property_Response_Messages } from '@shared/types/messages/Response.messages';
 import { BadRequestError } from '@shared/errors/common-errors';
+import { uploadToCloudinary } from '@shared/uploads/cloudinary.service';
 import axios from 'axios';
 
 @injectable()
@@ -40,8 +40,6 @@ export class PropertyController {
         private readonly _getAllPropertiesUseCase: IGetAllPropertiesUseCase,
         @inject(TokenTypes.IRelistPropertyUseCase)
         private readonly _relistPropertyUseCase: IRelistPropertyUseCase,
-        @inject(TokenTypes.IS3Service)
-        private readonly _s3Service: IS3Service,
         @inject(TokenTypes.IModerationService)
         private readonly _moderationService: IModerationService,
     ) {}
@@ -164,47 +162,39 @@ export class PropertyController {
 
     uploadPropertyPhotoUrls = async (req: Request, res: Response): Promise<Response> => {
         const ownerId = req.user!.id;
-        const { files } = req.body as {
-            files?: Array<{ fileName: string; contentType: string }>;
-        };
 
-        if (!Array.isArray(files) || files.length === 0) {
+        if (!req.files || !Array.isArray(req.files) || req.files.length === 0) {
             throw new BadRequestError(Property_Response_Messages.FILES_REQUIRED);
         }
 
-        const awsBucket = process.env.AWS_BUCKET_NAME;
-        const awsRegion = process.env.AWS_REGION;
-        if (!awsBucket || !awsRegion) {
-            return ResponseHandler.error(
-                res,
-                Property_Response_Messages.S3_CONFIG_ERROR,
-                Http_StatusCodes.INTERNAL_SERVER_ERROR,
-            );
+        const files = req.files as Express.Multer.File[];
+
+        // Run AI moderation on each photo buffer before uploading
+        for (const file of files) {
+            if (file.mimetype.startsWith('image/')) {
+                const moderation = await this._moderationService.checkImage(file.buffer);
+                if (moderation.status === 'UNSAFE') {
+                    logger.warn(`Property photo blocked for owner ${ownerId}: Unsafe content`);
+                    return ResponseHandler.error(
+                        res,
+                        `${Property_Response_Messages.MODERATION_FAILED}: ${moderation.reason}`,
+                        Http_StatusCodes.BAD_REQUEST,
+                    );
+                }
+            }
         }
 
-        const uploads = await Promise.all(
-            files.map(async (file, index) => {
-                const safeFileName = (file.fileName || `photo-${index}`).replace(
-                    /[^a-zA-Z0-9._-]/g,
-                    '',
-                );
-
-                const key = `rentease/properties/${ownerId}/${crypto.randomUUID()}-${index}-${safeFileName}`;
-                const uploadUrl = await this._s3Service.getUrl(
-                    key,
-                    file.contentType || 'image/jpeg',
-                );
-
-                const publicUrl = `https://${awsBucket}.s3.${awsRegion}.amazonaws.com/${key}`;
-                return { key, uploadUrl, publicUrl };
-            }),
+        const photoUrls = await Promise.all(
+            files.map((file) =>
+                uploadToCloudinary(file.buffer, file.mimetype, 'rentease/properties'),
+            ),
         );
 
-        logger.info(`propertuy photos uplods`);
+        logger.info(`${photoUrls.length} property photos uploaded for owner ${ownerId}`);
 
         return ResponseHandler.success(
             res,
-            { uploads },
+            { photoUrls },
             Property_Response_Messages.PHOTOS_UPLOADED,
         );
     };

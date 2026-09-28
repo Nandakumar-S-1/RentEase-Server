@@ -115,7 +115,7 @@ export const AGREEMENT_ROUTES = {
     SIGN_TENANT: '/:id/sign-tenant',
     GENERATE_PDF: '/:id/generate-pdf',
     UPLOAD_KYC: '/:id/kyc',
-    UPLOAD_URLS: '/:id/upload-urls',
+    UPLOAD_FILE: '/:id/upload-file',
 } as const;
 
 export const PAYMENT_ROUTES = {

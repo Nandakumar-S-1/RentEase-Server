@@ -42,7 +42,7 @@ export class OwnerVerificationController {
             });
         }
 
-        const documentUrl = await uploadToCloudinary(req.file.buffer, req.file.mimetype);
+        const documentUrl = await uploadToCloudinary(req.file.buffer, req.file.mimetype, 'rentease/owner-documents');
 
         const result = await this._submitVerification.execute({
             ownerId,

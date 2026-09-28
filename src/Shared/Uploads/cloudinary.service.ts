@@ -6,13 +6,13 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET!,
 });
 
-export const uploadToCloudinary = (buffer: Buffer, mimetype: string): Promise<string> => {
+export const uploadToCloudinary = (buffer: Buffer, mimetype: string, folder = 'rentease/uploads'): Promise<string> => {
     return new Promise((resolve, reject) => {
         const resourceType = mimetype === 'application/pdf' ? 'raw' : 'image';
 
         const stream = cloudinary.uploader.upload_stream(
             {
-                folder: 'rentease/owner-documents',
+                folder,
                 resource_type: resourceType,
             },
             (error, result) => {

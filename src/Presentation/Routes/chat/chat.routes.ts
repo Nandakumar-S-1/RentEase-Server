@@ -4,6 +4,7 @@ import { ChatController } from '@presentation/controllers/chat/chat.controller';
 import { CHAT_ROUTES } from '@shared/constants/routes';
 import { authMiddleware } from '@presentation/middlewares/auth.middleware';
 import { asyncHandlerFunction } from '@presentation/utils/async-handler';
+import { upload } from '@shared/uploads/cloudinary.upload';
 
 @injectable()
 export class ChatRoutes extends BaseRoute {
@@ -35,8 +36,10 @@ export class ChatRoutes extends BaseRoute {
             asyncHandlerFunction(this._controller.sendMessage.bind(this._controller)),
         );
 
+        // multipart/form-data, field: "file"
         this.router.post(
             CHAT_ROUTES.UPLOAD_PHOTO_URLS,
+            upload.single('file'),
             asyncHandlerFunction(this._controller.uploadChatPhotoUrls.bind(this._controller)),
         );
     }

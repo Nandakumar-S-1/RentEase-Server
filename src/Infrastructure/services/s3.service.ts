@@ -1,40 +1,13 @@
 import { IS3Service } from '@application/interfaces/services/s3.service.interface';
-import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
-import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import { injectable } from 'tsyringe';
 
-const s3b = new S3Client({
-    region: process.env.AWS_REGION,
-    credentials: {
-        accessKeyId: process.env.AWS_ACCESS_KEY!,
-        secretAccessKey: process.env.AWS_SECRET_KEY!,
-    },
-});
-
+@injectable()
 export class S3Service implements IS3Service {
-    async getUrl(key: string, contentType: string): Promise<string> {
-        const result = new PutObjectCommand({
-            Bucket: process.env.AWS_BUCKET_NAME,
-            Key: key,
-            ContentType: contentType,
-        });
-        const expiryValue = process.env.S3_EXPIRY_TIME;
-        const expirySeconds =
-            expiryValue && !isNaN(Number(expiryValue)) ? Number(expiryValue) : 3600;
-        const uploadUrl = await getSignedUrl(s3b, result, {
-            expiresIn: expirySeconds,
-        });
-        return uploadUrl;
+    async getUrl(_key: string, _contentType: string): Promise<string> {
+        throw new Error('S3Service is deprecated. Use uploadToCloudinary from shared/uploads/cloudinary.service.ts');
     }
 
-    async uploadFile(key: string, buffer: Buffer, contentType: string): Promise<string> {
-        await s3b.send(
-            new PutObjectCommand({
-                Bucket: process.env.AWS_BUCKET_NAME || 'rentease-bucket',
-                Key: key,
-                Body: buffer,
-                ContentType: contentType,
-            }),
-        );
-        return `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;
+    async uploadFile(_key: string, _buffer: Buffer, _contentType: string): Promise<string> {
+        throw new Error('S3Service is deprecated. Use uploadToCloudinary from shared/uploads/cloudinary.service.ts');
     }
 }

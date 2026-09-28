@@ -6,9 +6,9 @@ import { neededRole } from '@presentation/middlewares/role.middleware';
 import { UserRole } from '@shared/enums/user-role.enum';
 import { asyncHandlerFunction } from '@presentation/utils/async-handler';
 import { PROPERTY_ROUTES } from '@shared/constants/routes';
-
 import { validationRequestMiddleware } from '@presentation/middlewares/validation.middleware';
 import { createPropertySchema } from '@application/validators/property.validators';
+import { upload } from '@shared/uploads/cloudinary.upload';
 
 @injectable()
 export class PropertyRoutes extends BaseRoute {
@@ -20,14 +20,15 @@ export class PropertyRoutes extends BaseRoute {
         this.router.post(
             PROPERTY_ROUTES.UPLOAD_PHOTOS_URLS,
             authMiddleware,
-            neededRole(UserRole.OWNER),
+            neededRole(UserRole.OWNER, UserRole.ADMIN),
+            upload.array('photos', 5),
             asyncHandlerFunction(this._controller.uploadPropertyPhotoUrls.bind(this._controller)),
         );
 
         this.router.post(
             PROPERTY_ROUTES.CREATE,
             authMiddleware,
-            neededRole(UserRole.OWNER),
+            neededRole(UserRole.OWNER, UserRole.ADMIN),
             validationRequestMiddleware(createPropertySchema),
             asyncHandlerFunction(this._controller.createProperty.bind(this._controller)),
         );
