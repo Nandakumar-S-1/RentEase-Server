@@ -77,4 +77,9 @@ export const TokenTypes = {
     IDeleteAmenityUseCase: 'IDeleteAmenityUseCase',
     IGetAmenitiesUseCase: 'IGetAmenitiesUseCase',
     IAmenityRepository: 'IAmenityRepository',
+    
+    // Subscription tokens
+    ISubscriptionRepository: 'ISubscriptionRepository',
+    ICheckPropertyLimitUseCase: 'ICheckPropertyLimitUseCase',
+    ICreateSubscriptionUseCase: 'ICreateSubscriptionUseCase',
 };

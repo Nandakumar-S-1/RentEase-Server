@@ -13,7 +13,7 @@ import { inject, injectable } from 'tsyringe';
 export class ForgotPasswordUseCase implements IForgotPasswordUseCase {
     constructor(
         @inject(TokenTypes.IUserRepository)
-        private readonly _userRepository: IUserRepository,
+        private readonly _userRepository: IUserRepository,  
         @inject(TokenTypes.IRedisCache)
         private readonly _redisService: IRedisCache,
         @inject(TokenTypes.IOtpService)

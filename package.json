@@ -6,6 +6,7 @@
     "scripts": {
         "format": "prettier --write .",
         "lint": "eslint . --fix",
+        "build": "tsc && tsc-alias",
         "start": "node dist/index.js",
         "dev": "ts-node-dev --respawn --transpile-only -r tsconfig-paths/register src/index.ts",
         "type-check": "tsc --noEmit"
@@ -74,6 +75,7 @@
         "prettier": "^3.8.1",
         "ts-node": "^10.9.2",
         "ts-node-dev": "^2.0.0",
+        "tsc-alias": "^1.9.10",
         "tsconfig-paths": "^4.2.0",
         "typescript": "^5.9.3",
         "typescript-eslint": "^8.55.0"

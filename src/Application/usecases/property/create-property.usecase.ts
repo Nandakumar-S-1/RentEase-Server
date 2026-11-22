@@ -6,6 +6,7 @@ import { PropertyMapper } from '@application/mappers/property/property.mapper';
 import { IPropertyRepository } from '@core/interfaces/repository/property-repository.interface';
 import { IUserRepository } from '@core/interfaces/repository/user-repository.interface';
 import { ICreateNotificationUsecase } from '@application/interfaces/notification/notification.usecase.interface';
+import { CheckPropertyLimitUseCase } from '@application/usecases/subscription/check-property-limit.usecase';
 import { TokenTypes } from '@shared/types/tokens';
 import { UserRole } from '@shared/enums/user-role.enum';
 import { NotificationType } from '@shared/enums/notification-type.enum';
@@ -21,8 +22,13 @@ export class CreatePropertyUseCase implements ICreatePropertyUseCase {
         private readonly _userRepository: IUserRepository,
         @inject(TokenTypes.ICreateNotificationUseCase)
         private readonly _createNotification: ICreateNotificationUsecase,
+        private readonly _checkPropertyLimit: CheckPropertyLimitUseCase,
     ) {}
+    
     async execute(dto: CreatePropertyDTO): Promise<CreatePropertyResponseDTO> {
+        // Check if owner can add more properties (subscription limit)
+        await this._checkPropertyLimit.execute(dto.ownerId);
+        
         const entity = PropertyMapper.toEntity(dto);
         const createdProperty = await this._propertyRepo.create(entity);
 

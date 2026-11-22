@@ -96,12 +96,16 @@ import {
     AssignServiceProviderUseCase,
     UpdateMaintenanceStatusUseCase,
 } from '@application/usecases/maintenance/manage-maintenance.usecase';
+import { CreateSubscriptionUseCase } from '@application/usecases/subscription/create-subscription.usecase';
+import { CheckPropertyLimitUseCase } from '@application/usecases/subscription/check-property-limit.usecase';
 import {
     ICreateMaintenanceRequestUseCase,
     IGetMaintenanceRequestsUseCase,
     IAssignServiceProviderUseCase,
     IUpdateMaintenanceStatusUseCase,
 } from '@application/interfaces/maintenance/maintenance.usecase.interface';
+import { ICreateSubscriptionUseCase } from '@application/usecases/subscription/create-subscription.usecase';
+import { ICheckPropertyLimitUseCase } from '@application/usecases/subscription/check-property-limit.usecase';
 
 export class UseCaseModule {
     static registerModules(): void {
@@ -252,5 +256,13 @@ export class UseCaseModule {
                 useClass: UpdateMaintenanceStatusUseCase,
             },
         );
+        
+        // Subscription registrations
+        container.register<ICreateSubscriptionUseCase>(TokenTypes.ICreateSubscriptionUseCase, {
+            useClass: CreateSubscriptionUseCase,
+        });
+        container.register<ICheckPropertyLimitUseCase>(TokenTypes.ICheckPropertyLimitUseCase, {
+            useClass: CheckPropertyLimitUseCase,
+        });
     }
 }

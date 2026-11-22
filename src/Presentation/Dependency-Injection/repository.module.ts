@@ -24,6 +24,8 @@ import { IChatRepository } from '@core/interfaces/repository/chat-repository.int
 import { ChatRepository } from '@infrastructure/repositories/chat.repository';
 import { IMaintenanceRequestRepository } from '@core/interfaces/repository/maintenance-request.repository.interface';
 import { MaintenanceRequestRepositoryImpl } from '@infrastructure/repositories/maintenance-request.repository';
+import { ISubscriptionRepository } from '@core/interfaces/repository/subscription-repository.interface';
+import { SubscriptionRepository } from '@infrastructure/repositories/subscription.repository';
 
 export class RepositoryModule {
     //this is like when a call for Iuserrepo token ,it will give an instance of UserRepository class
@@ -69,5 +71,8 @@ export class RepositoryModule {
                 useClass: MaintenanceRequestRepositoryImpl,
             },
         );
+        container.register<ISubscriptionRepository>(TokenTypes.ISubscriptionRepository, {
+            useClass: SubscriptionRepository,
+        });
     }
 }

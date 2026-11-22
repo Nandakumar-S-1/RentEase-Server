@@ -48,6 +48,15 @@ export class App {
     }
 
     private routeConfigs() {
+        // Health check endpoint for Docker and load balancers
+        this._app.get('/health', (req, res) => {
+            res.status(200).json({ 
+                status: 'ok', 
+                timestamp: new Date().toISOString(),
+                uptime: process.uptime() 
+            });
+        });
+
         this._app.use('/api', globalLimiter, router);
         this._app.get('/', (req, res) => {
             res.send('Hello World!');

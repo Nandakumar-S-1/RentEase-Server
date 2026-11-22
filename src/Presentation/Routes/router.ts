@@ -13,6 +13,7 @@ import { NotificationRoutes } from './notification/notification.routes';
 import { PaymentRoutes } from './payment.routes';
 import { ChatRoutes } from './chat/chat.routes';
 import { MaintenanceRoutes } from './maintenance/maintenance.routes';
+import { SubscriptionRoutes } from './subscription/subscription.routes';
 const router = Router();
 const userRoutes = container.resolve(UserRoutes);
 const adminRoutes = container.resolve(AdminRoutes);

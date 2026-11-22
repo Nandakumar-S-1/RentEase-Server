@@ -4,25 +4,40 @@ services:
   server:
     build: .
     container_name: rentease_server
-    restart: always
+    restart: unless-stopped
     ports:
       - "3000:3000"
     env_file:
       - .env
     environment:
-      - NODE_ENV=production
+      - NODE_ENV=development
+      - REDIS_HOST=redis
     depends_on:
       - redis
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
   redis:
-    image: redis:alpine
+    image: redis:7-alpine
     container_name: rentease_redis
-    restart: always
+    restart: unless-stopped
     ports:
       - "6379:6379"
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
-#build . = location of dockerfile for docker to understand.
-#ports : connects the specified ports inside containder to aws ec2 instance.
-#container_name : gives a name to the container
-#restart : makes sure container restarts automatically when crah of app or reboots aws 
-#env_file : adds environment variables from .env file to container
+volumes:
+  redis_data:
+
+# This is for DEVELOPMENT only - just backend + Redis
+# For production, you'll use individual Dockerfiles
